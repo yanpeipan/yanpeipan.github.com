@@ -15,7 +15,7 @@ author :
   email : yanpeipan_82@qq.com
   github : yanpeipan
   twitter : yanpeipan
-  feedburner : yanpeipan
+#  feedburner : yanpeipan
 
 # The production_url is only used when full-domain names are needed
 # such as sitemap.txt 
@@ -82,7 +82,7 @@ JB :
   comments :
     provider : disqus
     disqus :
-      short_name : jekyllbootstrap
+      short_name : yanpeipan
     livefyre :
       site_id : 123
     intensedebate :
@@ -100,7 +100,7 @@ JB :
   analytics :
     provider : google 
     google : 
-        tracking_id : 'UA-123-12'
+        tracking_id : 'UA-57403084-1'
     getclicky :
       site_id : 
     mixpanel :
