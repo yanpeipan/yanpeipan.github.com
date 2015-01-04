@@ -47,11 +47,26 @@ tags: [JavaScript]
 
 > ECMAScript是一种由Ecma国际（前身为欧洲计算机制造商协会）通过ECMA-262标准化的脚本程序设计语言。这种语言在万维网上应用广泛，它往往被称为JavaScript或JScript，但实际上后两者是ECMA-262标准的实现和扩展。
 
+> ECMAScript 是标准化组织 ECMA（Ecma International - European association for standardizing information and communication systems）发布的脚本语言规范。现在大家常见的 JavaScript、微软的 JScript 以及 Adobe 的 ActionScript 等语言都是遵循这个规范的，属于 ECMAScript 语言的变体。每个 ECMAScript 规范的变体语言都可能增加自己额外的功能特性。
+
 ## 各浏览器执行的ECMAScript版本是什么情况？
+
+许多程序，尤其是网页浏览器支持ECMAScript。浏览器中的ECMAScript实现添加了与文档对象模型的接口，可以通过脚本改变网页的内容、结构和样式。
 
 ## `parseInt('08')`在什么情况下等于0,什么情况下等于8？
 
+`'8' is not an octal digit.`
+ECMAScript 5 规范中 parseInt 函数部分不在允许实现环境把以 0 字符开始的字符串作为八进制数值了。
+
 ## setTimeout方法，如果第二个参数是0, 那么是立即执行吗？
+
+setTimeout is simply like calling the funcion after delay has finished. Whenever a function is called it is not executed immediately, but queued so that it is executed after all the executing and currently queued eventhandlers finish first. setTimeout(,0) essentially means execute after all current functions in the present queue get executed. No guruantees can be made about how long it could take.
+
+setImmediate is similar in this regard except that it doesn't use queue of functions. It checks queue of I/O eventhandlers. If all I/O events in the current snapshot are processed, it executes the callback. It queues them immedieately after the last I/O handler somewhat like process.nextTick. So it is faster.
+
+> JavaScript引擎是单线程运行的,浏览器无论在什么时候都只且只有一个线程在运行JavaScript程序.
+
+> 如果队列非空,引擎就从队列头取出一个任务,直到该任务处理完,即返回后引擎接着运行下一个任务,在任务没返回前队列中的其它任务是没法被执行的.
 
 ## switch（变量），变量和case语句当中出现的值等于===还是==？
 
@@ -76,3 +91,6 @@ tags: [JavaScript]
 # 参考
 
 [深入探讨 ECMAScript 规范第五版](http://www.ibm.com/developerworks/cn/web/1305_chengfu_ecmascript5/)\\
+[Javascript 严格模式详解](http://www.ruanyifeng.com/blog/2013/01/javascript_strict_mode.html)\\
+[parseInt](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/parseInt)\\
+[javascript线程解释（setTimeout,setInterval你不知道的事）](http://www.iamued.com/qianduan/1645.html)\\
