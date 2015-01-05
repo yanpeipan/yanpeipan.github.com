@@ -129,6 +129,32 @@ setImmediate is similar in this regard except that it doesn't use queue of funct
 
 ## 在进行比较false=={}时，类型的转换过程是怎样的？
 
+比较运算x==y, 其中x和 y是值，产生true或者false。这样的比较按如下方式进行：
+
+* 若Type(x)与Type(y)相同， 则
+* 若Type(x)为Undefined， 返回true。
+* 若Type(x)为Null， 返回true。
+* 若Type(x)为Number， 则返回false。
+* 若x为NaN， 返回false。
+* 若y为NaN， 返回false。
+* 若x与y为相等数值， 返回true。
+* 若x 为 +0 且 y为−0， 返回true。
+* 若x 为 −0 且 y为+0， 返回true。
+* 
+* 若Type(x)为String, 则当x和y为完全相同的字符序列（长度相等且相同字符在相同位置）时返回true。 否则， 返回false。
+* 若Type(x)为Boolean, 当x和y为同为true或者同为false时返回true。 否则， 返回false。
+* 当x和y为引用同一对象时返回true。否则，返回false。
+* 若x为null且y为undefined， 返回true。
+* 若x为undefined且y为null， 返回true。
+* 若Type(x) 为 Number 且 Type(y)为String， 返回comparison x == ToNumber(y)的结果。
+* 若Type(x) 为 String 且 Type(y)为Number，
+* 返回比较ToNumber(x) == y的结果。
+* 若Type(x)为Boolean， 返回比较ToNumber(x) == y的结果。
+* 若Type(y)为Boolean， 返回比较x == ToNumber(y)的结果。
+* 若Type(x)为String或Number，且Type(y)为Object，返回比较x == ToPrimitive(y)的结果。
+* 若Type(x)为Object且Type(y)为String或Number， 返回比较ToPrimitive(x) == y的结果。
+* 返回false。
+
 ## 如果某个外部引用的Js文件出现运行时错误，后面的脚本还可以执行吗？
 
 ## 全局变量有什么弊端？
