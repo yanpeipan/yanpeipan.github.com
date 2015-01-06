@@ -173,6 +173,22 @@ setImmediate is similar in this regard except that it doesn't use queue of funct
 
 ---
 
+# 函数
+
+## 如何实现函数参数的默认值？
+
+## 如何实现函数的链式调用？
+
+## 函数的参数是值传递还是引用传值？
+
+## 什么是即时函数（立即调用的函数表达式）？
+
+## 什么情况下new构造函数，得到的对象不是该构造函数的实例？
+
+## 什么情况下对象的方法执行时this不能指向该对象本身？
+
+---
+
 # 参考
 
 [深入探讨 ECMAScript 规范第五版](http://www.ibm.com/developerworks/cn/web/1305_chengfu_ecmascript5/)\\
