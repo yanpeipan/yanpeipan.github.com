@@ -16,7 +16,9 @@ tags: [Reacct Native, App]
 ---
 
 # 知识点
+
 ## JavaScript
+
 1. [`React`](https://facebook.github.io/react/): A JAVASCRIPT LIBRARY FOR BUILDING USER INTERFACES
 2. [`JSX`](https://jsx.github.io/) is a statically-typed, object-oriented programming language designed to run on modern web browsers
 3. [`Redux`](http://redux.js.org/) Predictable state container for JavaScript apps
