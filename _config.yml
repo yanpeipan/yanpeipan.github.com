@@ -5,6 +5,20 @@ permalink: /:categories/:year/:month/:day/:title.html
 exclude: [".rvmrc", ".rbenv-version", "README.md", "Rakefile", "changelog.md"]
 highlighter: pygments
 
+markdown: kramdown
+kramdown:
+  input: GFM
+  extensions:
+    - autolink
+    - footnotes
+    - smart
+  auto_ids: true
+  parse_block_html: true
+  enable_coderay: true
+  syntax_highlighter: coderay
+  syntax_highlighter_opts:
+    line_numbers: false
+    coderay_css: class
 # Themes are encouraged to use these universal variables
 # so be sure to set them if your theme uses them.
 #
