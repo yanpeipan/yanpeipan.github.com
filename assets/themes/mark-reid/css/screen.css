@@ -47,7 +47,9 @@ h1,h2,h3,h4 {
 	clear: left;
 	font-family: 'lucida grande', sans-serif;
 }
-h1 { margin-bottom: 1em; }
+h1 {
+	margin: 1em 0em;
+}
 h2 {
 	font-size: 1.25em;
 	line-height: 1.5em;
@@ -133,7 +135,7 @@ sup { line-height: 1ex; }
 }
 blockquote {
 	padding: 0 2.8em;
-	margin: 1.714em 0;
+	margin: 0.714em 0;
 	color: #444;
 	font-size: 0.875em;
 	line-height: 1.714em;
@@ -347,12 +349,12 @@ pre {
 	margin: 1em 0 1.5em 0;
 	font-size: 0.75em; /* Hack to make code look same size as body font */
 	line-height: 1.5em;
-	color: #111;
-	background: #fffff0;
+	color: #333;
+	background: #f7f7f7;
 	border: 1px solid #ddc;
 	padding: 0.5em 1em;
 	overflow: hidden;
-
+	border-radius: 3px;
 	/* Experimental CSS3 stuff */
 	box-shadow: 1px 1px 6px #ccc;
 	-webkit-box-shadow: 1px 1px 6px #ccc;
@@ -363,7 +365,7 @@ pre:hover {
 	overflow: visible;
 }
 code {
-	font-size: 1em;
+	font-size: 85%;
 	background-color: #f7f7ff;
 	line-height: 1.4em;
 }
@@ -538,7 +540,6 @@ img.maruku-png { }
 .tag_box a {
 	padding: 3px 6px;
 	margin: 2px;
-	background: #eee;
 	border-radius: 3px;
 	border:1px dashed #ccc;
 	text-decoration:none;
