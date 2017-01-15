@@ -82,21 +82,21 @@ Promise对象是CommonJS工作组提出的一种规范，目的是为异步操�
 ## use @providesModule
 >
 在文件头部引入注释, 了解更多：[FBJS](https://github.com/facebook/fbjs)
-```Javascript
+~~~Javascript
 /**
  * @providesModule login
  */
-```
+~~~
 
 ## Use Babel Plugins
 >
 [Babel](http://babeljs.io/) is a JavaScript compiler.
-```bash
+~~~bash
 npm install --g babel-cli
 npm install --save babel babel-plugin-module-resolver
-```
+~~~
 .babelrc文件
-```json
+~~~json
 {
   "presets": ["react-native"],
   "plugins": [
@@ -107,14 +107,14 @@ npm install --save babel babel-plugin-module-resolver
     }]
   ]
 }
-```
+~~~
 .flowconfig文件（兼容Flow）
-```
+~~~
 module.name_mapper='themes' -> '<PROJECT_ROOT>/js/themes'
 module.name_mapper='actions' -> '<PROJECT_ROOT>/js/actions'
 module.name_mapper='tabs' -> '<PROJECT_ROOT>/js/tabs'
 module.name_mapper='reducers' -> '<PROJECT_ROOT>/js/reducers'
-```
+~~~
 Atom安装`autocomplete-modules`插件，并启用`babel-plugin-module-resolver`。启动：`npm start -- --reset-cache`
 
 ---
