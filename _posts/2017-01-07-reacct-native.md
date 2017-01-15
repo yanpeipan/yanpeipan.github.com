@@ -8,6 +8,11 @@ tags: [Reacct Native, App]
 {% include JB/setup %}
 ---
 
+<nav>
+  * 目录
+  {:toc}
+</nav>
+
   总结近段时间以来的经验（深坑）。
 
 # 搭建开发环境
@@ -67,6 +72,50 @@ Promise对象是CommonJS工作组提出的一种规范，目的是为异步操�
 ## redux-sage
 
 > An alternative side effect model for Redux apps
+
+---
+
+# Alias in React Native
+>
+令人厌烦的引入方式：`import themes from '../../config/themes';`
+
+## use @providesModule
+>
+在文件头部引入注释, 了解更多：[FBJS](https://github.com/facebook/fbjs)
+```Javascript
+/**
+ * @providesModule login
+ */
+```
+
+## Use Babel Plugins
+>
+[Babel](http://babeljs.io/) is a JavaScript compiler.
+```bash
+npm install --g babel-cli
+npm install --save babel babel-plugin-module-resolver
+```
+.babelrc文件
+```json
+{
+  "presets": ["react-native"],
+  "plugins": [
+    ["module-resolver", {
+      "root": ["./js"],
+      "alias": {
+      }
+    }]
+  ]
+}
+```
+.flowconfig文件（兼容Flow）
+```
+module.name_mapper='themes' -> '<PROJECT_ROOT>/js/themes'
+module.name_mapper='actions' -> '<PROJECT_ROOT>/js/actions'
+module.name_mapper='tabs' -> '<PROJECT_ROOT>/js/tabs'
+module.name_mapper='reducers' -> '<PROJECT_ROOT>/js/reducers'
+```
+Atom安装`autocomplete-modules`插件，并启用`babel-plugin-module-resolver`。启动：`npm start -- --reset-cache`
 
 ---
 
