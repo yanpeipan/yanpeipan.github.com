@@ -170,8 +170,8 @@ caption {
 
 /* @group Lists */
 ul {
-	margin-top: 1.5em;
-	margin-bottom: 1.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
 	line-height: 1.5em;
 	padding-left: 1.5em;
 }
