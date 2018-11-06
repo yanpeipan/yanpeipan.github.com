@@ -1,7 +1,7 @@
 {% capture jbcache %}{% comment %}
 
   Sort the given array or map.
-  
+
   Parameters:
     collection: the array or map to sort [REQUIRED]
     sort_by: the property to sort by [OPTIONAL]
@@ -44,7 +44,6 @@
     </ol>
 
 {% endcomment %}
-
 {% assign is_array = true %}
 {% assign sort_result = "," | split: "," %}
 {% assign collection = include.collection %}
@@ -53,7 +52,6 @@
 {% else %}
   {% assign sort_by = "title" %}
 {% endif %}
-
 {% if collection and collection.size > 0 %}
   {% for x in collection.first %}
     {% if x[1].size > 0 %}
@@ -61,13 +59,11 @@
     {% endif %}
     {% break %}
   {% endfor %}
-
   {% if is_array == false %}
     {% assign sort_result = collection | sort: sort_by %}
   {% else %}
     {% assign sort_result = collection | sort %}
   {% endif %}
-  
   {% if include.sort_descending %}
     {% assign reversed = "," | split: "," %}
     {% for index in (1..sort_result.size) %}
@@ -77,5 +73,4 @@
     {% assign sort_result = reversed %}
     {% assign reversed = nil %}
   {% endif %}
-
 {% endif %}{% endcapture %}{% assign jbcache = nil %}

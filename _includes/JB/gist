@@ -10,7 +10,6 @@ Usage:
   	  {% include JB/gist gist_id="fdcfeaba4f33c172828d" gist_file="jekyll-bootstrap.js" %}
   	</ul>
 -->{% endcomment %}
-
 <div id="gist">
 <script src="https://gist.github.com/{{ include.gist_id }}.js{% if include.gist_file %}?file={{ include.gist_file }}{% endif %}"></script>
 <noscript>

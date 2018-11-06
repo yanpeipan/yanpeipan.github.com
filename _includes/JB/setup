@@ -12,7 +12,6 @@
       {% assign BASE_PATH = nil %}
       {% assign HOME_PATH = "/" %}
     {% endif %}
-
     {% if site.JB.ASSET_PATH %}
       {% assign ASSET_PATH = site.JB.ASSET_PATH %}
     {% else %}
