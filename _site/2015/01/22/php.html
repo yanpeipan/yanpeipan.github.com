@@ -1,0 +1,505 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>PHP高级特性 &larr; </title>
+  <meta name="author" content="Yan Peipan" />
+  <link rel="start" href="/" />
+  
+  
+  
+  <!-- syntax highlighting CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/syntax.css" type="text/css" />
+  <!-- Homepage CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/screen.css" type="text/css" />
+</head>
+<body id="">
+  <div id="site">
+    <div id="header">
+      <h1>
+        <a href="/" title="Yan">Yan</a>
+        <span class="byline">&larr; <a href="/">Yan Peipan</a></span>
+      </h1>
+      <ul class="nav">
+        <li><a href="/" class="home">Home</a></li>
+        <li><a href="/archive.html">Archive</a></li>
+        <li><a href="/pages.html">Pages</a></li>
+        <li><a href="/categories.html">Categories</a></li>
+        <li><a href="/tags.html">Tags</a></li>
+      </ul>
+    </div>
+    
+
+<div id="page">
+  <h1 class="emphnext">PHP高级特性</h1>
+  <ul class="tag_box inline">
+    
+    
+
+  
+    
+    	<li><a href="/tags.html#PHP-ref">PHP <span>9</span></a></li>
+    
+  
+
+
+
+  </ul>
+  
+<hr />
+
+<h1 id="面向对象基础回顾">面向对象基础回顾</h1>
+
+<h2 id="什么是对象什么是类两者有什么区别和联系">什么是对象？什么是类？两者有什么区别和联系？</h2>
+
+<p>类是对一类事物描述，是抽象的、概念上的定义；<br />
+对象是实际存在的该类事物的每个个体，因而也称实例(instance)。在计算机中，可以理解为，在内存中创建了实实在在存在的一个内存区域存储着这个对象。<br />
+创建对象的过程称为创建对象，也称为实例化。</p>
+
+<h2 id="什么是继承php支持怎样的继承">什么是继承？PHP支持怎样的继承？</h2>
+
+<blockquote>
+  <p>继承（Inheritance）是面向对象软件技术当中的一个概念。继承可以使得子类别具有父类别的各种属性和方法，而不需要再次编写相同的代码。</p>
+</blockquote>
+
+<blockquote>
+  <p>一个扩充类总是依赖一个单独的基类，也就是说，不支持多继承。使用关键字“extends”来扩展一个类。</p>
+</blockquote>
+
+<h2 id="什么是重写overridingphp是否支持重载overloading">什么是重写（overriding）？PHP是否支持重载（overloading）？</h2>
+
+<p>Java 重写(Override)与重载(Overload)</p>
+
+<blockquote>
+  <p>重写是子类对父类的允许访问的方法的实现过程进行重新编写！返回值和形参都不能改变。即外壳不变，核心重写！</p>
+</blockquote>
+
+<blockquote>
+  <p>重载(overloading) 是在一个类里面，方法名字相同，而参数不同。返回类型呢？可以相同也可以不同。</p>
+</blockquote>
+
+<h2 id="什么是静态方法什么情况下适合使用静态方法">什么是静态方法？什么情况下适合使用静态方法？</h2>
+
+<blockquote>
+  <p>静态方法只要定义了类，不必建立类的实例就可使用</p>
+</blockquote>
+
+<p>全部静态意味着牺牲了OOP的三个特性，也就意味着放弃了封装、集成、多态。另外，由于没有统一编码习惯和约定，很多东西不做抽象，不做单一入口，代码本身的复用以及维护都是个问题。写多了这种代码，估计工程师本身的成就感都是个问题。
+个人理解下面这几种情景下使用static关键字会比较合适：\</p>
+
+<ul>
+  <li>util类(或者某个类中充当了util角色的method)</li>
+  <li>一些特殊的design pattern中，比如static factory、singleton pattern中</li>
+  <li>某项被封装的功能，即使类不实例化，也可以调用并且不觉得别扭、奇怪，不依赖类内部的其它非静态成员</li>
+</ul>
+
+<h2 id="什么是类常量什么情况下应该使用类常量">什么是类常量？什么情况下应该使用类常量？</h2>
+
+<blockquote>
+  <p>可以把在类中始终保持不变的值定义为常量。</p>
+</blockquote>
+
+<blockquote>
+  <p>常量的值必须是一个定值，不能是变量，类属性，数学运算的结果或函数调用。</p>
+</blockquote>
+
+<h2 id="什么是抽象类什么是接口分别适用于何种场景">什么是抽象类？什么是接口？分别适用于何种场景？</h2>
+
+<blockquote>
+  <p>定义为抽象的类不能被实例化。任何一个类，如果它里面至少有一个方法是被声明为抽象的，那么这个类就必须被声明为抽象的。被定义为抽象的方法只是声明了其调用方式（参数），不能定义其具体的功能实现。</p>
+</blockquote>
+
+<blockquote>
+  <p>使用接口（interface），可以指定某个类必须实现哪些方法，但不需要定义这些方法的具体内容。接口是通过 interface 关键字来定义的，就像定义一个标准的类一样，但其中定义所有的方法都是空的。接口中定义的所有方法都必须是公有，这是接口的特性。</p>
+</blockquote>
+
+<ul>
+  <li>接口没有构造函数，抽象类可以有构造函数。</li>
+  <li>接口中的方法默认都是public类型的。而抽象类中的方法可以使用private,protected或public来修饰。</li>
+  <li>一个类可以同时实现多个接口。一个类只能继承一个抽象类。</li>
+</ul>
+
+<p>抽象类还是接口</p>
+
+<ul>
+  <li>如果要创建一个模型，这个模型将由一些紧密相关的对象采用，就可以使用抽象类。如果要创建由一些不相关对象采用的功能，就使用接口。</li>
+  <li>如果必须从多个来源继承行为，就使用接口。</li>
+  <li>如果知道所有类都会共享一个公共的行为实现，就可以使用抽象类，并在其中实现该行为。</li>
+</ul>
+
+<hr />
+
+<h1 id="异常处理">异常处理</h1>
+
+<h2 id="程序中运行时出现的问题-该怎样处理">程序中运行时出现的问题， 该怎样处理？</h2>
+
+<h2 id="什么是异常">什么是异常？</h2>
+
+<p>异常处理，是编程语言或计算机硬件里的一种机制，用于处理软件或信息系统中出现的异常状况（即超出程序正常执行流程的某些特殊条件）。</p>
+
+<h2 id="怎么样产生一个异常怎样处理产生的异常">怎么样产生一个异常？怎样处理产生的异常？</h2>
+
+<pre><code>function inverse($x) {
+    if (!$x) {
+        throw new Exception('Division by zero.');
+    }
+    else return 1/$x;
+}
+
+try {
+    echo inverse(5) . "\n";
+    echo inverse(0) . "\n";
+} catch (Exception $e) {
+    echo 'Caught exception: ',  $e-&gt;getMessage(), "\n";
+}
+</code></pre>
+
+<h2 id="怎样自定义异常">怎样自定义异常？</h2>
+
+<pre><code>class MyException extends Exception { }
+</code></pre>
+
+<h2 id="trycatchfinally是怎样协同工作的">try\catch\finally是怎样协同工作的？</h2>
+
+<p><img src="http://laruence-wordpress.stor.sinaapp.com/uploads/finally-executionflow.png" alt="" /></p>
+
+<h2 id="php的error-warning-notice等类型的错误怎样通过抛出异常的方式处理">PHP的error, warning, notice等类型的错误，怎样通过抛出异常的方式处理？</h2>
+
+<p>trigger_error — 产生一个用户级别的 error/warning/notice 信息</p>
+
+<h2 id="怎样捕捉php中的致命错误">怎样捕捉PHP中的致命错误？</h2>
+
+<p><code>set_error_handler("customError");</code></p>
+
+<hr />
+
+<h1 id="traits">Traits</h1>
+
+<h2 id="traits是什么">Traits是什么？</h2>
+
+<blockquote>
+  <p>Traits 是一种为类似 PHP 的单继承语言而准备的代码复用机制。Trait 为了减少单继承语言的限制，使开发人员能够自由地在不同层次结构内独立的类中复用方法集。Traits 和类组合的语义是定义了一种方式来减少复杂性，避免传统多继承和混入类（Mixin）相关的典型问题。</p>
+</blockquote>
+
+<h2 id="什么场景下适合使用trait">什么场景下适合使用Trait？</h2>
+
+<p>PHP使用单一继承模型。虽然这种模型足够应付大部分用例场景，但有时用户也需要将一些通用样板代码放置其他无关联的类中。</p>
+
+<h2 id="怎样使用trait">怎样使用Trait？</h2>
+
+<pre><code>trait PropertiesTrait {
+    public $same = true;
+    public $different = false;
+}
+
+class PropertiesExample {
+    use PropertiesTrait;
+    public $same = true; // Strict Standards
+    public $different = true; // 致命错误
+}
+
+trait Hello {
+    public function sayHello() {
+        echo 'Hello ';
+    }
+}
+
+trait World {
+    public function sayWorld() {
+        echo 'World!';
+    }
+}
+
+trait HelloWorld {
+    use Hello, World;
+}
+
+class MyHelloWorld {
+    use HelloWorld;
+}
+</code></pre>
+
+<hr />
+
+<h1 id="预订义接口">预订义接口</h1>
+
+<h2 id="php中有哪些预订义接口它们可实现什么功能">PHP中有哪些预订义接口？它们可实现什么功能？</h2>
+
+<ul>
+  <li>遍历Traversable 检测一个类是否可以使用 foreach 进行遍历的接口。无法被单独实现的基本抽象接口。相反它必须由 IteratorAggregate 或 Iterator 接口实现。</li>
+  <li>迭代器Iterator 可在内部迭代自己的外部迭代器或类的接口。</li>
+  <li>聚合式迭代器IteratorAggregate 创建外部迭代器的接口。</li>
+  <li>数组式访问ArrayAccess 提供像访问数组一样访问对象的能力的接口。</li>
+  <li>序列化 自定义序列化的接口。</li>
+  <li>Closure 用于代表匿名函数的类.</li>
+</ul>
+
+<h2 id="怎样使用php的预订义接口">怎样使用PHP的预订义接口？</h2>
+
+<h2 id="traversable是什么iterator和iteratoraggregate是什么">Traversable是什么？Iterator和IteratorAggregate是什么？</h2>
+
+<p>Traversable 无法被单独实现的基本抽象接口。相反它必须由 IteratorAggregate 或 Iterator 接口实现。</p>
+
+<pre><code>Iterator extends Traversable {
+/* 方法 */
+abstract public mixed current ( void )
+abstract public scalar key ( void )
+abstract public void next ( void )
+abstract public void rewind ( void )
+abstract public boolean valid ( void )
+}
+
+IteratorAggregate extends Traversable {
+/* 方法 */
+abstract public Traversable getIterator ( void )
+}
+</code></pre>
+
+<h2 id="foreach是否只能用于遍历数组">foreach是否只能用于遍历数组？</h2>
+
+<h2 id="怎样高效便捷地读取超大的文本文件">怎样高效便捷地读取超大的文本文件？</h2>
+
+<pre><code>class FileIterator implements Iterator
+</code></pre>
+
+<h2 id="怎样通过数组的方式调用自定义类中的数据">怎样通过数组的方式调用自定义类中的数据？</h2>
+
+<blockquote>
+  <p>ArrayAccess（数组式访问）</p>
+</blockquote>
+
+<h2 id="yield是什么东西它和generator类traversable类有什么联系">yield是什么东西？它和Generator类，Traversable类有什么联系？</h2>
+
+<p>Generators provide an easy way to implement simple iterators without the overhead or complexity of implementing a class that implements the Iterator interface.</p>
+
+<pre><code>function xrange($start, $limit, $step = 1) {
+    for ($i = $start; $i &lt;= $limit; $i += $step) {
+        yield $i;
+    }
+}
+
+echo 'Single digit odd numbers: ';
+
+/* 注意保存在内存中的数组绝不会被创建或返回 */ 
+foreach (xrange(1, 9, 2) as $number) {
+    echo "$number ";
+}
+</code></pre>
+
+<h2 id="什么是回调函数怎样创建回调函数">什么是回调函数？怎样创建回调函数？</h2>
+
+<p>call_user_func()和call_user_func_array()</p>
+
+<h2 id="怎么样调用匿名函数怎样在匿名函数中使用外部变量">怎么样调用匿名函数？怎样在匿名函数中使用外部变量？</h2>
+
+<blockquote>
+  <p>匿名函数（Anonymous functions），也叫闭包函数（closures），允许 临时创建一个没有指定名称的函数。最经常用作回调函数（callback）参数的值。当然，也有其它应用的情况。</p>
+</blockquote>
+
+<pre><code>$greet = function($name)
+{
+    printf("Hello %s\r\n", $name);
+};
+
+$greet('World');
+$greet('PHP');
+
+// 继承 $message
+$example = function () use ($message) {
+    var_dump($message);
+};
+</code></pre>
+
+<hr />
+
+<h1 id="php的魔术方法和魔术常量">PHP的魔术方法和魔术常量</h1>
+
+<h2 id="什么是魔术方法什么是魔术常量">什么是魔术方法？什么是魔术常量？</h2>
+
+<blockquote>
+  <p>__construct()， __destruct()， __call()， __callStatic()， __get()， __set()， __isset()， __unset()， __sleep()， __wakeup()， __toString()， __invoke()， __set_state()， __clone() 和 __debugInfo() 等方法在 PHP 中被称为”魔术方法”（Magic methods）</p>
+</blockquote>
+
+<ul>
+  <li><strong>LINE</strong>  文件中的当前行号。</li>
+  <li><strong>FILE</strong>  文件的完整路径和文件名。如果用在被包含文件中，则返回被包含的文件名。自 PHP 4.0.2 起，<strong>FILE</strong> 总是包含一个绝对路径（如果是符号连接，则是解析后的绝对路径），而在此之前的版本有时会包含一个相对路径。</li>
+  <li><strong>DIR</strong> 文件所在的目录。如果用在被包括文件中，则返回被包括的文件所在的目录。它等价于 dirname(<strong>FILE</strong>)。除非是根目录，否则目录中名不包括末尾的斜杠。（PHP 5.3.0中新增） =</li>
+  <li><strong>FUNCTION</strong>  函数名称（PHP 4.3.0 新加）。自 PHP 5 起本常量返回该函数被定义时的名字（区分大小写）。在 PHP 4 中该值总是小写字母的。</li>
+  <li><strong>CLASS</strong> 类的名称（PHP 4.3.0 新加）。自 PHP 5 起本常量返回该类被定义时的名字（区分大小写）。在 PHP 4 中该值总是小写字母的。类名包括其被声明的作用区域（例如 Foo\Bar）。注意自 PHP 5.4 起 <strong>CLASS</strong> 对 trait 也起作用。当用在 trait 方法中时，<strong>CLASS</strong> 是调用 trait 方法的类的名字。</li>
+  <li><strong>TRAIT</strong> Trait 的名字（PHP 5.4.0 新加）。自 PHP 5.4 起此常量返回 trait 被定义时的名字（区分大小写）。Trait 名包括其被声明的作用区域（例如 Foo\Bar）。</li>
+  <li><strong>METHOD</strong>  类的方法名（PHP 5.0.0 新加）。返回该方法被定义时的名字（区分大小写）。</li>
+  <li><strong>NAMESPACE</strong> 当前命名空间的名称（区分大小写）。此常量是在编译时定义的（PHP 5.3.0 新增）。</li>
+</ul>
+
+<h2 id="php中有哪些魔术方法">PHP中有哪些魔术方法？</h2>
+
+<blockquote>
+  <p>__construct()， __destruct()， __call()， __callStatic()， __get()， __set()， __isset()， __unset()， __sleep()， __wakeup()， __toString()， __invoke()， __set_state()， __clone() 和 __debugInfo() 等方法在 PHP 中被称为”魔术方法”（Magic methods）</p>
+</blockquote>
+
+<h2 id="调用类中不存在的方法会发生什么">调用类中不存在的方法会发生什么？</h2>
+
+<p>在对象中调用一个不可访问方法时，__call() 会被调用。用静态方式中调用一个不可访问方法时，__callStatic() 会被调用。</p>
+
+<h2 id="怎样避免一个类被实例化">怎样避免一个类被实例化？</h2>
+
+<p><code>private</code></p>
+
+<p>单例模式</p>
+
+<h2 id="类中的方法能否以类属性的方式调用">类中的方法能否以类属性的方式调用？</h2>
+
+<hr />
+
+<h1 id="命名空间与自动加载">命名空间与自动加载</h1>
+
+<h2 id="什么是命名空间怎样定义命名空间">什么是命名空间？怎样定义命名空间？</h2>
+
+<p>在PHP中，命名空间用来解决在编写类库或应用程序时创建可重用的代码如类或函数时碰到的两类问题</p>
+
+<ul>
+  <li>用户编写的代码与PHP内部的类/函数/常量或第三方类/函数/常量之间的名字冲突。</li>
+  <li>为很长的标识符名称(通常是为了缓解第一类问题而定义的)创建一个别名（或简短）的名称，提高源代码的可读性。</li>
+</ul>
+
+<h2 id="命名空间有什么作用">命名空间有什么作用？</h2>
+
+<blockquote>
+  <p>命名空间用来解决在编写类库或应用程序时创建可重用的代码如类或函数时碰到的两类问</p>
+</blockquote>
+
+<h2 id="同一个文件内能否定义多个命名空间">同一个文件内能否定义多个命名空间？</h2>
+
+<pre><code>namespace MyProject;
+
+const CONNECT_OK = 1;
+class Connection { /* ... */ }
+function connect() { /* ... */  }
+
+namespace AnotherProject;
+
+const CONNECT_OK = 1;
+class Connection { /* ... */ }
+function connect() { /* ... */  }
+
+namespace MyProject {
+
+const CONNECT_OK = 1;
+class Connection { /* ... */ }
+function connect() { /* ... */  }
+}
+
+namespace AnotherProject {
+
+const CONNECT_OK = 1;
+class Connection { /* ... */ }
+function connect() { /* ... */  }
+}
+</code></pre>
+
+<h2 id="什么是非限定名称什么是相对限定名称什么是完全限定名称">什么是非限定名称？什么是相对限定名称？什么是完全限定名称？</h2>
+
+<p>PHP 命名空间中的元素使用同样的原理。例如，类名可以通过三种方式引用：</p>
+
+<ul>
+  <li>非限定名称，或不包含前缀的类名称，例如 $a=new foo(); 或 foo::staticmethod();。如果当前命名空间是 currentnamespace，foo 将被解析为 currentnamespace\foo。如果使用 foo 的代码是全局的，不包含在任何命名空间中的代码，则 foo 会被解析为foo。 警告：如果命名空间中的函数或常量未定义，则该非限定的函数名称或常量名称会被解析为全局函数名称或常量名称。详情参见 使用命名空间：后备全局函数名称/常量名称。</li>
+  <li>限定名称,或包含前缀的名称，例如 $a = new subnamespace\foo(); 或 subnamespace\foo::staticmethod();。如果当前的命名空间是 currentnamespace，则 foo 会被解析为 currentnamespace\subnamespace\foo。如果使用 foo 的代码是全局的，不包含在任何命名空间中的代码，foo 会被解析为subnamespace\foo。</li>
+  <li>完全限定名称，或包含了全局前缀操作符的名称，例如， $a = new \currentnamespace\foo(); 或 \currentnamespace\foo::staticmethod();。在这种情况下，foo 总是被解析为代码中的文字名(literal name)currentnamespace\foo。</li>
+</ul>
+
+<h2 id="定义了命名空间后怎样调用php内置的函数">定义了命名空间后，怎样调用PHP内置的函数？</h2>
+
+<h2 id="怎样在一个命名空间中使用另一个命名空间下的类">怎样在一个命名空间中使用另一个命名空间下的类？</h2>
+
+<pre><code>use My\Full\Classname as Another;
+new \My\Full\Classname();
+</code></pre>
+
+<h2 id="命名空间和文件目录有关系吗">命名空间和文件目录有关系吗？</h2>
+
+<p>在文件系统中访问一个文件有三种方式：</p>
+
+<ul>
+  <li>相对文件名形式如foo.txt。它会被解析为 currentdirectory/foo.txt，其中 currentdirectory 表示当前目录。因此如果当前目录是 /home/foo，则该文件名被解析为/home/foo/foo.txt。</li>
+  <li>相对路径名形式如subdirectory/foo.txt。它会被解析为 currentdirectory/subdirectory/foo.txt。</li>
+  <li>绝对路径名形式如/main/foo.txt。它会被解析为/main/foo.txt。</li>
+</ul>
+
+<h2 id="怎样实现类的自动加载">怎样实现类的自动加载？</h2>
+
+<hr />
+
+<h1 id="反射">反射</h1>
+
+<h2 id="什么是反射">什么是反射？</h2>
+
+<p>在计算机科学中，反射是指计算机程序在运行时（Run time）可以访问、检测和修改它本身状态或行为的一种能力。</p>
+
+<h2 id="通过反射可以了解哪些信息">通过反射可以了解哪些信息？</h2>
+
+<p>某个类中所有的方法、属性、注释、方法参数等</p>
+
+<h2 id="什么时候使用类函数什么时候使用反射">什么时候使用类函数？什么时候使用反射？</h2>
+
+<p>反射使用场景： 自动加载插件，自动生成文档，甚至可用来扩充PHP语言。</p>
+
+<hr />
+
+<h1 id="参考">参考</h1>
+
+<p><a href="http://thisisbaozi.github.io/blog/2014/02/12/phpzai-webkai-fa-zhong-staticde-shi-yong-chang-jing/">PHP在Web开发中static的使用场景</a><br />
+<a href="http://www.php-internals.com/book/?p=chapt05/05-05-class-magic-methods-latebinding">魔术方法，延迟绑定及静态成员</a><br />
+<a href="http://php.net/manual/zh/language.oop5.late-static-bindings.php">后期静态绑定</a><br />
+<a href="http://www.laruence.com/2012/08/16/2709.html">PHP的新特性finally</a><br />
+<a href="http://www.infoq.com/cn/news/2012/03/PHP-5.4">PHP 5.4弃Register Globals增Traits</a><br />
+<a href="http://www.laruence.com/2011/07/02/2097.html">PHP5.4的新特性</a><br />
+<a href="http://www.tuicool.com/articles/eaMzuu7">PHP如何快速读取大文件</a><br />
+<a href="http://www.laruence.com/2010/06/20/1602.html">深入理解PHP之匿名函数</a><br />
+<a href="http://www.php-internals.com/book/?p=chapt04/04-04-anonymous-function">匿名函数及闭包</a>\</p>
+
+  <address class="signature">
+    <a class="author" href="/">Yan Peipan</a>
+    <span class="date">22 January 2015</span>
+    <span class="location"></span>
+  </address>
+  <div class="prev-next">
+    
+    <a href="/2015/01/25/%E5%A4%A7%E8%A7%84%E6%A8%A1%E7%BD%91%E7%AB%99%E5%BC%80%E5%8F%91%E6%8A%80%E6%9C%AF.html" class="next" title="大规模网站开发技术">Next Post &rarr;</a>
+    
+    
+    <a href="/2015/01/11/php%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.html" class="prev" title="PHP设计模式">&larr; Earlier Post</a>
+    
+  </div>
+</div><!-- End Page -->
+
+
+
+
+    <div id="footer">
+      <address>
+        <span class="copyright">
+          Content by <a href="/sitemap.txt">Yan Peipan</a>.
+        </span>
+        <span class="engine">
+          Powered by <a href="http://github.com/mojombo/jekyll/" title="A static, minimalist CMS">Jekyll</a>
+        </span>
+      </address>
+    </div>
+  </div>
+  <!--[if IE 6]>
+  <script type="text/javascript">
+  /*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; }
+  var IE6UPDATE_OPTIONS = {
+  icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+
+
+</body>
+</html>
+

@@ -1,0 +1,144 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>CoreOS &larr; </title>
+  <meta name="author" content="Yan Peipan" />
+  <link rel="start" href="/" />
+  
+  
+  
+  <!-- syntax highlighting CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/syntax.css" type="text/css" />
+  <!-- Homepage CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/screen.css" type="text/css" />
+</head>
+<body id="">
+  <div id="site">
+    <div id="header">
+      <h1>
+        <a href="/" title="Yan">Yan</a>
+        <span class="byline">&larr; <a href="/">Yan Peipan</a></span>
+      </h1>
+      <ul class="nav">
+        <li><a href="/" class="home">Home</a></li>
+        <li><a href="/archive.html">Archive</a></li>
+        <li><a href="/pages.html">Pages</a></li>
+        <li><a href="/categories.html">Categories</a></li>
+        <li><a href="/tags.html">Tags</a></li>
+      </ul>
+    </div>
+    
+
+<div id="page">
+  <h1 class="emphnext">CoreOS</h1>
+  <ul class="tag_box inline">
+    
+    
+
+  
+    
+    	<li><a href="/tags.html#CoreOS-ref">CoreOS <span>1</span></a></li>
+    
+  
+
+
+
+  </ul>
+  
+<h1 id="安装">安装</h1>
+
+<h2 id="下载镜像">下载镜像</h2>
+<p>http://stable.release.core-os.net/amd64-usr/current/coreos_production_iso_image.iso</p>
+
+<h2 id="livecd">LiveCD</h2>
+
+<h2 id="sshd">sshd</h2>
+
+<pre><code>cd /etc/ssh
+mv sshd_config{,.bak}
+cat sshd_config.bak &gt; sshd_config
+vim sshd_config
+#...
+PermitRootLogin yes  #加入这一句
+systemctl restart sshd
+sudo passwd root
+</code></pre>
+
+<h2 id="cloud-configyaml">cloud-config.yaml</h2>
+
+<pre><code>#cloud-config
+hostname: coreos01
+coreos:
+        units:
+                - name: etcd2.service
+                  command: start
+                - name: fleet.service
+                  command: start
+        etcd2:
+          discovery: https://discovery.etcd.io/bfb9403e71057fc7d8dc1f48064dbe5b
+          advertise-client-urls: http://$private_ipv4:2379,http://$private_ipv4:4001
+          initial-advertise-peer-urls: http://$private_ipv4:2380
+          listen-client-urls: http://0.0.0.0:2379,http://0.0.0.0:4001
+          listen-peer-urls: http://$private_ipv4:2380,http://$private_ipv4:7001
+        fleet:
+          metadata: role=coreos01
+users:
+        - name: core
+          passwd: 295079529
+          ssh-authorized-keys:
+                - ssh-dss AAAAB3NzaC1kc3MAAACBAOa5RtATjQMxp7a9fnL6PeB5impl8pnsi2ZhlKrHzj5N80PVhntra+xGwnxsDFqBe7Y87MltP2yEGcUH/R5nsaDK6QOlXY/wHili4dmj3wl4qn7yORox/sRhhTNa1rT/XvdAu8trOb8jSU99xfFbuPSNkdgTLDNhpnDbZlhqjgk/AAAAFQCWHwTgRGJVyObt+3IxC328nMGCzQAAAIARHlP4/4AKYlCmBXYs6uqsM4cuqQaLcW6IpvhFSCXdw0zHYpRiu0IKY0BJwxhtdtRz8jGvTlqXfuqfvUy+zvLVqsS0SJlk2gVAGAlrCgC/W41VAiXmhv9y5fXAFC6IE2KRWNxw2dkBk1qwnYuKxyWUdR5VdRfJyFt8iMdBhORVUgAAAIAJ/+mD7KMQD3PADFyLRYwShexhHRwl1NDbvND+7KReozzSJEa+Kbz3z2/THFjh3ADr+CWEqizDJp3BRSK7Da+pS7i1y/hBlasTxQBxlVbi29YZKGLPesk9Qkxl0S1EeHKZKuv8fj7+A+1VY6xMiJF/uAb6hfur2cI7HIawXZ9HDg== yanpeipan@localhost
+        - groups:
+               - sudo
+                - docker
+</code></pre>
+
+<h2 id="coreos-install">coreos-install</h2>
+<p><code>bash -x /usr/bin/coreos-install -d /dev/sda -c cloud-config.yaml -b http://192.168.1.?/amd64-usr/</code></p>
+
+  <address class="signature">
+    <a class="author" href="/">Yan Peipan</a>
+    <span class="date">15 November 2016</span>
+    <span class="location"></span>
+  </address>
+  <div class="prev-next">
+    
+    <a href="/2017/01/07/reacct-native.html" class="next" title="Reacct Native">Next Post &rarr;</a>
+    
+    
+    <a href="/2015/06/17/xhprof.html" class="prev" title="xhprof">&larr; Earlier Post</a>
+    
+  </div>
+</div><!-- End Page -->
+
+
+
+
+    <div id="footer">
+      <address>
+        <span class="copyright">
+          Content by <a href="/sitemap.txt">Yan Peipan</a>.
+        </span>
+        <span class="engine">
+          Powered by <a href="http://github.com/mojombo/jekyll/" title="A static, minimalist CMS">Jekyll</a>
+        </span>
+      </address>
+    </div>
+  </div>
+  <!--[if IE 6]>
+  <script type="text/javascript">
+  /*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; }
+  var IE6UPDATE_OPTIONS = {
+  icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+
+
+</body>
+</html>
+

@@ -1,0 +1,710 @@
+I"f�
+<hr />
+
+<h1 id="mysql体系结构">MySQL体系结构</h1>
+
+<h2 id="什么是体系结构">什么是体系结构？</h2>
+
+<h2 id="mysql部件包括哪些">MySQL部件包括哪些？</h2>
+
+<ul>
+  <li>连接池组件</li>
+  <li>管理服务和工具组件</li>
+  <li>SQL接口组件</li>
+  <li>查询分析器组件</li>
+  <li>优化器组件</li>
+  <li>缓冲（Cache）组件</li>
+  <li>插件式存储引擎</li>
+  <li>物理文件</li>
+</ul>
+
+<h2 id="各个部件之间的执行顺序是什么">各个部件之间的执行顺序是什么？</h2>
+
+<hr />
+
+<h1 id="mysql存储引擎">MySQL存储引擎</h1>
+
+<h2 id="mysql常见的存储引擎有哪些">MySQL常见的存储引擎有哪些？</h2>
+
+<ul>
+  <li>innodb存储引擎：面向oltp(online transaction processing)、行锁、支持外键、非锁定读、默认采用repeaable级别（可重复读）通过next-keylocking策略避免幻读、插入缓冲、二次写、自适应哈希索引、预读</li>
+  <li>myisam存储引擎：不支持事务、表锁、全文索引、适合olap（在线分析处理），其中myd:放数据文件，myi:放索引文件</li>
+  <li>ndb存储引擎：集群存储引擎，share nothing，可提高可用性</li>
+  <li>memory存储引擎：数据存放在内存中，表锁，并发性能差，默认使用哈希索引</li>
+  <li>archive存储引擎：只支持insert和select zlib算法压缩1：10，适合存储归档数据如日志等、行锁</li>
+  <li>maria存储引擎：目的取代myisam、缓存数据和索引、行锁、mvcc</li>
+</ul>
+
+<h2 id="myisam和innodb有什么不同如何选择存储引擎">MyISAM和InnoDB有什么不同？如何选择存储引擎？</h2>
+
+<p><strong>MySQL存储引擎MyISAM与InnoDB的优劣</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">×</th>
+      <th style="text-align: left">MyISAM</th>
+      <th style="text-align: left">InnoDB</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">存储结构</td>
+      <td style="text-align: left">每张表被存放在三个文件：frm-表格定义MYD(MYData)-数据文件MYI(MYIndex)-索引文件</td>
+      <td style="text-align: left">所有的表都保存在同一个数据文件中（也可能是多个文件，或者是独立的表空间文件），InnoDB表的大小只受限于操作系统文件的大小，一般为2GB</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">存储空间</td>
+      <td style="text-align: left">MyISAM可被压缩，存储空间较小</td>
+      <td style="text-align: left">InnoDB的表需要更多的内存和存储，它会在主内存中建立其专用的缓冲池用于高速缓冲数据和索引</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">可移植性、备份及恢复</td>
+      <td style="text-align: left">由于MyISAM的数据是以文件的形式存储，所以在跨平台的数据转移中会很方便。在备份和恢复时可单独针对某个表进行操作</td>
+      <td style="text-align: left">免费的方案可以是拷贝数据文件、备份 binlog，或者用 mysqldump，在数据量达到几十G的时候就相对痛苦了</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">事务安全</td>
+      <td style="text-align: left">不支持</td>
+      <td style="text-align: left">每次查询具有原子性 支持 具有事务(commit)、回滚(rollback)和崩溃修复能力(crash recovery capabilities)的事务安全(transaction-safe (ACID compliant))型表</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">AUTO_INCREMENT</td>
+      <td style="text-align: left">MyISAM表可以和其他字段一起建立联合索引</td>
+      <td style="text-align: left">InnoDB中必须包含只有该字段的索引</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">SELECT</td>
+      <td style="text-align: left">MyISAM更优</td>
+      <td style="text-align: left"> </td>
+    </tr>
+    <tr>
+      <td style="text-align: left">INSERT</td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">InnoDB更优</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">UPDATE</td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">InnoDB更优</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">DELETE</td>
+      <td style="text-align: left"> </td>
+      <td style="text-align: left">InnoDB更优 它不会重新建立表，而是一行一行的删除</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">COUNT without WHERE</td>
+      <td style="text-align: left">MyISAM更优。因为MyISAM保存了表的具体行数</td>
+      <td style="text-align: left">InnoDB没有保存表的具体行数，需要逐行扫描统计，就很慢了</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">COUNT with WHERE</td>
+      <td style="text-align: left">一样</td>
+      <td style="text-align: left">一样，InnoDB也会锁表</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">锁</td>
+      <td style="text-align: left">只支持表锁</td>
+      <td style="text-align: left">支持表锁、行锁 行锁大幅度提高了多用户并发操作的新能。但是InnoDB的行锁，只是在WHERE的主键是有效的，非主键的WHERE都会锁全表的</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">外键</td>
+      <td style="text-align: left">不支持</td>
+      <td style="text-align: left">支持</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">FULLTEXT全文索引</td>
+      <td style="text-align: left">支持</td>
+      <td style="text-align: left">不支持 可以通过使用Sphinx从InnoDB中获得全文索引，会慢一点</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>InnoDB 还是 MyISAM?</strong></p>
+
+<ul>
+  <li>你的数据库有外键吗？</li>
+  <li>你需要事务支持吗？</li>
+  <li>你需要全文索引吗？</li>
+  <li>你经常使用什么样的查询模式？</li>
+  <li>你的数据有多大？</li>
+</ul>
+
+<blockquote>
+  <p>如果你需要事务处理或是外键，那么InnoDB 可能是比较好的方式。如果你需要全文索引，那么通常来说 MyISAM是好的选择，因为这是系统内建的，然而，我们其实并不会经常地去测试两百万行记录。所以，就算是慢一点，我们可以通过使用Sphinx从InnoDB中获得全文索引。</p>
+</blockquote>
+
+<blockquote>
+  <p>数据的大小，是一个影响你选择什么样存储引擎的重要因素，大尺寸的数据集趋向于选择InnoDB方式，因为其支持事务处理和故障恢复。数据库的在小决定了故障恢复的时间长短，InnoDB可以利用事务日志进行数据恢复，这会比较快。而MyISAM可能会需要几个小时甚至几天来干这些事，InnoDB只需要几分钟。</p>
+</blockquote>
+
+<blockquote>
+  <p>操作数据库表的习惯可能也会是一个对性能影响很大的因素。比如： COUNT() 在 MyISAM 表中会非常快，而在InnoDB 表下可能会很痛苦。而主键查询则在InnoDB下会相当相当的快，但需要小心的是如果我们的主键太长了也会导致性能问题。大批的inserts 语句在MyISAM下会快一些，但是updates 在InnoDB 下会更快一些——尤其在并发量大的时候。</p>
+</blockquote>
+
+<blockquote>
+  <p>根据经验来看，如果是一些小型的应用或项目，那么MyISAM 也许会更适合。当然，在大型的环境下使用MyISAM 也会有很大成功的时候，但却不总是这样的。如果你正在计划使用一个超大数据量的项目，而且需要事务处理或外键支持，那么你真的应该直接使用InnoDB方式。但需要记住InnoDB 的表需要更多的内存和存储，转换100GB 的MyISAM 表到InnoDB 表可能会让你有非常坏的体验。</p>
+</blockquote>
+
+<h2 id="存储时间类型字段用int还是datetime类型为什么">存储时间类型字段用int还是datetime类型？为什么？</h2>
+
+<p><strong>int</strong></p>
+
+<ol>
+  <li>占用4个字节</li>
+  <li>建立索引之后，查询速度快</li>
+  <li>条件范围搜索可以使用使用between</li>
+  <li>不能使用mysql提供的时间函数</li>
+</ol>
+
+<p>结论：适合需要进行大量时间范围查询的数据表</p>
+
+<p><strong>datetime</strong></p>
+
+<ol>
+  <li>占用8个字节</li>
+  <li>允许为空值，可以自定义值，系统不会自动修改其值。</li>
+  <li>实际格式储存（Just stores what you have stored and retrieves the same thing which you have stored.）</li>
+  <li>与时区无关（It has nothing to deal with the TIMEZONE and Conversion.）</li>
+  <li>不可以设定默认值，所以在不允许为空值的情况下，必须手动指定datetime字段的值才可以成功插入数据。</li>
+  <li>可以在指定datetime字段的值的时候使用now()变量来自动插入系统的当前时间。</li>
+</ol>
+
+<p>结论：datetime类型适合用来记录数据的原始的创建时间，因为无论你怎么更改记录中其他字段的值，datetime字段的值都不会改变，除非你手动更改它。</p>
+
+<p><strong>timestamp</strong></p>
+
+<ol>
+  <li>占用4个字节</li>
+  <li>允许为空值，但是不可以自定义值，所以为空值时没有任何意义。</li>
+  <li>TIMESTAMP值不能早于1970或晚于2037。这说明一个日期，例如’1968-01-01’，虽然对于DATETIME或DATE值是有效的，但对于TIMESTAMP值却无效，如果分配给这样一个对象将被转换为0。
+4.值以UTC格式保存（ it stores the number of milliseconds）
+5.时区转化 ，存储时对当前的时区进行转换，检索时再转换回当前的时区。</li>
+  <li>默认值为CURRENT_TIMESTAMP()，其实也就是当前的系统时间。</li>
+  <li>数据库会自动修改其值，所以在插入记录时不需要指定timestamp字段的名称和timestamp字段的值，你只需要在设计表的时候添加一个timestamp字段即可，插入后该字段的值会自动变为当前系统时间。</li>
+  <li>以后任何时间修改表中的记录时，对应记录的timestamp值会自动被更新为当前的系统时间。</li>
+</ol>
+
+<p>结论：timestamp类型适合用来记录数据的最后修改时间，因为只要你更改了记录中其他字段的值，timestamp字段的值都会被自动更新。</p>
+
+<h2 id="如果是字符串类型字段选char好还是选varchar好为什么">如果是字符串类型，字段选char好还是选varchar好？为什么？</h2>
+
+<blockquote>
+  <p>CHAR和VARCHAR类型声明的长度表示你想要保存的最大字符数。</p>
+</blockquote>
+
+<ul>
+  <li>CHAR列的长度固定为创建表时声明的长度。长度可以为从0到255的任何值。当保存CHAR值时，在它们的右边填充空格以达到指定的长度。当检索到CHAR值时，尾部的空格被删除掉。在存储或检索过程中不进行大小写转换。</li>
+  <li>VARCHAR列中的值为可变长字符串。长度可以指定为0到65,535之间的值。(VARCHAR的最大有效长度由最大行大小和使用的字符集确定。整体最大长度是65,532字节）。
+同CHAR对比，VARCHAR值保存时只保存需要的字符数，另加一个字节来记录长度(如果列声明的长度超过255，则使用两个字节)。</li>
+  <li>VARCHAR值保存时不进行填充。当值保存和检索时尾部的空格仍保留，符合标准SQL。
+如果分配给CHAR或VARCHAR列的值超过列的最大长度，则对值进行裁剪以使其适合。如果被裁掉的字符不是空格，则会产生一条警告。如果裁剪非空格字符，则会造成错误(而不是警告)并通过使用严格SQL模式禁用值的插入。参见5.3.2节，“SQL服务器模式”。</li>
+</ul>
+
+<h2 id="枚举类型应用在什么场景下有什么缺陷">枚举类型应用在什么场景下？有什么缺陷？</h2>
+
+<p><strong>布尔类型</strong></p>
+
+<p>MySQL数据库产品没有真正实现对布尔类型的支持，建议大家不要使用MySQL布尔类型BOOL或布尔类型BOOLEAN，而是使用数据库类型微整型TINYINT替代。</p>
+
+<p><strong>枚举类型</strong></p>
+
+<ul>
+  <li>MySQL枚举类型的枚举元素允许最大65535个</li>
+  <li>引入枚举类型数据存储，有利于缩减数据库存储数据的容量，尤其能达到减少数据库瓶颈最大的物理IO，逻辑IO也能减小，提高主机的处理能力；</li>
+  <li>引入枚举类型数据存储，有利于简化工程师的代码复杂度、工作量，增加代码的可读性和可维护性；</li>
+  <li>可以通过枚举类型元素值访问数据，也可以根据枚举类型元素编号进行访问数据；</li>
+</ul>
+
+<p>缺点：</p>
+
+<ul>
+  <li>MySQL数据库枚举类型的引入，可能给软件程序的版本发布，存在遗忘数据库结构变更的隐患；</li>
+  <li>MySQL数据库枚举类型字段的元素增加，必须以尾部追加的方式，否则影响数据库提供数据服务；</li>
+  <li>枚举类型字段不再需要的元素，也不能进行删除，否则影响数据库提供数据服务；</li>
+  <li>MySQL数据库枚举类型的字段定义属性元素值，不能随意调整其顺序，否则影响数据库提供数据服务；</li>
+</ul>
+
+<blockquote>
+  <p>MySQL数据库枚举类型是一种有应用场景广泛的数据类型，若是抛开网站程序或软件版本发布，可能会导致开发工程师与数据库维护人员之间没有配合好的问题，非常推荐大家把枚举类型引入到生产环境的数据库应用中，对企业而言也可以起到节省人力、物理等成本。建议大家使用枚举类型的时候，尽量把可能需要用到的枚举元素，都写到MySQL数据库表字段的定义属性中，减少出现漏做DDL变更的故障。</p>
+</blockquote>
+
+<p><strong>集合类型</strong></p>
+
+<ul>
+  <li>数据库的数据存储容量相应缩小，利于减少数据操纵的逻辑IO和物理IO；</li>
+  <li>集合类型的数据读取方便，可根据字符串值，也可以根据字符串集合的顺序编号；</li>
+  <li>集合类型字段的定义属性维护与其他数据类型类似，并不特殊化；</li>
+  <li>开发工程师，不需要借助额外的集合元素编码表或程序中使用编号替代集合的字符串元素，达到减少开发成本、提高代码的可读性和可维护性；</li>
+</ul>
+
+<p>缺点：</p>
+
+<ul>
+  <li>集合类型字段的集合元素限制最大为64个；</li>
+  <li>集合类型字段的定义属性的集合元素，删除导致锁表而影响数据服务提供；</li>
+  <li>集合类型字段的定义属性的集合元素增加，只能以尾部追加的方式，若是此特性没有掌握，则会导致数据服务提供受影响；</li>
+</ul>
+
+<p>人才招聘网站的用户，设置工作意向城市一项，则往往会选择1-3个城市，甚至更多城市，采用集合类型字段作为数据存储结果的话，将可以大量简化程序复杂度，以及大规模降低数据存储的容量，唯一的遗憾则是集合元素限制为64个，会导致无法满足招聘网站后期业务发展需要。</p>
+
+<h2 id="表锁和行锁的优缺点">表锁和行锁的优缺点？</h2>
+
+<p>MySQL有三种锁的级别：页级、表级、行级。</p>
+
+<ul>
+  <li>MyISAM和MEMORY存储引擎采用的是表级锁（table-level locking）；</li>
+  <li>BDB存储引擎采用的是页面锁（page-level locking），但也支持表级锁；</li>
+  <li>
+    <p>InnoDB存储引擎既支持行级锁（row-level locking），也支持表级锁，但默认情况下是采用行级锁。</p>
+  </li>
+  <li>表级锁：开销小，加锁快；不会出现死锁；锁定粒度大，发生锁冲突的概率最高,并发度最低。</li>
+  <li>行级锁：开销大，加锁慢；会出现死锁；锁定粒度最小，发生锁冲突的概率最低,并发度也最高。</li>
+  <li>页面锁：开销和加锁时间界于表锁和行锁之间；会出现死锁；锁定粒度界于表锁和行锁之间，并发度一般。</li>
+</ul>
+
+<p>MySQL的表级锁有两种模式：表共享读锁（Table Read Lock）和表独占写锁（Table Write
+Lock）。MyISAM在执行查询语句（SELECT）前，会自动给涉及的所有表加读锁，在执行更新操作（UPDATE、DELETE、INSERT等）前，会自动给涉及的表加写锁。
+所以对MyISAM表进行操作，会有以下情况：</p>
+
+<ul>
+  <li>对MyISAM表的读操作（加读锁），不会阻塞其他进程对同一表的读请求，但会阻塞对同一表的写请求。只有当读锁释放后，才会执行其它进程的写操作。</li>
+  <li>对MyISAM表的写操作（加写锁），会阻塞其他进程对同一表的读和写操作，只有当写锁释放后，才会执行其它进程的读写操作。</li>
+</ul>
+
+<p>原则上数据表有一个读锁时，其它进程无法对此表进行更新操作，但在一定条件下，MyISAM表也支持读取和插入操作的并发进行。MyISAM存储引擎有一个系统变量concurrent_insert，专门用以控制其并发插入的行为，其值分别可以为0、1或2</p>
+
+<ul>
+  <li>当concurrent_insert设置为0时，不允许并发插入。</li>
+  <li>当concurrent_insert设置为1时，如果MyISAM表中没有空洞（即表的中间没有被删除的行），MyISAM允许在一个进程读表的同时，另一个进程从表尾插入记录。这也是MySQL的默认设置。</li>
+  <li>当concurrent_insert设置为2时，无论MyISAM表中有没有空洞，都允许在表尾并发插入记录。</li>
+</ul>
+
+<p>由于MySQL认为写请求一般比读请求要重要，所以如果有读写请求同时进行的话，MYSQL将会优先执行写操作。这样MyISAM表在进行大量的更新操作时（特别是更新的字段中存在索引的情况下），会造成查询操作很难获得读锁，从而导致查询阻塞。</p>
+
+<ul>
+  <li>通过指定启动参数low-priority-updates，使MyISAM引擎默认给予读请求以优先的权利。</li>
+  <li>通过执行命令SET LOW_PRIORITY_UPDATES=1，使该连接发出的更新请求优先级降低。</li>
+  <li>通过指定INSERT、UPDATE、DELETE语句的LOW_PRIORITY属性，降低该语句的优先级。</li>
+</ul>
+
+<h2 id="当数据库的表有锁的时候此时有插入数据的操作是直接插入还是等待解锁后插入">当数据库的表有锁的时候，此时有插入数据的操作，是直接插入还是等待解锁后插入？</h2>
+
+<h2 id="事务一般应用在哪些场景下">事务一般应用在哪些场景下？</h2>
+
+<ul>
+  <li>原子性，是一个不可分割的逻辑单元，一组sql语句，要么都执行，要么都不执行。</li>
+  <li>隔离性，事务中的执行过程是不可见的。</li>
+  <li>持久性，事务一旦提交，就不可撤销。</li>
+  <li>一致性，事务在发生之前和发生之后，数据是一致。(能量守恒)</li>
+</ul>
+
+<h2 id="php如何调用mysql的事务">PHP如何调用MySQL的事务？</h2>
+
+<h2 id="如果事务出现脏读或者幻读如何解决">如果事务出现脏读或者幻读，如何解决？</h2>
+
+<p>MySQL InnoDB事务的隔离级别有四级，默认是“可重复读”（REPEATABLE READ）。</p>
+
+<ul>
+  <li>未提交读（READUNCOMMITTED）。另一个事务修改了数据，但尚未提交，而本事务中的SELECT会读到这些未被提交的数据（脏读）。</li>
+  <li>提交读（READCOMMITTED）。本事务读取到的是最新的数据（其他事务提交后的）。问题是，在同一个事务里，前后两次相同的SELECT会读到不同的结果（不重复读）。</li>
+  <li>可重复读（REPEATABLEREAD）。在同一个事务里，SELECT的结果是事务开始时时间点的状态，因此，同样的SELECT操作读到的结果会是一致的。但是，会有幻读现象（稍后解释）。</li>
+  <li>串行化（SERIALIZABLE）。读操作会隐式获取共享锁，可以保证不同事务间的互斥。</li>
+</ul>
+
+<p>四个级别逐渐增强，每个级别解决一个问题。</p>
+
+<ul>
+  <li>脏读 最容易理解。另一个事务修改了数据，但尚未提交，而本事务中的SELECT会读到这些未被提交的数据。</li>
+  <li>不重复读。解决了脏读后，会遇到，同一个事务执行过程中，另外一个事务提交了新数据，因此本事务先后两次读到的数据结果会不一致。</li>
+  <li>幻读 解决了不重复读，保证了同一个事务里，查询的结果都是事务开始时的状态（一致性）。但是，如果另一个事务同时提交了新数据，本事务再更新时，就会“惊奇的”发现了这些新数据，貌似之前读到的数据是“鬼影”一样的幻觉。</li>
+</ul>
+
+<hr />
+
+<h1 id="mysql驱动与api">MySQL驱动与API</h1>
+
+<h2 id="mysql的驱动是php_mysqlso或php_mysqldll吗">MySQL的驱动是php_mysql.so或php_mysql.dll吗？</h2>
+
+<h2 id="如何选择一个驱动后来又想换一个驱动怎么办">如何选择一个驱动，后来又想换一个驱动怎么办？</h2>
+
+<p>可以通过ORM 工具做到，Propel 和 Doctrine。或者数据库框架，<a href="https://github.com/catfan/Medoo">Medoo</a></p>
+
+<h2 id="php的mysql-api有几种他们各有什么优缺点">PHP的MySQL API有几种？他们各有什么优缺点？</h2>
+
+<p>The PHP MySQL extensions are lightweight wrappers on top of a C client library. There are 3 PHP MySQL extensions:</p>
+
+<ul>
+  <li>ext/mysql (not recommended)</li>
+  <li>ext/mysqli</li>
+  <li>PDO_MySQL</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">~</th>
+      <th style="text-align: left">PDO</th>
+      <th style="text-align: left">MySQLi</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Database support</td>
+      <td style="text-align: left">12 different drivers</td>
+      <td style="text-align: left">MySQL only</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">API</td>
+      <td style="text-align: left">OOP</td>
+      <td style="text-align: left">OOP + procedural</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Connection</td>
+      <td style="text-align: left">Easy</td>
+      <td style="text-align: left">Easy</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Named parameters</td>
+      <td style="text-align: left">Yes</td>
+      <td style="text-align: left">No</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Object mapping</td>
+      <td style="text-align: left">Yes</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Prepared statements (client side)</td>
+      <td style="text-align: left">Yes</td>
+      <td style="text-align: left">No</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Performance</td>
+      <td style="text-align: left">Fast</td>
+      <td style="text-align: left">Fast</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Stored procedures</td>
+      <td style="text-align: left">Yes</td>
+      <td style="text-align: left">Yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>普通的mysql连接肯定是会被抛弃的 因为每次都要防止sql注入的问题 而且相对来说比较慢<br />
+mysqli是在普通mysql的基础上做的一次优化 说实话 很成功 预处理方式完全解决了sql注入的问题，但是唯一的不足点 就是只支持mysql数据库 当然 如果你要是不操作其他的数据库或者 当然这无疑是最好的选择 <br />
+PDO则是最新出来的一种 连接方式 兼容大部分数据库 也解决了sql注入 但是也有缺点 它只支持php5以上的版本 不过听说在未来的php6中 只支持这种连接</p>
+
+<h2 id="如果有多条sql语句要一起执行怎么办">如果有多条SQL语句要一起执行，怎么办？</h2>
+
+<ul>
+  <li>在MySQL的连接字符串中设置allowMultiQueries参数置为true</li>
+  <li>PDO在默认情况下参数绑定在php客户端进行，是不允许多语句的，需要<code>$db-&gt;setAttribute(PDO::ATTR_EMULATE_PREPARES, 0);</code></li>
+</ul>
+
+<h2 id="如何防止sql语句注入">如何防止SQL语句注入？</h2>
+
+<ul>
+  <li>prepareStatement + Bind-variable</li>
+  <li>使用应用程序提供的转换函数 <code>mysql_real_escape_string</code></li>
+</ul>
+
+<hr />
+
+<h1 id="mysql索引">MySQL索引</h1>
+
+<h2 id="索引有哪些">索引有哪些？</h2>
+
+<ul>
+  <li>B-Tree索引 (普通索引， 唯一索引， 主键索引)</li>
+  <li>Hash索引</li>
+  <li>全文索引</li>
+</ul>
+
+<h2 id="如何选择索引">如何选择索引？</h2>
+
+<h2 id="怎么创建全文索引">怎么创建全文索引？</h2>
+
+<h2 id="innodb引擎上可以创建全文索引吗">InnoDB引擎上可以创建全文索引吗？</h2>
+
+<p>MySQL 5.6.4里才添加了InnoDB引擎的Full-Text索引支持。<br />
+推荐用Lucene（ElasticSearch比较容易部署）或Sphinx这样的第三方解决方案。</p>
+
+<h2 id="什么是最左前缀原则应用在什么索引上">什么是最左前缀原则？应用在什么索引上？</h2>
+
+<blockquote>
+  <p>最左前缀匹配原则，非常重要的原则，mysql会一直向右匹配直到遇到范围查询(&gt;、&lt;、between、like)就停止匹配，比如a = 1 and b = 2 and c &gt; 3 and d = 4 如果建立(a,b,c,d)顺序的索引，d是用不到索引的，如果建立(a,b,d,c)的索引则都可以用到，a,b,d的顺序可以任意调整。</p>
+</blockquote>
+
+<h2 id="索引是怎么实现的">索引是怎么实现的？</h2>
+
+<blockquote>
+  <p>索引（Index）是帮助MySQL高效获取数据的数据结构。</p>
+</blockquote>
+
+<blockquote>
+  <p>目前大部分数据库系统及文件系统都采用B-Tree或其变种B+Tree作为索引结构</p>
+</blockquote>
+
+<hr />
+
+<h1 id="sql语句优化">SQL语句优化</h1>
+
+<h2 id="sql语句执行的逻辑顺序是怎样的">SQL语句执行的逻辑顺序是怎样的？</h2>
+
+<ul>
+  <li>语法分析，分析语句的语法是否符合规范，衡量语句中各表达式的意义。</li>
+  <li>语义分析，检查语句中涉及的所有数据库对象是否存在，且用户有相应的权限。</li>
+  <li>视图转换，将涉及视图的查询语句转换为相应的对基表查询语句。</li>
+  <li>表达式转换， 将复杂的 SQL 表达式转换为较简单的等效连接表达式。</li>
+  <li>选择优化器，不同的优化器一般产生不同的“执行计划”</li>
+  <li>选择连接方式， ORACLE 有三种连接方式，对多表连接 ORACLE 可选择适当的连接方式。</li>
+  <li>选择连接顺序， 对多表连接 ORACLE 选择哪一对表先连接，选择这两表中哪个表做为源数据表。</li>
+  <li>选择数据的搜索路径，根据以上条件选择合适的数据搜索路径，如是选用全表搜索还是利用索引或是其他的方式。</li>
+  <li>运行“执行计划”。</li>
+</ul>
+
+<h2 id="如何判断sql语句执行的效率">如何判断SQL语句执行的效率</h2>
+
+<p><code>explain</code>输出解释</p>
+
+<pre><code>+----+-------------+-------+-------+-------------------+---------+---------+-------+------+-------+
+| id | select_type | table | type  | possible_keys     | key     | key_len | ref   | rows | Extra |
++----+-------------+-------+-------+-------------------+---------+---------+-------+------+-------+
+</code></pre>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Column</th>
+      <th style="text-align: left">Meaning</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">id</td>
+      <td style="text-align: left">The SELECT identifier</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">select_type</td>
+      <td style="text-align: left">The SELECT type</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">table</td>
+      <td style="text-align: left">The table for the output row</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">type</td>
+      <td style="text-align: left">The join type</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">possible_keys</td>
+      <td style="text-align: left">The possible indexes to choose</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">key</td>
+      <td style="text-align: left">The index actually chosen</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">key_len</td>
+      <td style="text-align: left">The length of the chosen key</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">ref</td>
+      <td style="text-align: left">The columns compared to the index</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">rows</td>
+      <td style="text-align: left">Estimate of rows to be examined</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Extra</td>
+      <td style="text-align: left">Additional information</td>
+    </tr>
+  </tbody>
+</table>
+
+<ol>
+  <li>id select标识,SQL从大到小的执行.</li>
+  <li>select_type 就是select类型,可以有以下几种
+    <ul>
+      <li>SIMPLE 简单SELECT(不使用UNION或子查询)</li>
+      <li>PRIMARY 最外面的</li>
+      <li>UNION UNION中的第二个或后面的SELECT语句</li>
+      <li>DEPENDENT UNION UNION中的第二个或后面的SELECT语句，取决于外面的查询</li>
+      <li>UNION RESULT UNION的结果</li>
+      <li>SUBQUERY 子查询中的第一个</li>
+      <li>DEPENDENT SUBQUERY 子查询中的第一个SELECT，取决于外面的查询</li>
+      <li>DERIVED 导出表的SELECT(FROM子句的子查询)</li>
+    </ul>
+  </li>
+  <li>talbe 表明这一行涉及了哪张表，也可能是一下的值：
+    <ul>
+      <li>&lt;unionM,N&gt;: The row refers to the union of the rows with id values of M and N.</li>
+      <li>&lt;derivedN&gt;: The row refers to the derived table result for the row with an id value of N. A derived table may result, for example, from a subquery in the FROM clause.</li>
+    </ul>
+  </li>
+  <li>type 联接类型。下面给出各种联接类型，按照从最佳类型到最坏类型进行排序：
+    <ul>
+      <li>system 表仅有一行(=系统表)。这是const联接类型的一个特例。</li>
+      <li>const 表最多有一个匹配行，它将在查询开始时被读取。因为仅有一行，在这行的列值可被优化器剩余部分认为是常数。const表很快，因为它们只读取一次！
+const用于用常数值比较PRIMARY KEY或UNIQUE索引的所有部分时。</li>
+      <li>eq_ref 对于每个来自于前面的表的行组合，从该表中读取一行。这可能是最好的联接类型，除了const类型。它用在一个索引的所有部分被联接使用并且索引是UNIQUE或PRIMARY KEY。
+eq_ref可以用于使用= 操作符比较的带索引的列。比较值可以为常量或一个使用在该表前面所读取的表的列的表达式。</li>
+      <li>ref 对于每个来自于前面的表的行组合，所有有匹配索引值的行将从这张表中读取。如果联接只使用键的最左边的前缀，或如果键不是UNIQUE或PRIMARY KEY（换句话说，如果联接不能基于关键字选择单个行的话），则使用ref。如果使用的键仅仅匹配少量行，该联接类型是不错的。ref可以用于使用=或&lt;=&gt;操作符的带索引的列。</li>
+      <li>ref_or_null 该联接类型如同ref，但是添加了MySQL可以专门搜索包含NULL值的行。在解决子查询中经常使用该联接类型的优化。</li>
+      <li>index_merge 该联接类型表示使用了索引合并优化方法。在这种情况下，key列包含了使用的索引的清单，key_len包含了使用的索引的最长的关键元素。</li>
+      <li>unique_subquery 该类型替换了下面形式的IN子查询的ref： value IN (SELECT primary_key FROM single_table WHERE some_expr) unique_subquery是一个索引查找函数，可以完全替换子查询，效率更高。</li>
+      <li>index_subquery 该联接类型类似于unique_subquery。可以替换IN子查询，但只适合下列形式的子查询中的非唯一索引：value IN (SELECT key_column FROM single_table WHERE some_expr)</li>
+      <li>range 只检索给定范围的行，使用一个索引来选择行。key列显示使用了哪个索引。key_len包含所使用索引的最长关键元素。在该类型中ref列为NULL。当使用=、&lt;&gt;、&gt;、&gt;=、&lt;、&lt;=、IS NULL、&lt;=&gt;、BETWEEN或者IN操作符，用常量比较关键字列时，可以使用range：SELECT * FROM tbl_name WHERE key_column = 10;SELECT * FROM tbl_name WHERE key_column BETWEEN 10 and 20; SELECT * FROM tbl_name WHERE key_column IN (10,20,30); SELECT * FROM tbl_name WHERE key_part1= 10 AND key_part2 IN (10,20,30);</li>
+      <li>index 该联接类型与ALL相同，除了只有索引树被扫描。这通常比ALL快，因为索引文件通常比数据文件小。当查询只使用作为单索引一部分的列时，MySQL可以使用该联接类型。</li>
+      <li>ALL 对于每个来自于先前的表的行组合，进行完整的表扫描。如果表是第一个没标记const的表，这通常不好，并且通常在它情况下很差。通常可以增加更多的索引而不要使用ALL，使得行能基于前面的表中的常数值或列值被检索出。</li>
+    </ul>
+  </li>
+  <li>possible_keys列指出MySQL能使用哪个索引在该表中找到行。注意，该列完全独立于EXPLAIN输出所示的表的次序。这意味着在possible_keys中的某些键实际上不能按生成的表次序使用。</li>
+  <li>key列显示MySQL实际决定使用的键（索引）。如果没有选择索引，键是NULL。要想强制MySQL使用或忽视possible_keys列中的索引，在查询中使用FORCE INDEX、USE INDEX或者IGNORE INDEX。对于MyISAM和BDB表，运行ANALYZE TABLE可以帮助优化器选择更好的索引。对于MyISAM表，可以使用myisamchk –analyze。</li>
+  <li>key_len列显示MySQL决定使用的键长度。如果键是NULL，则长度为NULL。注意通过key_len值我们可以确定MySQL将实际使用一个多部关键字的几个部分。</li>
+  <li>ref列显示使用哪个列或常数与key一起从表中选择行。</li>
+  <li>rows列显示MySQL认为它执行查询时必须检查的行数。</li>
+  <li>Extra 列包含MySQL解决查询的详细信息。下面解释了该列可以显示的不同的文本字符串：
+    <ul>
+      <li>Distinct MySQL发现第1个匹配行后，停止为当前的行组合搜索更多的行。</li>
+      <li>Not exists MySQL能够对查询进行LEFT JOIN优化，发现1个匹配LEFT JOIN标准的行后，不再为前面的的行组合在该表内检查更多的行。</li>
+      <li>range checked for each record (index map: #) MySQL没有发现好的可以使用的索引，但发现如果来自前面的表的列值已知，可能部分索引可以使用。对前面的表的每个行组合，MySQL检查是否可以使用range或index_merge访问方法来索取行</li>
+      <li>Using filesort MySQL需要额外的一次传递，以找出如何按排序顺序检索行。通过根据联接类型浏览所有行并为所有匹配WHERE子句的行保存排序关键字和行的指针来完成排序。然后关键字被排序，并按排序顺序检索行。</li>
+      <li>Using index 从只使用索引树中的信息而不需要进一步搜索读取实际的行来检索表中的列信息。当查询只使用作为单一索引一部分的列时，可以使用该策略。</li>
+      <li>Using temporary 为了解决查询，MySQL需要创建一个临时表来容纳结果。典型情况如查询包含可以按不同情况列出列的GROUP BY和ORDER BY子句时。</li>
+      <li>Using where WHERE子句用于限制哪一个行匹配下一个表或发送到客户。除非你专门从表中索取或检查所有行，如果Extra值不为Using where并且表联接类型为ALL或index，查询可能会有一些错误。</li>
+      <li>Using sort_union(…), Using union(…), Using intersect(…)这些函数说明如何为index_merge联接类型合并索引扫描。</li>
+      <li>Using index for group-by 类似于访问表的Using index方式，Using index for group-by表示MySQL发现了一个索引，可以用来查询GROUP BY或DISTINCT查询的所有列，而不要额外搜索硬盘访问实际的表。并且，按最有效的方式使用索引，以便对于每个组，只读取少量索引条目。</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="sql语句优化的原则是什么">SQL语句优化的原则是什么？</h2>
+
+<ol>
+  <li>减少 IO 次数
+IO永远是数据库最容易瓶颈的地方，这是由数据库的职责所决定的，大部分数据库操作中超过90%的时间都是 IO 操作所占用的，减少 IO 次数是 SQL 优化中需要第一优先考虑，当然，也是收效最明显的优化手段。</li>
+  <li>降低 CPU 计算
+除了 IO 瓶颈之外，SQL优化中需要考虑的就是 CPU 运算量的优化了。order by, group by,distinct … 都是消耗 CPU 的大户（这些操作基本上都是 CPU 处理内存中的数据比较运算）。当我们的 IO 优化做到一定阶段之后，降低 CPU 计算也就成为了我们 SQL 优化的重要目标</li>
+</ol>
+
+<h2 id="select--的方式到底好不好为什么">select * 的方式到底好不好？为什么?</h2>
+
+<p>从数据库里读出越多的数据，那么查询就会变得越慢。并且，如果你的数据库服务器和WEB服务器是两台独立的服务器的话，这还会增加网络传输的负载。</p>
+
+<h2 id="当一条sql语句要选择出所有的男性成员的时候怎么才能快速的差出来">当一条SQL语句要选择出所有的男性成员的时候怎么才能快速的差出来？</h2>
+
+<p>性别字段加索引</p>
+
+<h2 id="limit-1000010这样的语句查询起来可能会很慢该怎么优化才能快速的差出来呢">limit 10000,10这样的语句查询起来可能会很慢，该怎么优化才能快速的差出来呢？</h2>
+
+<ol>
+  <li>对于数据量较大数据表，可以建立主键和索引字段建立索引表，通过索引表查询相应的主键，在通过主键查询数据量的数据表；</li>
+  <li>如果对于有where 条件，又想走索引用limit的，必须设计一个索引，将where 放第一位，limit用到的主键放第2位，而且只能select 主键！这样能提高读取速度</li>
+  <li>利用in：先通过where条件取得相应的主键值，然后利用主键值查询相应的字段值。</li>
+</ol>
+
+<h2 id="估计查询性能">估计查询性能</h2>
+
+<p>在大多数情况下，可以通过计算磁盘搜索来估计性能。对小的表，通常能在1次磁盘搜索中找到行(因为索引可能被缓存)。对更大的表，可以使用B－树索引进行估计，将需要log(row_count)/log(index_block_length/3 * 2/(index_length + data_pointer_length))+1次搜索才能找到行。
+在MySQL中，索引块通常是1024个字节，数据指针通常是4个字节，这对于有一个长度为3(中等整数)的索引的500,000行的表，通过公式可以计算出log(500,000)/log(1024/3*2/(3+4))+1= 4次搜索。
+上面的索引需要大约500,000 * 7 * 3/2 = 5.2MB，(假设典型情况下索引缓存区填充率为2/3)，可以将大部分索引保存在内存中，仅需要1-2调用从OS读数据来找出行。
+然而对于写，将需要4次搜索请求(如上)来找到在哪儿存放新索引，并且通常需要2次搜索来更新这个索引并且写入行。
+注意，上述讨论并不意味着应用程序的性能将缓慢地以logN 退化！当表格变得更大时，所有内容缓存到OS或SQL服务器后，将仅仅或多或少地更慢。在数据变得太大不能缓存后，将逐渐变得更慢，直到应用程序只能进行磁盘搜索(以logN增加)。为了避免这个问题，随数据增加而增加 键高速缓冲区大小。对于MyISAM表, 由key_buffer_size系统变量控制 键高速缓冲区大小</p>
+
+<hr />
+
+<h1 id="mysql分表">MySQL分表</h1>
+
+<h2 id="垂直拆分和水平拆分分别应用到什么场景下">垂直拆分和水平拆分分别应用到什么场景下？</h2>
+
+<blockquote>
+  <p>垂直切分的最大特点就是规则简单，实施也更为方便，尤其适合各业务之间的耦合度非常低，相互影响很小，业务逻辑非常清晰的系统。在这种系统中，可以很容易做到将不同业务模块所使用的表分拆到不同的数据库中。根据不同的表来进行拆分，对应用程序的影响也更小，拆分规则也会比较简单清晰。（这也就是所谓的”share nothing”）。</p>
+</blockquote>
+
+<blockquote>
+  <p>垂直切分后，需要对shard内表格的数据量和增速进一步分析，以确定是否需要进行水平切分。</p>
+</blockquote>
+
+<h2 id="如何设置水平拆分的hash算法">如何设置水平拆分的hash算法？</h2>
+
+<ol>
+  <li>Range拆分
+sharding key按连续区间段路由，一般用在有严格自增ID需求的场景上，如Userid, Userid Range的小例子：以userid 3000W 为Range进行拆分   1号cluster  userid 1-3000W  2号cluster  userid   3001W-6000W</li>
+  <li>List拆分
+List拆分与Range拆分思路一样，都是通过给不同的sharding key来路由到不同的cluster,但是具体方法有些不同,List主要用来做sharding key不是连续区间的序列落到一个cluster的情况</li>
+  <li>Hash拆分
+通过对sharding key 进行哈希的方式来进行拆分，常用的哈希方法有除余,字符串哈希等等，除余如按userid%n 的值来决定数据读写哪个cluster，其他哈希类算法这里就不细展开讲了。</li>
+</ol>
+
+<h2 id="设置水平拆分的原则是什么">设置水平拆分的原则是什么？</h2>
+
+<blockquote>
+  <p>数据库表水平拆分是非常复杂的，需要综合各个方面考虑完善，套用网友cauherk的说法“系统的切分是个很复杂的技术活，要综合考虑，而不仅仅从数据库层面考虑。业务的使用、分库的原则、数据的割接、开发的侵入、可操作的易难程度、后期的管理等等都是需要考虑的因素。”</p>
+</blockquote>
+
+<h2 id="设置垂直拆分的原则是什么">设置垂直拆分的原则是什么？</h2>
+
+<p>垂直切分的依据原则是：将业务紧密，表间关联密切的表划分在一起，例如同一模块的表。</p>
+
+<hr />
+
+<h1 id="mysql读写分离">MySQL读写分离</h1>
+
+<h2 id="设置数据库读写分离的原因是什么">设置数据库读写分离的原因是什么？</h2>
+
+<p>1.增加冗余
+2.增加了机器的处理能力（硬件资源增加了）
+3.对于读操作为主的应用，使用读写分离是最好的场景…..因为可以确保写的服务器压力更小….而读又可以接受点时间上的延迟</p>
+
+<h2 id="如何设置mysql的主从同步">如何设置MySQL的主从同步</h2>
+
+<h2 id="php如何写代码才能满足查询时调用读库写入更新时调用写库">PHP如何写代码才能满足查询时调用读库，写入更新时调用写库？</h2>
+
+<h2 id="写库和读库能不能实时同步如果不能实时同步而业务要求高必须要同步看到更新的数据怎么办">写库和读库能不能实时同步？如果不能实时同步而业务要求高必须要同步看到更新的数据怎么办？</h2>
+
+<p>强制读主库</p>
+
+<hr />
+
+<h1 id="mysql高可用方案">MySQL高可用方案</h1>
+
+<h2 id="什么是mysql的高可用怎么才能高可用">什么是MySQL的高可用，怎么才能高可用？</h2>
+
+<h2 id="当主服务器down掉后如何才能让备用服务器立即提供服务">当主服务器down掉后，如何才能让备用服务器立即提供服务？</h2>
+
+<p>heartbeat + keepalive</p>
+
+<h2 id="主服务器与备用服务器之间的数据如何同步">主服务器与备用服务器之间的数据如何同步？</h2>
+
+<ul>
+  <li>二进制日志</li>
+  <li>文件共享 rsync</li>
+  <li>块共享 DRBD</li>
+</ul>
+
+<hr />
+
+<h1 id="参考">参考</h1>
+
+<p><a href="http://gpshumano.blogs.dri.pt/2009/07/06/mysql-datetime-vs-timestamp-vs-int-performance-and-benchmarking-with-myisam/">MySQL DATETIME vs TIMESTAMP vs INT performance and benchmarking with MyISAM</a><br />
+<a href="http://gpshumano.blogs.dri.pt/2009/07/06/mysql-datetime-vs-timestamp-vs-int-performance-and-benchmarking-with-innodb/">MySQL DATETIME vs TIMESTAMP vs INT performance and benchmarking with InnoDB</a><br />
+<a href="http://coolshell.cn/articles/652.html">MySQL: InnoDB 还是 MyISAM?</a><br />
+<a href="http://www.zhdba.com/mysqlops/2012/03/21/mysql-data-type-set-enum-bool/">MySQL数据库之布尔类型、枚举类型和集合类型的应用场景详解</a><br />
+<a href="http://www.searchtb.com/2010/09/mysql%E8%A1%8C%E9%94%81%E6%B7%B1%E5%85%A5%E7%A0%94%E7%A9%B6-2.html">MySQL行锁深入研究</a><br />
+<a href="http://www.woqutech.com/?p=769">MYSQL数据丢失讨论</a><br />
+<a href="http://blog.csdn.net/seven_3306/article/details/27085275">MySQL InnoDB四个事务级别 与 脏读、不重复读、幻读</a><br />
+<a href="http://code.tutsplus.com/tutorials/pdo-vs-mysqli-which-should-you-use--net-24059">PDO vs. MySQLi: Which Should You Use?</a><br />
+<a href="http://kb.cnblogs.com/page/45712/">漫谈数据库索引</a><br />
+<a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html">MySQL索引背后的数据结构及算法原理</a><br />
+<a href="http://tech.meituan.com/mysql-index.html">MySQL索引原理及慢查询优化</a><br />
+<a href="http://www.cnitblog.com/aliyiyi08/archive/2008/09/09/48878.html">Mysql Explain 详解</a><br />
+<a href="http://coolshell.cn/articles/1846.html">MySQL性能优化的最佳20+条经验</a><br />
+<a href="http://blog.csdn.net/bluishglc/article/details/6161475">数据库Sharding的基本思想和切分策略</a><br />
+<a href="http://blog.sae.sina.com.cn/archives/4356">MySQL在大型网站的应用架构演变</a><br />
+<a href="http://www.uml.org.cn/sjjm/201211212.asp">数据库分库分表(sharding)系列</a>\</p>
+:ET

@@ -1,0 +1,729 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Linux原理和使用 &larr; </title>
+  <meta name="author" content="Yan Peipan" />
+  <link rel="start" href="/" />
+  
+  
+  
+  <!-- syntax highlighting CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/syntax.css" type="text/css" />
+  <!-- Homepage CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/screen.css" type="text/css" />
+</head>
+<body id="">
+  <div id="site">
+    <div id="header">
+      <h1>
+        <a href="/" title="Yan">Yan</a>
+        <span class="byline">&larr; <a href="/">Yan Peipan</a></span>
+      </h1>
+      <ul class="nav">
+        <li><a href="/" class="home">Home</a></li>
+        <li><a href="/archive.html">Archive</a></li>
+        <li><a href="/pages.html">Pages</a></li>
+        <li><a href="/categories.html">Categories</a></li>
+        <li><a href="/tags.html">Tags</a></li>
+      </ul>
+    </div>
+    
+
+<div id="page">
+  <h1 class="emphnext">Linux原理和使用</h1>
+  <ul class="tag_box inline">
+    
+    
+
+  
+    
+    	<li><a href="/tags.html#PHP-ref">PHP <span>9</span></a></li>
+    
+    	<li><a href="/tags.html#Linux-ref">Linux <span>3</span></a></li>
+    
+  
+
+
+
+  </ul>
+  
+<hr />
+
+<h1 id="linux哲学思想">Linux哲学思想</h1>
+
+<h2 id="linux是怎样诞生的">Linux是怎样诞生的？</h2>
+
+<blockquote>
+  <p>Linux（收听i英语发音：/ˈlɪnəks/ LIN-əks）是一种自由和开放源代码的类UNIX操作系统。该操作系统的内核由林纳斯·托瓦兹在1991年10月5日首次发布。[5][6]，在加上用户空间的应用程序之后，成为Linux操作系统。</p>
+</blockquote>
+
+<blockquote>
+  <p>术语Linux只表示操作系统内核本身，但通常采用Linux内核来表达该意思。Linux则常用来指基于Linux内核的完整操作系统，包括GUI组件和许多其他实用工具。由于这些支持用户空间的系统工具和库主要由理查德·斯托曼于1983年发起的GNU计划提供，自由软件基金会提议将该组合系统命名为GNU/Linux[7][8]，但Linux不属于GNU计划。</p>
+</blockquote>
+
+<h2 id="linux中的软件在开发时通常遵循着哪些原则">Linux中的软件在开发时通常遵循着哪些原则？</h2>
+
+<ol>
+  <li>一切皆文件</li>
+  <li>由众多目的单一的应用程序组成，一个程序只做一件事</li>
+  <li>组合目的单一的小程序完成复杂任务</li>
+  <li>尽量避免捕捉用户接口</li>
+  <li>提供机制而非策略</li>
+</ol>
+
+<h2 id="linux中的软件有什么共同特征">Linux中的软件有什么共同特征？</h2>
+
+<p>自由，免费，开源</p>
+
+<h2 id="怎样学习linux">怎样学习Linux？</h2>
+
+<p>Linux From Scratch (LFS) 从头来</p>
+
+<hr />
+
+<h1 id="linux基础知识">Linux基础知识</h1>
+
+<h2 id="linux中的文件是怎么样组织存放的">Linux中的文件是怎么样组织存放的？</h2>
+
+<p><img src="/assets/image/linux_file_structure.jpg" alt="" /></p>
+
+<blockquote>
+  <p>Linux系统将它的重要文件按照一个标准的分布进行存储，这种摆放系统文件的方法叫做文件系统的层次标准，即 Filesystem Hierarchy Standard （FHS）。<br />
+Linux用符号 ‘/’ 来表示路径间的分隔符（不像Windows，用 ‘' 符号）</p>
+</blockquote>
+
+<h2 id="linux系统的启动流程是怎么样的">Linux系统的启动流程是怎么样的？</h2>
+
+<ul>
+  <li><strong>加载内核</strong> 操作系统接管硬件以后，首先读入 /boot 目录下的内核文件。</li>
+  <li><strong>启动初始化进程</strong> 内核文件加载以后，就开始运行第一个程序 /sbin/init，它的作用是初始化系统环境。</li>
+  <li><strong>确定运行级别</strong> 许多程序需要开机启动。它们在Windows叫做”服务”（service），在Linux就叫做”守护进程”（daemon）。</li>
+  <li><strong>加载开机启动程序</strong> 七种预设的”运行级别”各自有一个目录，存放需要开机启动的程序。七个 /etc/rcN.d 目录里列出的程序，都设为链接文件，指向另外一个目录 /etc/init.d ，真正的启动脚本都统一放在这个目录中。init进程逐一加载开机启动程序，其实就是运行这个目录里的启动脚本</li>
+  <li><strong>用户登录</strong> 一般来说，用户的登录方式有三种：命令行登录, ssh登录, 图形界面登录
+这三种情况，都有自己的方式对用户进行认证。</li>
+</ul>
+
+<blockquote>
+  <ol>
+    <li>命令行登录：init进程调用getty程序（意为get teletype），让用户输入用户名和密码。输入完成后，再调用login程序，核对密码（Debian还会再多运行一个身份核对程序/etc/pam.d/login）。如果密码正确，就从文件 /etc/passwd 读取该用户指定的shell，然后启动这个shell。</li>
+    <li>ssh登录：这时系统调用sshd程序（Debian还会再运行/etc/pam.d/ssh ），取代getty和login，然后启动shell。</li>
+    <li>图形界面登录：init进程调用显示管理器，Gnome图形界面对应的显示管理器为gdm（GNOME Display Manager），然后用户输入用户名和密码。如果密码正确，就读取/etc/gdm3/Xsession，启动用户的会话。</li>
+  </ol>
+</blockquote>
+
+<ul>
+  <li><strong>进入 login shell</strong></li>
+</ul>
+
+<blockquote>
+  <ol>
+    <li>命令行登录：首先读入 /etc/profile，这是对所有用户都有效的配置；然后依次寻找下面三个文件，这是针对当前用户的配置。
+<code>~/.bash_profile</code> <code>~/.bash_login</code> <code>~/.profile</code> 需要注意的是，这三个文件只要有一个存在，就不再读入后面的文件了。比如，要是 ~/.bash_profile 存在，就不会再读入后面两个文件了。</li>
+    <li>ssh登录：与第一种情况完全相同。</li>
+    <li>图形界面登录：只加载 /etc/profile 和 ~/.profile。也就是说，~/.bash_profile 不管有没有，都不会运行。</li>
+  </ol>
+</blockquote>
+
+<ul>
+  <li><strong>打开 non-login shell</strong> 用户进入操作系统以后，常常会再手动开启一个shell。这个shell就叫做 non-login shell，意思是它不同于登录时出现的那个shell，不读取/etc/profile和.profile等配置文件。它会读入用户自己的bash配置文件 ~/.bashrc。</li>
+</ul>
+
+<h2 id="linux中的运行级别是怎么回事怎样切换运行级别">Linux中的运行级别是怎么回事？怎样切换运行级别？</h2>
+
+<blockquote>
+  <p>运行级别 定义了在 Linux 系统的目前状态（或运行级别）下能够完成哪些任务。每个 Linux 系统支持三种基本的运行级别，以及完成正常操作所需的一个或多个运行级别。</p>
+</blockquote>
+
+<p>Linux 的基本运行级别</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">级别</th>
+      <th style="text-align: left">目的</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">0</td>
+      <td style="text-align: left">关闭（或停止）系统</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">1</td>
+      <td style="text-align: left">单用户模式；通常别称为 s 或 S</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">6</td>
+      <td style="text-align: left">重启系统</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>其他常见的 Linux 运行级别</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">级别</th>
+      <th style="text-align: left">目的</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">2</td>
+      <td style="text-align: left">没有联网的多用户模式</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">3</td>
+      <td style="text-align: left">联网的多用户模式</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">5</td>
+      <td style="text-align: left">联网并且使用 X Window 系统的多用户模式</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>在启动 Linux 系统时，默认的运行级别是由 /etc/inittab 中的 id: 条目确定的。<br />
+无需重启系统，可以使用 <code>telinit</code> 命令转到另一个运行级别，使用 <code>runlevel</code> 命令来显示之前的运行级别和现在的运行级别。如果第一个输出参数是 ‘N’，那么在启动系统之后，运行级别就不会发生改变。
+telinit 实际上是 init 的一个符号链接 <code>ls -l $(which telinit)</code></p>
+
+<h2 id="超级管理员的密码忘记了怎么办">超级管理员的密码忘记了怎么办？</h2>
+
+<p>从GRUB界面在引导装载程序进入单用户模式，修改root密码</p>
+
+<h2 id="怎样让一个命令在linux启动时自动执行">怎样让一个命令在Linux启动时自动执行？</h2>
+
+<ol>
+  <li><code>ln -s</code> 建立启动软连接 /etc/rc.d/rc[0~6].d 每个目录分别存放着对应运行级别加载时需要关闭或启动的服务，K开头的脚本文件代表运行级别加载时需要关闭的，S开头的代表需要执行，将可执行脚本丢在/etc/init.d目录下，然后在/etc/rc.d/rc*.d中建立软链接即可</li>
+  <li><code>chkconfig</code></li>
+  <li><code>ntsysv </code></li>
+</ol>
+
+<h2 id="linux中的文件权限是怎样设定的文件和目录各有哪些可设置的权限">Linux中的文件权限是怎样设定的？文件和目录各有哪些可设置的权限？</h2>
+
+<p><strong>用户和组</strong></p>
+
+<ul>
+  <li>Linux 是一个多用户的系统，每个用户属于一个主要 组，也可能是附加组。也可以作为一个用户登录，然后使用 su 或者 sudo -s 命令变为另一个用户。</li>
+  <li><code>whoami</code> 检查您当前有效的 用户id</li>
+  <li><code>groups</code> 命令找出在什么组中：<code>groups</code> <code>groups root</code></li>
+  <li><code>id</code> 找出用户和组信息 <code>id</code> <code>id root</code></li>
+</ul>
+
+<p><strong>文件所有权和权限</strong></p>
+
+<ul>
+  <li>普通文件 Linux 权限模型每个文件系统对象有 3 种类型。这些权限就是读（r），写（w）和执行（x）。写权限包括修改和删除对象的能力。此外，这些权限被分别指定给文件所有者、文件组成员和其他人。</li>
+  <li>目录 目录的读权限允许用户使用该权限列出目录内容。写权限意味着用户使用该权限能够在目录中创建或者删除文件。执行权限允许用户输入目录并访问任意子目录。没有执行权限，目录下的文件系统对象就是不可访问的。没有读权限，目录下的文件系统对象在目录清单下就是不可见的，但是如果知道磁盘上对象的完整路径，这些对象仍是可访问的。</li>
+</ul>
+
+<h2 id="什么是软链接什么是硬链接他们有什么作用">什么是软链接？什么是硬链接？他们有什么作用？</h2>
+
+<blockquote>
+  <p>硬链接与软链接是 Linux 文件系统中的一个重要概念，其涉及文件系统中的索引节点 (index node 又称 inode)，而索引节点对象是 Linux 虚拟文件系统 (VFS) 的四个基本概念之一。</p>
+</blockquote>
+
+<blockquote>
+  <p>为解决文件的共享使用，Linux 系统引入了两种链接：硬链接 (hard link) 与软链接（又称符号链接，即 soft link 或 symbolic link）。链接为 Linux 系统解决了文件的共享使用，还带来了隐藏文件路径、增加权限安全及节省存储等好处。若一个 inode 号对应多个文件名，则称这些文件为硬链接。换言之，硬链接就是同一个文件使用了多个别名（见 图 2.hard link 就是 file 的一个别名，他们有共同的 inode）。</p>
+</blockquote>
+
+<ol>
+  <li>文件有相同的 inode 及 data block；</li>
+  <li>只能对已存在的文件进行创建；</li>
+  <li>不能交叉文件系统进行硬链接的创建；</li>
+  <li>不能对目录进行创建，只可对文件创建；</li>
+  <li>删除一个硬链接文件并不影响其他有相同 inode 号的文件。</li>
+</ol>
+
+<blockquote>
+  <p>软链接与硬链接不同，若文件用户数据块中存放的内容是另一文件的路径名的指向，则该文件就是软连接。软链接就是一个普通文件，只是数据块内容有点特殊。软链接有着自己的 inode 号以及用户数据块（见 图 2.）。因此软链接的创建与使用没有类似硬链接的诸多限制：</p>
+</blockquote>
+
+<ol>
+  <li>软链接有自己的文件属性及权限等；</li>
+  <li>可对不存在的文件或目录创建软链接；</li>
+  <li>软链接可交叉文件系统；</li>
+  <li>软链接可对文件或目录创建；</li>
+  <li>创建软链接时，链接计数 i_nlink 不会增加；</li>
+  <li>删除软链接并不影响被指向的文件，但若被指向的原文件被删除，则相关软连接被称为死链接（即 dangling link，若被指向路径文件被重新创建，死链接可恢复为正常的软链接）。</li>
+</ol>
+
+<hr />
+
+<h1 id="linux日常使用">Linux日常使用</h1>
+
+<h2 id="linux中的小工具忘记了参数怎么办怎么样获取帮助">Linux中的小工具忘记了参数怎么办？怎么样获取帮助？</h2>
+
+<ul>
+  <li><code>man</code></li>
+  <li><code>--help</code></li>
+  <li><code>-h</code></li>
+</ul>
+
+<h2 id="linux中怎样查找文件怎么在文件中查找特定的内容">Linux中怎样查找文件？怎么在文件中查找特定的内容？</h2>
+
+<ul>
+  <li><code>$ find &lt;指定目录&gt; &lt;指定条件&gt; &lt;指定动作&gt;</code></li>
+  <li><code>locate</code>命令其实是<code>find -name</code>的另一种写法，但是要比后者快得多，原因在于它不搜索具体目录，而是搜索一个数据库（/var/lib/locatedb），这个数据库中含有本地所有文件信息。Linux系统自动创建这个数据库，并且每天自动更新一次，所以使用locate命令查不到最新变动过的文件。为了避免这种情况，可以在使用locate之前，先使用updatedb命令，手动更新数据库。</li>
+  <li><code>whereis</code>命令只能用于程序名的搜索，而且只搜索二进制文件（参数-b）、man说明文件（参数-m）和源代码文件（参数-s）。如果省略参数，则返回所有信息。</li>
+  <li><code>which</code>命令的作用是，在PATH变量指定的路径中，搜索某个系统命令的位置，并且返回第一个搜索结果。</li>
+  <li><code>type</code>命令其实不能算查找命令，它是用来区分某个命令到底是由shell自带的，还是由shell外部的独立二进制文件提供的。</li>
+</ul>
+
+<p><strong>Find</strong></p>
+
+<p>基本格式</p>
+
+<p><code>find [-H] [-L] [-P] [path...] [expression]</code>\</p>
+
+<ul>
+  <li><code>find</code> will display the pathnames of all files in the current directory and all subdirectories.</li>
+  <li><code>find / -name foo 2&gt;/dev/null</code> find command using a search criterion and the default action</li>
+  <li><code>find /tmp /var/tmp . $HOME -name foo</code> You can specify as many places to search as you wish</li>
+  <li><code>find downloads  -iname "*.gif"</code> 不区分大小写</li>
+</ul>
+
+<p>按类型查找</p>
+
+<p><code>find /usr -type l</code> 查找某一类型的文件</p>
+
+<ul>
+  <li>b - 块设备文件</li>
+  <li>d - 目录</li>
+  <li>c - 字符设备文件</li>
+  <li>p - 管道文件</li>
+  <li>l - 符号链接文件</li>
+  <li>f - 普通文件。</li>
+</ul>
+
+<p>按时间查找</p>
+
+<ul>
+  <li>mtime — 文件内容上次修改时间</li>
+  <li>atime — 文件被读取或访问的时间</li>
+  <li>ctime — 文件状态变化时间</li>
+</ul>
+
+<p>这些时间选项都需要与一个值 n 结合使用，指定为 -n、n 或 +n。</p>
+
+<ul>
+  <li>-n 返回项小于 n</li>
+  <li>+n 返回项大于 n</li>
+  <li>n 返回项正好与 n 相等</li>
+</ul>
+
+<p>还可以使用 -newer、-anewer 和 –cnewer 选项查找已修改或访问过的文件与特定的文件比较。</p>
+
+<ul>
+  <li>-newer 指内容最近被修改的文件</li>
+  <li>-anewer 指最近被读取过的文件</li>
+  <li>-cnewer 指状态最近发生变化的文件</li>
+</ul>
+
+<p>按大小查找 [cwbkMG]</p>
+
+<p><code>-size n</code><br />
+<code>-size +n</code><br />
+<code>-size -n</code></p>
+
+<p><code>find / -size  +5000000c 2&gt; /dev/null</code>\</p>
+
+<p>按权限查找</p>
+
+<ul>
+  <li><code>-perm model</code> File’s  permission  bits  are exactly mode.</li>
+  <li><code>-perm -mode</code> All of the permission bits mode are  set  for  the  file.</li>
+  <li><code>-perm /mode</code> Any  of the permission bits mode are set for the file.</li>
+  <li>
+    <p><code>-perm +mode</code> Deprecated</p>
+  </li>
+  <li><code>-executable</code> Matches files which are executable and directories which are searchable (in a file name resolution sense).</li>
+</ul>
+
+<p><code>find /sbin /usr/sbin -executable \! -readable -print</code>
+<code>find . -perm 664</code></p>
+
+<p>控制find</p>
+
+<p><code>find -maxdepth 2 -name passwd</code></p>
+
+<h2 id="linux中有哪些用于处理文本的小工具怎样通过管道组合起来使用">Linux中有哪些用于处理文本的小工具？怎样通过管道组合起来使用？</h2>
+
+<p>find 文件查找
+grep 文本搜索
+xargs 命令行参数转换
+sort 排序
+uniq 消除重复行
+用tr进行转换
+cut 按列切分文本
+paste 按列拼接文本
+wc 统计行和字符的工具
+sed 文本替换利器
+awk 数据流处理工具</p>
+
+<h2 id="怎么样使用文本工具对日志进行统计分析">怎么样使用文本工具对日志进行统计分析</h2>
+
+<p><code>awk '{a[$1]+=1;}END{for(i in a){print a[i]" " i;}}' averainy.info.log</code></p>
+
+<p>211.154.151.111 - - [03/May/2012:05:02:01 +0800] GET /feed HTTP/1.1 200 73777 - Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1; WOW64; Trident/4.0; SLCC2;) -</p>
+
+<h2 id="输入输出重定向是怎么回事">输入，输出重定向是怎么回事？</h2>
+
+<blockquote>
+  <p>所谓I/O重定向简单来说就是一个过程，这个过程捕捉一个文件，或者命令，程序，脚本，甚至脚本中的代码块（code block）的输出，然后把捕捉到的输出，作为输入发送给另外一个文件，命令，程序，或者脚本。</p>
+</blockquote>
+
+<blockquote>
+  <p>如果谈到I/O重定向，就涉及到文件标识符(File Descriptor)的概念, 在Linux系统中，系统为每一个打开的文件指定一个文件标识符以便系统对文件进行跟踪，这里有些和C语言编程里的文件句柄相似，文件标识符是一个数字，不同数字代表不同的含义，默认情况下，系统占用了3个，分别是0标准输入（stdin）,1标准输出(stdout), 2标准错误(stderr), 另外3-9是保留的标识符，可以把这些标识符指定成标准输入，输出或者错误作为临时连接。通常这样可以解决很多复杂的重定向请求。</p>
+</blockquote>
+
+<ul>
+  <li>标准输入通常指键盘的输入</li>
+  <li>标准输出通常指显示器的输出</li>
+  <li>标准错误通常也是定向到显示器</li>
+</ul>
+
+<h2 id="vim编辑器怎样使用">VIm编辑器怎样使用？</h2>
+
+<hr />
+
+<h1 id="linux系统管理">Linux系统管理</h1>
+
+<h2 id="linux中有哪些安装软件的方式怎样实现编译安装">Linux中有哪些安装软件的方式？怎样实现编译安装？</h2>
+
+<blockquote>
+  <p>deb是Debian软件包格式，文件扩展名为.deb，跟Debian的命名一样，deb也是因Debra Murdock（Debian创始人Ian Murdock的前妻）而得名。
+Debian包是Unixar的标准归档，将包文件信息以及包内容，经过gzip和tar打包而成。
+处理这些包的经典程序是dpkg，经常是通过apt来运作。
+通过Alien工具，可以将deb包转换成其他形式的软件包。</p>
+</blockquote>
+
+<blockquote>
+  <p>RPM包管理员（简称RPM，全称为The RPM Package Manager）是在Linux下广泛使用的软件包管理器。RPM此名词可能是指.rpm的文件格式的软件包，也可能是指其本身的软件包管理器(RPM Package Manager)。
+RPM软件包分为二进制包（Binary）、源代码包（Source）和Delta包三种。二进制包可以直接安装在计算机中，而源代码包将会由RPM自动编译、安装。源代码包经常以src.rpm作为后缀名。</p>
+</blockquote>
+
+<p>管理deb软件包的dpkg以及它的前端apt（使用于Debian、Ubuntu）。 rpm以及它的前端yum（使用于Fedora）、前端ZYpp（使用于openSUSE）、 前端urpmi（使用于Mandriva Linux、Mageia）等</p>
+
+<h2 id="怎样启动停止重启一个系统服务">怎样启动，停止，重启一个系统服务？</h2>
+
+<p><code>sudo service mysql restart</code></p>
+
+<h2 id="怎样查看当前系统中登录了哪些用户">怎样查看当前系统中登录了哪些用户？</h2>
+
+<p><code>w</code>
+<code>who</code>
+<code>last</code></p>
+
+<h2 id="怎样查看当前系统的负载情况怎样确定系统是否已经满负荷">怎样查看当前系统的负载情况？怎样确定系统是否已经满负荷？</h2>
+
+<p><code>top</code></p>
+
+<h2 id="怎样使一个命令在每周一三五早8点-10点每隔五分钟执行一次">怎样使一个命令在每周一三五早8点-10点每隔五分钟执行一次？</h2>
+
+<blockquote>
+  <p>crontab文件包含送交cron守护进程的一系列作业和指令。每个用户可以拥有自己的crontab文件；同时，操作系统保存一个针对整个系统的crontab文件，该文件通常存放于/etc或者/etc之下的子目录中，而这个文件只能由系统管理员来修改。</p>
+</blockquote>
+
+<blockquote>
+  <p>crontab文件的每一行均遵守特定的格式，由空格或tab分隔为数个领域，每个领域可以放置单一或多个数值。</p>
+</blockquote>
+
+<p><strong>操作符号</strong></p>
+
+<ul>
+  <li>逗号 (‘,’) 分开的值，例如：“1,3,4,7,8”</li>
+  <li>连词符 (‘-‘) 制定值的范围，例如：“1-6”，意思等同于“1,2,3,4,5,6”</li>
+  <li>星号 (‘*’) 代表任何可能的值。例如，在“小时域” 里的星号等于是“每一个小时”，等等</li>
+  <li>某些cron程序的扩展版本也支持斜线 (‘/’) 操作符，用于表示跳过某些给定的数。例如，“*/3”在小时域中等于“0,3,6,9,12,15,18,21”等被3整除的数；</li>
+</ul>
+
+<p><strong>时间设置</strong></p>
+
+<pre><code># 文件格式说明
+#  ——分钟 (0 - 59)
+# |  ——小时 (0 - 23)
+# | |  ——日   (1 - 31)
+# | | |  ——月   (1 - 12)
+# | | | |  ——星期 (0 - 7)（星期日=0或7）
+# | | | | |
+# * * * * * 被执行的命令
+</code></pre>
+
+<p><strong>常见错误</strong></p>
+
+<ol>
+  <li>命令行双引号中使用<code>%</code>时，未加反斜线<code>\</code></li>
+  <li>与其他域不同，第三和第五个域之间执行的是“或”操作。</li>
+</ol>
+
+<p><code>crontab -e</code>
+*/5 8-10 * * 1,3,5 command</p>
+
+<hr />
+
+<h1 id="shell编程">Shell编程</h1>
+
+<h2 id="什么是shell">什么是Shell？</h2>
+
+<blockquote>
+  <p>壳层在计算机科学中，是指“提供用户使用界面”的软件，通常指的是命令行界面的解析器。</p>
+</blockquote>
+
+<blockquote>
+  <p>shell是指一种应用程序，这个应用程序提供了一个界面，用户通过这个界面访问操作系统内核的服务。</p>
+</blockquote>
+
+<blockquote>
+  <p>Shell is a user program or it’s environment provided for user interaction. Shell is an command language interpreter that executes commands read from the standard input device (keyboard) or from a file.</p>
+</blockquote>
+
+<h2 id="什么是shell脚本怎样让一个脚本文件变成一个可以直接执行的软件">什么是Shell脚本？怎样让一个脚本文件变成一个可以直接执行的软件？</h2>
+
+<blockquote>
+  <p>“Shell Script is series of command written in plain text file. Shell script is just like batch file is MS-DOS but have more power than the MS-DOS batch file.”</p>
+</blockquote>
+
+<p>在第一行指定脚本解释器，如：<code>#!/bin/sh</code></p>
+
+<h2 id="怎样定义shell变量">怎样定义Shell变量？</h2>
+
+<blockquote>
+  <p>shell变量是一种很“弱”的变量，默认情况下，一个变量保存一个串，shell不关心这个串是什么含义。所以若要进行数学运算，必须使用一些命令例如let、declare、expr、双括号等。shell变量可分为两类：局部变量和环境变量。</p>
+</blockquote>
+
+<p><code>var=value</code><br />
+<code>export var</code></p>
+
+<ul>
+  <li>$0  获取当前执行的shell脚本的文件名</li>
+  <li>$n  获取当前执行的shell脚本的第n个参数值，n=1..9</li>
+  <li>$*  获取当前shell的所有参数 “$1 $2 $3 …注意与$#的区别</li>
+  <li>$#  获取当前shell命令行中参数的总个数</li>
+  <li>$$  获取当前shell的进程号（PID）</li>
+  <li>$!  执行上一个指令的PID</li>
+  <li>$?  获取执行的上一个指令的返回值(0 为成功， 非零为失败)</li>
+  <li>$@  这个程序的所有参数 “$1″ “$2″ “$3″ “…”</li>
+</ul>
+
+<h2 id="怎样给一个shell脚本传递命令参数怎样接受解析这些参数">怎样给一个Shell脚本传递命令参数？怎样接受，解析这些参数？</h2>
+
+<ul>
+  <li>位置参数 $0就是脚本文件的名字,$1是第一个参数,$2为第2个…,$9以后就需要打括号了,如${10},${11},${12}…</li>
+</ul>
+
+<h2 id="shell中怎样捕获一个命令的输出结果">Shell中怎样捕获一个命令的输出结果？</h2>
+
+<pre><code>var=`ps -ef | grep oracle`
+var=$(ps -ef | grep oracle)
+</code></pre>
+
+<h2 id="命令的返回码是什么东西有什么用怎样查看">命令的返回码是什么东西？有什么用？怎样查看？</h2>
+
+<p><code>echo $?</code></p>
+
+<h2 id="怎样定义shell函数函数怎样传递参数怎样返回数值">怎样定义Shell函数？函数怎样传递参数？怎样返回数值？</h2>
+
+<pre><code>[ function ] funname [()]
+{
+  action;
+  [return int;]
+}
+</code></pre>
+
+<h2 id="shell中怎样进行数学计算">Shell中怎样进行数学计算？</h2>
+
+<p><code>var=1</code>\</p>
+
+<ul>
+  <li><code>let "var+=1"</code></li>
+  <li>((var+=1))</li>
+  <li>$[$var+1]</li>
+  <li>var=<code>expr $var+1</code></li>
+  <li>var=<code>echo "$var+1"|bc</code></li>
+</ul>
+
+<h2 id="shell中怎样处理字符串">Shell中怎样处理字符串？</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">表达式</th>
+      <th style="text-align: left">含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">${#string}</td>
+      <td style="text-align: left">$string的长度</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string:position}</td>
+      <td style="text-align: left">在$string中, 从位置$position开始提取子串</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${str     ing:position:length}</td>
+      <td style="text-align: left">在$string中, 从位置$position开始提取长å¦为$length的子串</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string#substring}</td>
+      <td style="text-align: left">从变量$string的开头, 删  除最短匹配$substring的子串</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string##substring}</td>
+      <td style="text-align: left">从变量$strin  g的开头, 删除最长匹配$substring的子串</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string%substring}</td>
+      <td style="text-align: left">从变量$string的结尾, 删除最短匹配$substring的子串</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string%%substring}</td>
+      <td style="text-align: left">从变量$string的结尾, 删除最长匹配$substringç子串</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string/substring/replacement}</td>
+      <td style="text-align: left">使用$replacement, 来代替ç¬一个匹配的$substring</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string//substring/replacement}</td>
+      <td style="text-align: left">使用$rep  lacement, 代替所有匹配的$substring</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string/#substring/replacement}</td>
+      <td style="text-align: left">如果$string的前缀匹配$substring, 那么就用$replacement来ä£替匹配到的$substring</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">${string/%substring/replacement}</td>
+      <td style="text-align: left">如果$stri ng的后缀匹配$substring, 那么就用$replacement来代替匹配到的$substring</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="一个shell脚本中怎样包含其他脚本">一个Shell脚本中怎样包含其他脚本？</h2>
+
+<ul>
+  <li><code>source first</code></li>
+  <li><code>. first</code></li>
+  <li><code>sh  first</code></li>
+</ul>
+
+<hr />
+
+<h1 id="awk--sed">AWK &amp; SED</h1>
+
+<h2 id="awk是什么">AWK是什么？</h2>
+
+<blockquote>
+  <p>Awk是一种便于使用且表达能力强的程序设计语言，可应用于各种计算和数据处理任务。</p>
+</blockquote>
+
+<blockquote>
+  <p>AWK是贝尔实验室1977年搞出来的文本出现神器</p>
+</blockquote>
+
+<blockquote>
+  <p>之所以叫AWK是因为其取了三位创始人 Alfred Aho，Peter Weinberger, 和 Brian Kernighan 的Family Name的首字符。</p>
+</blockquote>
+
+<h2 id="awk中有那些特殊变量各有什么含义">AWK中有那些特殊变量？各有什么含义？</h2>
+
+<ul>
+  <li><code>$0</code> 当前记录（这个变量中存放着整个行的内容）</li>
+  <li><code>$1~$n</code> 当前记录的第n个字段，字段间由FS分隔</li>
+  <li><code>FS</code> 输入字    段分隔符 默认是空格或Tab</li>
+  <li><code>NF</code>当前记录中的字段个数，  就是有多少列</li>
+  <li><code>NR</code>已经读出的记录数，就是行号，从1开 始，如果有多个文件话，这个值也是不断累加中。</li>
+  <li><code>FNR</code> 当前记录数，与NR不同的是，这个值会是各个文件自己的行号</li>
+  <li><code>RS</code>输入的记录分隔符， 默认为换行符</li>
+  <li><code>OFS</code>输出字段分隔符 默认也是空格</li>
+  <li><code>ORS</code>输出的记录分隔符，默认为换行符</li>
+  <li><code>FILENAME</code>当前输入文件的名字</li>
+</ul>
+
+<h2 id="怎样通过awk对一个文本文件按列拆分">怎样通过AWK对一个文本文件按列拆分？</h2>
+
+<h2 id="怎样通过awk统计一个web访问日志中发起post提交最多的ip地址和提交次数">怎样通过AWK统计一个WEB访问日志中发起POST提交最多的IP地址和提交次数？</h2>
+
+<h2 id="怎样通过sed实现文本的查找替换">怎样通过SED实现文本的查找，替换？</h2>
+
+<hr />
+
+<h1 id="参考">参考</h1>
+<p><a href="http://zh.wikipedia.org/wiki/Linux">Linux</a><br />
+<a href="http://coolshell.cn/articles/1032.html">Unix 40年：Unix年鉴</a><br />
+<a href="http://coolshell.cn/articles/4535.html">一些软件设计的原则</a><br />
+<a href="http://www.admin10000.com/document/4477.html">趣图图解SOLID软件开发原则</a><br />
+<a href="http://www.ibm.com/developerworks/cn/linux/l-linux-filesystem/">Linux 文件系统剖析</a><br />
+<a href="https://courses.edx.org/c4x/LinuxFoundationX/LFS101x/asset/LFS101_Ch3_Sec1_FSH.pdf">Filesystem Hierarchy Standard</a><br />
+<a href="http://refspecs.linuxfoundation.org/fhs.shtml">Filesystem Hierarchy Standard</a><br />
+<a href="http://mooc.guokr.com/note/13463/">Linux文件层次标准</a><br />
+<a href="http://www.ruanyifeng.com/blog/2013/08/linux_boot_process.html">Linux 的启动流程</a><br />
+<a href="http://www.ibm.com/developerworks/cn/linux/l-lpic1-v3-101-3/">学习 Linux, 101: 运行级别、关机和重启</a><br />
+<a href="http://vbird.dic.ksu.edu.tw/linux_basic/0210filepermission.php">Linux 的文件权限与目录配置</a><br />
+<a href="https://www.ibm.com/developerworks/cn/linux/l-cn-hardandsymb-links/">理解 Linux 的硬链接与软链接</a><br />
+<a href="http://www.ruanyifeng.com/blog/2009/10/5_ways_to_search_for_files_using_the_terminal.html">Linux的五个查找命令</a><br />
+<a href="http://content.hccfl.edu/pollock/Unix/FindCmd.htm">A Unix/Linux “find” Command Tutorial</a><br />
+<a href="http://www.cnblogs.com/me115/p/3427319.html">Linux Shell 文本处理工具集锦</a><br />
+<a href="http://www.ruanyifeng.com/blog/2011/07/linux_load_average_explained.html">理解Linux系统负荷</a><br />
+<a href="http://blog.scoutapp.com/articles/2009/07/31/understanding-load-averages">Understanding Linux CPU Load</a><br />
+<a href="http://www.cnblogs.com/barrychiao/archive/2012/10/22/2733210.html">shell变量详解</a><br />
+<a href="http://awk.readthedocs.org/en/latest/chapter-one.html">AWK程序设计语言</a><br />
+<a href="http://coolshell.cn/articles/9070.html">AWK 简明教程</a><br />
+<a href="http://www.gnu.org/software/gawk/manual/gawk.html">The GNU Awk User’s Guide</a><br />
+<a href="http://www.ibm.com/developerworks/cn/linux/l-iotips/">技巧：Linux I/O重定向的一些小技巧</a><br />
+<a href="http://www.oracle.com/technetwork/cn/articles/calish-find-096463-zhs.html">Linux Find 命令精通指南</a><br />
+<a href="http://www.oschina.net/translate/15-practical-unix-linux-find-command-examples-part-2">爹地，我找到了!, 15个极好的Linux find命令示例</a><br />
+<a href="http://www.oschina.net/translate/15-practical-linux-find-command-examples">妈咪，我找到了! – 15个实用的Linux find命令示例</a><br />
+<a href="https://docs.oracle.com/cd/E56344_01/html/E54075/find-1.html">用户命令 find</a><br />
+<a href="http://man.chinaunix.net/">Man手册中心</a><br />
+<a href="http://www-01.ibm.com/support/knowledgecenter/ssw_aix_61/com.ibm.aix.cmds2/find.htm?lang=zh">find 命令</a>\</p>
+
+  <address class="signature">
+    <a class="author" href="/">Yan Peipan</a>
+    <span class="date">26 December 2014</span>
+    <span class="location"></span>
+  </address>
+  <div class="prev-next">
+    
+    <a href="/2014/12/28/%E6%B7%B1%E5%85%A5HTTP%E5%8D%8F%E8%AE%AE.html" class="next" title="深入HTTP协议">Next Post &rarr;</a>
+    
+    
+    <a href="/2014/12/21/php%E6%96%87%E4%BB%B6%E6%A0%B8%E5%BF%83%E7%BC%96%E7%A8%8B.html" class="prev" title="PHP文件核心编程">&larr; Earlier Post</a>
+    
+  </div>
+</div><!-- End Page -->
+
+
+
+
+    <div id="footer">
+      <address>
+        <span class="copyright">
+          Content by <a href="/sitemap.txt">Yan Peipan</a>.
+        </span>
+        <span class="engine">
+          Powered by <a href="http://github.com/mojombo/jekyll/" title="A static, minimalist CMS">Jekyll</a>
+        </span>
+      </address>
+    </div>
+  </div>
+  <!--[if IE 6]>
+  <script type="text/javascript">
+  /*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; }
+  var IE6UPDATE_OPTIONS = {
+  icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+
+
+</body>
+</html>
+

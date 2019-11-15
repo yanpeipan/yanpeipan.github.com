@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>Linux平均负载解疑 &larr; </title>
+  <meta name="author" content="Yan Peipan" />
+  <link rel="start" href="/" />
+  
+  
+  
+  <!-- syntax highlighting CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/syntax.css" type="text/css" />
+  <!-- Homepage CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/screen.css" type="text/css" />
+</head>
+<body id="">
+  <div id="site">
+    <div id="header">
+      <h1>
+        <a href="/" title="Yan">Yan</a>
+        <span class="byline">&larr; <a href="/">Yan Peipan</a></span>
+      </h1>
+      <ul class="nav">
+        <li><a href="/" class="home">Home</a></li>
+        <li><a href="/archive.html">Archive</a></li>
+        <li><a href="/pages.html">Pages</a></li>
+        <li><a href="/categories.html">Categories</a></li>
+        <li><a href="/tags.html">Tags</a></li>
+      </ul>
+    </div>
+    
+
+<div id="page">
+  <h1 class="emphnext">Linux平均负载解疑</h1>
+  <ul class="tag_box inline">
+    
+    
+
+  
+    
+    	<li><a href="/tags.html#Linux-ref">Linux <span>3</span></a></li>
+    
+  
+
+
+
+  </ul>
+  
+<h1 id="平均负载load-average的定义">平均负载(Load Average)的定义</h1>
+
+<h2 id="cpu平均负载">CPU平均负载</h2>
+
+<p>RFC 546 (1973)</p>
+
+<blockquote>
+  <p>[1] The TENEX load average is a measure of CPU demand.  The load
+   average is an average of the number of runable processes over a given
+   time period.  For example, an hourly load average of 10 would mean
+   that (for a single CPU system) at any time during that hour one could
+   expect to see 1 process running and 9 others ready to run (i.e., not
+   blocked for I/O) waiting for the CPU.</p>
+</blockquote>
+
+<blockquote>
+  <p>TENEX load averages是衡量CPU需求的指标。这个值是给定时间内可运行进程数量的平均值。例如，对于单核CPU系统，每小时平均10次意思是在该小时内可以期望看到一个进程正在运行和另外九个等待CPU(即没有被I/O阻塞)处于ready状态的进程。</p>
+</blockquote>
+
+<h2 id="不可中断任务">不可中断任务</h2>
+
+<p><a href="http://oldlinux.org/Linux.old/mail-archive/">oldlinux.org</a> 上1993年的一封邮件:</p>
+<blockquote>
+
+  <p>From: Matthias Urlichs <a href="mailto:urlichs@smurf.sub.org">urlichs@smurf.sub.org</a><br />
+Subject: Load average broken ?<br />
+Date: Fri, 29 Oct 1993 11:37:23 +0200</p>
+
+  <p>The kernel only counts “runnable” processes when computing the load average.
+I don’t like that; the problem is that processes which are swapping or
+waiting on “fast”, i.e. noninterruptible, I/O, also consume resources.<br />
+It seems somewhat nonintuitive that the load average goes down when you
+replace your fast swap disk with a slow swap disk…<br />
+Anyway, the following patch seems to make the load average much more
+consistent WRT the subjective speed of the system. And, most important, the
+load is still zero when nobody is doing anything. ;-)</p>
+</blockquote>
+
+<p>绝大多数类 Unix 系统只统计运行和等待状态的进程。但是在 Linux 中，平均负载也包括处于不可打断的睡眠状态的进程（TASK_UNINTERRUPTIBLE或nr_uninterruptible）——这种状态由希望避免信号中断的代码使用，其中包括阻塞在磁盘I/O和一些锁上的任务。</p>
+
+<p>使用<code>man ps</code> (process status)查看：</p>
+<blockquote>
+  <p>ps displays information about a selection of the active processes.  If you want a repetitive update of the selection and the displayed information, use top(1) instead.</p>
+</blockquote>
+
+<blockquote>
+  <p>Here are the different values that the s, stat and state output specifiers (header “STAT” or “S”) will display to describe the state of a process:</p>
+  <blockquote>
+    <p>D    uninterruptible sleep (usually IO)  <br />
+R    running or runnable (on run queue)<br />
+S    interruptible sleep (waiting for an event to complete)<br />
+T    stopped by job control signal<br />
+t    stopped by debugger during the tracing<br />
+W    paging (not valid since the 2.6.xx kernel)<br />
+X    dead (should never be seen)<br />
+Z    defunct (“zombie”) process, terminated but not reaped by its parent</p>
+  </blockquote>
+</blockquote>
+
+<p>注：参见《OPERATING SYSTEM》  A process is an ‘active’ entity as opposed to program which is considered to be a ‘passive’ entity. 进程是活跃的，与之相反程序（代码）是不活跃的。所以active processes活跃进程包含所有状态的进程。</p>
+
+<h2 id="系统平均负载">系统平均负载</h2>
+
+<p>使用<code>man uptime</code>命令来了解平均负载的详细解释。</p>
+
+<blockquote>
+
+  <p>System  load  averages  is the average number of processes that are either in a runnable or uninterruptable state.  A process in a runnable state is either using the CPU or waiting to use the CPU.  A process in uninterruptable state is waiting for some I/O access, eg waiting for disk.  The averages are taken over the three time intervals.  Load averages are not normalized for the number of CPUs in a system, so a load average of 1 means a single CPU system is loaded all the time while on a  4  CPU  system  it means it was idle 75% of the time.</p>
+
+  <p>系统负载平均是处于可运行或不可中断状态的进程的平均数量。处于可运行状态的进程要么使用CPU，要么等待使用CPU。处于不可中断状态的进程正在等待一些I/O访问(如等待磁盘)。平均值在三个时间间隔内取。对于系统中的CPU数量，负载平均并不是标准化的，所以负载平均为1意味着一个CPU系统一直在加载，而对于4 CPU系统，负载平均为75%的时间是空闲的。</p>
+</blockquote>
+
+<p>除此之外还可使用 <code>w</code> <code>top</code>, 及各种增强版<code>atop</code> <code>htop</code> <code>glances</code>等，或者直接使用<code>cat /proc/loadavg</code>命令读取。</p>
+
+<h2 id="实现">实现</h2>
+
+<p>linux/fs/proc/loadavg.c</p>
+<pre><code>static int loadavg_proc_show(struct seq_file *m, void *v)
+{
+	unsigned long avnrun[3];
+
+	get_avenrun(avnrun, FIXED_1/200, 0);
+
+	seq_printf(m, "%lu.%02lu %lu.%02lu %lu.%02lu %ld/%d %d\n",
+		LOAD_INT(avnrun[0]), LOAD_FRAC(avnrun[0]),
+		LOAD_INT(avnrun[1]), LOAD_FRAC(avnrun[1]),
+		LOAD_INT(avnrun[2]), LOAD_FRAC(avnrun[2]),
+		nr_running(), nr_threads,
+		idr_get_cursor(&amp;task_active_pid_ns(current)-&gt;idr) - 1);
+	return 0;
+}
+</code></pre>
+
+<p>linux/include/linux/sched/loadavg.h</p>
+<pre><code>#define EXP_1		1884		/* 1/exp(5sec/1min) as fixed-point */
+#define EXP_5		2014		/* 1/exp(5sec/5min) */
+#define EXP_15		2037		/* 1/exp(5sec/15min) */
+
+/*
+ * a1 = a0 * e + a * (1 - e)
+ */
+static inline unsigned long
+calc_load(unsigned long load, unsigned long exp, unsigned long active)
+{
+	unsigned long newload;
+
+	newload = load * exp + active * (FIXED_1 - exp);
+	if (active &gt;= load)
+		newload += FIXED_1-1;
+
+	return newload / FIXED_1;
+}
+</code></pre>
+
+<p>linux/kernel/sched/loadavg.c</p>
+<pre><code>
+/*
+ * Global load-average calculations
+ *
+ * We take a distributed and async approach to calculating the global load-avg
+ * in order to minimize overhead.
+ *
+ * The global load average is an exponentially decaying average of nr_running +
+ * nr_uninterruptible.
+ *
+ * Once every LOAD_FREQ:
+ *
+ *   nr_active = 0;
+ *   for_each_possible_cpu(cpu)
+ *	nr_active += cpu_of(cpu)-&gt;nr_running + cpu_of(cpu)-&gt;nr_uninterruptible;
+ *
+ *   avenrun[n] = avenrun[0] * exp_n + nr_active * (1 - exp_n)
+...
+*/
+
+/*
+ * calc_load - update the avenrun load estimates 10 ticks after the
+ * CPUs have updated calc_load_tasks.
+ *
+ * Called from the global timer code.
+ */
+void calc_global_load(unsigned long ticks)
+{
+	unsigned long sample_window;
+	long active, delta;
+
+	sample_window = READ_ONCE(calc_load_update);
+	if (time_before(jiffies, sample_window + 10))
+		return;
+
+	/*
+	 * Fold the 'old' NO_HZ-delta to include all NO_HZ CPUs.
+	 */
+	delta = calc_load_nohz_fold();
+	if (delta)
+		atomic_long_add(delta, &amp;calc_load_tasks);
+
+	active = atomic_long_read(&amp;calc_load_tasks);
+	active = active &gt; 0 ? active * FIXED_1 : 0;
+
+	avenrun[0] = calc_load(avenrun[0], EXP_1, active);
+	avenrun[1] = calc_load(avenrun[1], EXP_5, active);
+	avenrun[2] = calc_load(avenrun[2], EXP_15, active);
+
+	WRITE_ONCE(calc_load_update, sample_window + LOAD_FREQ);
+
+	/*
+	 * In case we went to NO_HZ for multiple LOAD_FREQ intervals
+	 * catch up in bulk.
+	 */
+	calc_global_nohz();
+}
+</code></pre>
+<p>为了最小化开销，Linux采用分布式和异步的方法来计算全局负载平均分配。全局负载平均值是nr_running + nr_uninterruptible的指数衰减平均值。<br />
+Linux内核定义一个长度为3的双字数组avenrun，双字的低11位用于存放负载的小数部分，高21位用于存放整数部分。</p>
+
+<blockquote>
+
+  <p>注：linux kernel的设计哲学是禁止在内核里使用浮点操作的，这是从性能上的考虑，因为这样做可以省去在用户态与内核态之间进行切换时保存/恢复浮点寄存器 FPU的操作, 内核浮点计算代码块中，必须使用 <code>kernel_fpu_begin()</code>和<code>kernel_fpu_end()</code>这两个函数包起来。这两个函数的作用是让内核感知不到OS运行过程中有使用硬件浮点寄存器   <br />
+指数移动平均（英语：exponential moving average，EMA或EXMA）是以指数式递减加权的移动平均。各数值的加权影响力随时间而指数式递减，越近期的数据加权影响力越重，但较旧的数据也给予一定的加权值</p>
+</blockquote>
+
+<h1 id="指标的三个粒度">指标的三个粒度</h1>
+
+<h2 id="理解linux的平均负载">理解Linux的平均负载</h2>
+<pre><code>uptime
+13:17  up 23:48, 5 users, load averages: 2.31 2.44 2.46
+</code></pre>
+<ul>
+  <li>如果平均值是0.0，说明系统处于空闲状态</li>
+  <li>如果1分钟的平均值大于5分钟或者15分钟，说明系统负载正在增加</li>
+  <li>如果1分钟的平均值小于5分钟或者15分钟，说明系统负载正在减小</li>
+  <li>如果这些值大于CPU的个数，说明可能遇到了性能问题</li>
+  <li>系统平均负载涉及不同的资源类型，因此它们更加模糊，所以不能只除以CPU计数</li>
+</ul>
+
+<p>注：查看CPU个数 <code>grep 'model name' /proc/cpuinfo | wc -l</code> )</p>
+
+<h2 id="模拟分析">模拟分析</h2>
+
+<pre><code>apt install sysstat
+</code></pre>
+
+<h3 id="cpu密集">CPU密集</h3>
+
+<pre><code>stress -i 1 --timeout 600
+
+watch -d uptime
+
+Every 2.0s: uptime                                                                                                                                                          2018: Wed Dec 19 20:05:44 2018
+
+ 20:05:44 up  6:30,  3 users,  load average: 0.57, 0.37, 0.21
+
+mpstat -P ALL 5
+
+20时05分11秒  CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+20时05分16秒  all   12.60    0.00    0.05    0.00    0.00    0.00    0.00    0.00    0.00   87.35
+20时05分16秒    0    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00  100.00
+20时05分16秒    1    0.60    0.00    0.20    0.20    0.00    0.00    0.00    0.00    0.00   99.00
+20时05分16秒    2    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00  100.00
+20时05分16秒    3    0.00    0.00    0.20    0.00    0.00    0.00    0.00    0.00    0.00   99.80
+20时05分16秒    4    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00  100.00
+20时05分16秒    5    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00  100.00
+20时05分16秒    6  100.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00
+20时05分16秒    7    0.20    0.00    0.20    0.00    0.00    0.00    0.00    0.00    0.00   99.60
+</code></pre>
+
+<h3 id="io密集">IO密集</h3>
+
+<pre><code>stress -d 1 --hdd-bytes 1G -t 600
+
+stress-ng -i 1 --hdd 1 --timeout 600
+
+watch -d uptime
+
+mpstat -P ALL 5
+
+pidstat -u 5
+</code></pre>
+
+<h3 id="进程竞争">进程竞争</h3>
+
+<pre><code>stress -c 8 --timeout 600
+
+watch -d vmstat
+</code></pre>
+
+<hr />
+<ul>
+  <li><a href="https://juejin.im/post/5b18d47ce51d4506c3354d54">深入理解load averages</a></li>
+  <li><a href="http://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html">Linux Load Averages: Solving the Mystery</a></li>
+  <li><a href="https://time.geekbang.org/column/article/69618">基础篇：到底应该怎么理解“平均负载”？</a></li>
+  <li><a href="https://www.studytonight.com/operating-system/operating-system-processes">What is a Process?</a></li>
+</ul>
+
+  <address class="signature">
+    <a class="author" href="/">Yan Peipan</a>
+    <span class="date">12 December 2018</span>
+    <span class="location"></span>
+  </address>
+  <div class="prev-next">
+    
+    <a href="/2018/12/14/mysql%E9%AB%98%E5%8F%AF%E7%94%A8%E6%9E%B6%E6%9E%84.html" class="next" title="MySQL高可用架构">Next Post &rarr;</a>
+    
+    
+    <a href="/php/2018/10/31/xdebug%E5%8D%8F%E5%8A%A9%E8%B0%83%E8%AF%95%E4%B8%8E%E5%BC%80%E5%8F%91.html" class="prev" title="Xdebug: 协助调试与开发">&larr; Earlier Post</a>
+    
+  </div>
+</div><!-- End Page -->
+
+
+
+
+    <div id="footer">
+      <address>
+        <span class="copyright">
+          Content by <a href="/sitemap.txt">Yan Peipan</a>.
+        </span>
+        <span class="engine">
+          Powered by <a href="http://github.com/mojombo/jekyll/" title="A static, minimalist CMS">Jekyll</a>
+        </span>
+      </address>
+    </div>
+  </div>
+  <!--[if IE 6]>
+  <script type="text/javascript">
+  /*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; }
+  var IE6UPDATE_OPTIONS = {
+  icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+
+
+</body>
+</html>
+

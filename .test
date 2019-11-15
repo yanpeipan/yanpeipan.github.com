@@ -1,6 +1,0 @@
-#!/bin/bash
-
-if [ `git symbolic-ref --short -q HEAD` = 'master' ]; then
-    echo 'tester'
-fi
-

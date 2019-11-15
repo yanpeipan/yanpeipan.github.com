@@ -1,0 +1,53 @@
+I"Ü
+<p>Makefile</p>
+<pre><code>obj-m += procsview.o
+
+KDIR := /lib/modules/$(shell uname -r)/build
+PWD := $(shell pwd)
+
+default:
+        $(MAKE) -C $(KDIR) SUBDIRS=$(PWD) modules
+</code></pre>
+
+<p>procsview.c</p>
+<pre><code>#include &lt;linux/kernel.h&gt;
+#include &lt;linux/module.h&gt;
+#include &lt;linux/sched.h&gt;
+#include &lt;linux/sched/signal.h&gt;
+
+
+extern struct task_struct init_task;
+
+int init_module( void )
+{
+  /* Set up the anchor point */
+
+
+        struct task_struct *task = &amp;init_task;
+        printk(KERN_ERR "Module init: Hello linux kernel.\n");
+
+  /* Walk through the task list, until we hit the init_task again */
+        for_each_process(task) {
+
+                printk( KERN_INFO "*** %s [%d] parent %s\n",
+        task-&gt;comm, task-&gt;pid, task-&gt;parent-&gt;comm );
+  }
+
+  return 0;
+
+}
+
+void cleanup_module( void )
+{
+  return;
+}
+</code></pre>
+
+<pre><code>make
+insmod procsview.ko
+cat  /var/log/syslog
+</code></pre>
+
+<pre><code>rmmod procsview
+</code></pre>
+:ET

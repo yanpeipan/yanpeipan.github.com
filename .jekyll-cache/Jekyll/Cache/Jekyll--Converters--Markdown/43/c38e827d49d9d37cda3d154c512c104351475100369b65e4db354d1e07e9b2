@@ -1,0 +1,478 @@
+I"wu
+<hr />
+
+<h1 id="字符串的表达方式">字符串的表达方式</h1>
+
+<h2 id="字符串的表达方式有哪些各是怎么表达">字符串的表达方式有哪些，各是怎么表达？</h2>
+<ul>
+  <li>单引号</li>
+  <li>双引号</li>
+  <li>heredoc 语法结构</li>
+  <li>nowdoc 语法结构（自 PHP 5.3.0 起）</li>
+</ul>
+
+<h2 id="存取和修改字符串中的字符有什么技巧">存取和修改字符串中的字符有什么技巧？</h2>
+
+<blockquote>
+  <p>string 中的字符可以通过一个从 0 开始的下标，用类似 array 结构中的方括号包含对应的数字来访问和修改，比如 $str[42]。可以把 string 当成字符组成的 array。函数 substr() 和 substr_replace() 可用于操作多于一个字符的情况。</p>
+</blockquote>
+
+<blockquote>
+  <p>Warning
+用超出字符串长度的下标写入将会拉长该字符串并以空格填充。非整数类型下标会被转换成整数。非法下标类型会产生一个 E_NOTICE 级别错误。用负数下标写入字符串时会产生一个 E_NOTICE 级别错误，用负数下标读取字符串时返回空字符串。写入时只用到了赋值字符串的第一个字符。用空字符串赋值则赋给的值是 NULL 字符。</p>
+</blockquote>
+
+<blockquote>
+  <p>Warning
+PHP 的字符串在内部是字节组成的数组。因此用花括号访问或修改字符串对多字节字符集很不安全。仅应对单字节编码例如 ISO-8859-1 的字符串进行此类操作。</p>
+</blockquote>
+
+<blockquote>
+  <p>Note:
+用 [] 或 {} 访问任何其它类型（不包括数组或具有相应接口的对象实现）的变量只会无声地返回 NULL。</p>
+</blockquote>
+
+<hr />
+
+<h1 id="字符串的原理">字符串的原理</h1>
+
+<h2 id="字符串在底层是如何实现的什么决定着字符串的长度">字符串在底层是如何实现的，什么决定着字符串的长度？</h2>
+
+<blockquote>
+  <p>PHP 中的 string 的实现方式是一个由字节组成的数组再加上一个整数指明缓冲区长度。并无如何将字节转换成字符的信息，由程序员来决定。字符串由什么值来组成并无限制；特别的，其值为 0（“NUL bytes”）的字节可以处于字符串任何位置（不过有几个函数，在本手册中被称为非“二进制安全”的，也许会把 NUL 字节之后的数据全都忽略）。</p>
+</blockquote>
+
+<blockquote>
+  <p>字符串类型的此特性解释了为什么 PHP 中没有单独的“byte”类型 - 已经用字符串来代替了。返回非文本值的函数 - 例如从网络套接字读取的任意数据 - 仍会返回字符串。</p>
+</blockquote>
+
+<h2 id="php并不特别知名字符串的编码那字符串到底时怎样编码的呢">PHP并不特别知名字符串的编码，那字符串到底时怎样编码的呢？</h2>
+
+<blockquote>
+  <p>字符串会被按照该脚本文件相同的编码方式来编码。因此如果一个脚本的编码是 ISO-8859-1，则其中的字符串也会被编码为 ISO-8859-1，以此类推。不过这并不适用于激活了 Zend Multibyte 时；此时脚本可以是以任何方式编码的（明确指定或被自动检测）然后被转换为某种内部编码，然后字符串将被用此方式编码。注意脚本的编码有一些约束（如果激活了 Zend Multibyte 则是其内部编码）- 这意味着此编码应该是 ASCII 的兼容超集，例如 UTF-8 或 ISO-8859-1。不过要注意，依赖状态的编码其中相同的字节值可以用于首字母和非首字母而转换状态，这可能会造成问题。</p>
+</blockquote>
+
+<blockquote>
+  <p>某些函数假定字符串是以单字节编码的，但并不需要将字节解释为特定的字符。例如 substr()，strpos()，strlen() 和 strcmp()。理解这些函数的另一种方法是它们作用于内存缓冲区，即按照字节和字节下标操作。
+某些函数被传递入了字符串的编码方式，也可能会假定默认无此信息。例如 htmlentities() 和 mbstring 扩展中的大部分函数。
+其它函数使用了当前区域（见 setlocale()），但是逐字节操作。例如 strcasecmp()，strtoupper() 和 ucfirst()。这意味着这些函数只能用于单字节编码，而且编码要与区域匹配。例如 strtoupper(“á”) 在区域设定正确并且 á 是单字节编码时会返回 “Á”。如果是用 UTF-8 编码则不会返回正确结果，其结果根据当前区域有可能返回损坏的值。
+最后一些函数会假定字符串是使用某特定编码的，通常是 UTF-8。intl 扩展和 PCRE（上例中仅在使用了 u 修饰符时）扩展中的大部分函数都是这样。尽管这是由于其特殊用途，utf8_decode() 会假定 UTF-8 编码而 utf8_encode() 会假定 ISO-8859-1 编码。</p>
+</blockquote>
+
+<h2 id="非二进制安全是什么意思">非“二进制安全”是什么意思？</h2>
+
+<blockquote>
+  <p>在PHP中经常看到一些函数有个标识「binary safe」，即二进制安全，这是个什么概念呢？ 在一个字符串中会包含很多的字符，这其中就包括NULL。「binary safe」的函数会把它的输入字符串原封不动的进行处理；而非「binary safe」的函数是在底层直接调用C的字符串相关的函数，而这些函数处理一个字符串会把NULL后边的内容忽略掉。</p>
+</blockquote>
+
+<p>以下例子中，如果函数strlen是binary safe的话，我们将得到7；如果函数是非binary safe的话，我们将得到3 ，由于strlen是binary safe的，所以实际上以下的运行结果是7：</p>
+
+<pre><code>$str = "abcx00abc"; //x00为NULL
+echo strlen($str);  //7
+</code></pre>
+
+<hr />
+
+<h1 id="字符串的编码方式">字符串的编码方式</h1>
+
+<h2 id="什么是位什么是字节">什么是位？什么是字节？</h2>
+
+<blockquote>
+  <p>数据存储是以“字节”（Byte）为单位，数据传输是以“位”（bit）为单位，一个位就代表一个0或1（即二进制），每8个位（bit，简写为b）组成一个字节（Byte，简写为B）。</p>
+</blockquote>
+
+<h2 id="什么是ascii编码如何编码">什么是ascii编码，如何编码？</h2>
+
+<blockquote>
+  <p>美国标准信息交换码 (ASCII) （ASCII：将英语中的字符表示为数字的代码。为每个字符分配一个介于 0 到 127 之间的数字。大多数计算机都使用 ASCII 表示文本和在计算机之间传输数据。）（发音为 ask-kee）。ASCII 表包含 128 个数字，分配给了相应的字符 （字符：字母、数字、标点或符号。）。ASCII 为计算机提供了一种存储数据和与其他计算机及程序交换数据的方式。
+因为1位二进制数可以表示（2-1）=2种状态：0、1；而2位二进制数可以表示（2-2）=4种状态：00、01、10、11；依次类推，7位二进制 数可以表示（2-7）=128种状态，每种状态都唯一地编为一个7位的二进制码，对应一个字符（或控制码），这些码可以排列成一个十进制序号0～127。所 以，7位ASCII码是用七位二进制数进行编码的，可以表示128个字符。</p>
+</blockquote>
+
+<blockquote>
+  <p>我们知道，在计算机内部，所有的信息最终都表示为一个二进制的字符串。每一个二进制位（bit）有0和1两种状态，因此八个二进制位就可以组合出256种状态，这被称为一个字节（byte）。也就是说，一个字节一共可以用来表示256种不同的状态，每一个状态对应一个符号，就是256个符号，从0000000到11111111。
+上个世纪60年代，美国制定了一套字符编码，对英语字符与二进制位之间的关系，做了统一规定。这被称为ASCII码，一直沿用至今。
+ASCII码一共规定了128个字符的编码，比如空格”SPACE”是32（二进制00100000），大写的字母A是65（二进制01000001）。这128个符号（包括32个不能打印出来的控制符号），只占用了一个字节的后面7位，最前面的1位统一规定为0</p>
+</blockquote>
+
+<h2 id="什么是unicode编码">什么是Unicode编码？</h2>
+
+<blockquote>
+  <p>Unicode码扩展自ASCII字元集。在严格的ASCII中，每个字元用7位元表示，或者电脑上普遍使用的每字元有8位元宽；而Unicode使用全16位元字元集。这使得Unicode能够表示世界上所有的书写语言中可能用於电脑通讯的字元、象形文字和其他符号。</p>
+</blockquote>
+
+<blockquote>
+  <p>世界上存在着多种编码方式，同一个二进制数字可以被解释成不同的符号。因此，要想打开一个文本文件，就必须知道它的编码方式，否则用错误的编码方式解读，就会出现乱码。为什么电子邮件常常出现乱码？就是因为发信人和收信人使用的编码方式不一样。
+可以想象，如果有一种编码，将世界上所有的符号都纳入其中。每一个符号都给予一个独一无二的编码，那么乱码问题就会消失。这就是Unicode，就像它的名字都表示的，这是一种所有符号的编码。
+Unicode当然是一个很大的集合，现在的规模可以容纳100多万个符号。每个符号的编码都不一样，比如，U+0639表示阿拉伯字母Ain，U+0041表示英语的大写字母A，U+4E25表示汉字”严”。具体的符号对应表，可以查询unicode.org，或者专门的汉字对应表。</p>
+</blockquote>
+
+<blockquote>
+  <p>Unicode只是一个符号集，它只规定了符号的二进制代码，却没有规定这个二进制代码应该如何存储。
+比如，汉字”严”的unicode是十六进制数4E25，转换成二进制数足足有15位（100111000100101），也就是说这个符号的表示至少需要2个字节。表示其他更大的符号，可能需要3个字节或者4个字节，甚至更多。
+这里就有两个严重的问题，第一个问题是，如何才能区别Unicode和ASCII？计算机怎么知道三个字节表示一个符号，而不是分别表示三个符号呢？第二个问题是，我们已经知道，英文字母只用一个字节表示就够了，如果Unicode统一规定，每个符号用三个或四个字节表示，那么每个英文字母前都必然有二到三个字节是0，这对于存储来说是极大的浪费，文本文件的大小会因此大出二三倍，这是无法接受的。
+它们造成的结果是：1）出现了Unicode的多种存储方式，也就是说有许多种不同的二进制格式，可以用来表示Unicode。2）Unicode在很长一段时间内无法推广，直到互联网的出现。</p>
+</blockquote>
+
+<h2 id="如何在xm中用unicode表示汉字">如何在xm中用Unicode表示汉字？</h2>
+
+<pre><code>\u5982\u4f55\u5728\u78\u6d\u4e2d\u7528\u55\u6e\u69\u63\u6f\u64\u65\u8868\u793a\u6c49\u5b57\uff1f
+</code></pre>
+
+<hr />
+
+<h1 id="utf-8和gbk编码原理">UTF-8和GBK编码原理</h1>
+
+<h2 id="什么是utf_8编码">什么是UTF_8编码？</h2>
+
+<blockquote>
+  <p>互联网的普及，强烈要求出现一种统一的编码方式。UTF-8就是在互联网上使用最广的一种Unicode的实现方式。其他实现方式还包括UTF-16（字符用两个字节或四个字节表示）和UTF-32（字符用四个字节表示），不过在互联网上基本不用。重复一遍，这里的关系是，<strong>UTF-8是Unicode的实现方式之一</strong>。</p>
+</blockquote>
+
+<h2 id="utf-8编码有什么规律">UTF-8编码有什么规律？</h2>
+
+<blockquote>
+  <p>UTF-8最大的一个特点，就是它是一种变长的编码方式。它可以使用1~4个字节表示一个符号，根据不同的符号而变化字节长度。
+UTF-8的编码规则很简单，只有二条：</p>
+  <ol>
+    <li>对于单字节的符号，字节的第一位设为0，后面7位为这个符号的unicode码。因此对于英语字母，UTF-8编码和ASCII码是相同的。</li>
+    <li>对于n字节的符号（n&gt;1），第一个字节的前n位都设为1，第n+1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的unicode码。</li>
+  </ol>
+</blockquote>
+
+<pre><code>Unicode符号范围(十六进制）         UTF-8编码方式（二进制）
+0000 0000 - 0000 007F   | 0xxxxxxx
+0000 0080 - 0000 07FF   | 110xxxxx 10xxxxxx
+0000 0800 - 0000 FFFF   | 1110xxxx 10xxxxxx 10xxxxxx
+0001 0000 - 0010 FFFF   | 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
+</code></pre>
+
+<h2 id="utf8中汉字到底占几个字节">UTF8中汉字到底占几个字节？</h2>
+
+<blockquote>
+  <p>UTF-8编码是变长编码，通常汉字占三个字节，扩展B区以后的汉字占四个字节。</p>
+</blockquote>
+
+<blockquote>
+  <p>已知”严”的unicode是4E25（100111000100101），根据上表，可以发现4E25处在第三行的范围内（0000 0800-0000 FFFF），因此”严”的UTF-8编码需要三个字节，即格式是”1110xxxx 10xxxxxx 10xxxxxx”。然后，从”严”的最后一个二进制位开始，依次从后向前填入格式中的x，多出的位补0。这样就得到了，”严”的UTF-8编码是”11100100 10111000 10100101”，转换成十六进制就是E4B8A5。</p>
+</blockquote>
+
+<h2 id="带有签名的utf-8时怎么回事">带有签名的UTF-8时怎么回事？</h2>
+
+<blockquote>
+  <p>Unicode编码中表示字节排列顺序的那个文件头，叫做BOM（byte-order mark），FFFE和FEFF就是不同的BOM。
+UTF-8文件的BOM是“EF BB BF”，但是UTF-8的字节顺序是不变的，因此这个文件头实际上不起作用。有一些编程语言是ISO-8859-1编码，所以如果用UTF-8针对这些语言编程序，就必须去掉BOM，即保存成“UTF-8—无BOM”的格式才可以，PHP语言就是这样。</p>
+</blockquote>
+
+<blockquote>
+  <p>用文本编辑软件UltraEdit中的”十六进制功能”，观察该文件的内部编码方式。
+或在VIM敲入<code>:%!xxd</code> (<code>:%!xxd -r</code></p>
+</blockquote>
+
+<ol>
+  <li>ANSI：文件的编码就是两个字节”D1 CF”，这正是”严”的GB2312编码，这也暗示GB2312是采用大头方式存储的。</li>
+  <li>Unicode：编码是四个字节”FF FE 25 4E”，其中”FF FE”表明是小头方式存储，真正的编码是4E25。</li>
+  <li>Unicode big endian：编码是四个字节”FE FF 4E 25”，其中”FE FF”表明是大头方式存储。</li>
+  <li>UTF-8：编码是六个字节”EF BB BF E4 B8 A5”，前三个字节”EF BB BF”表示这是UTF-8编码，后三个”E4B8A5”就是”严”的具体编码，它的存储顺序与编码顺序是一致的。</li>
+</ol>
+
+<h2 id="gb2312和gbk编码是怎么来的">GB2312和GBK编码是怎么来的？</h2>
+
+<blockquote>
+  <p>GB 2312 或 GB 2312-80 是中华人民共和国国家标准简体中文字符集，全称《信息交换用汉字编码字符集·基本集》，又称GB0，由中国国家标准总局发布</p>
+</blockquote>
+
+<blockquote>
+  <p>GB 2312的出现，基本满足了汉字的计算机处理需要，它所收录的汉字已经覆盖中国大陆99.75%的使用频率。但对于人名、古汉语等方面出现的罕用字和繁体字，GB 2312不能处理，因此后来GBK及GB 18030汉字字符集相继出现以解决这些问题。</p>
+</blockquote>
+
+<blockquote>
+  <p>GBK即汉字内码扩展规范，K为汉语拼音 Kuo Zhan（扩展）中“扩”字的声母。英文全称Chinese Internal Code Specification。</p>
+</blockquote>
+
+<h2 id="gbk和utf8该如何选择">GBK和UTF8该如何选择？</h2>
+
+<blockquote>
+  <p>使用GBK则每个字符占用2个字节，而使用UTF－8英文却只占一个字节。</p>
+</blockquote>
+
+<h2 id="什么时候要用多字节转码函数">什么时候要用多字节转码函数？</h2>
+
+<blockquote>
+  <p>虽然许多语言每个必要字符都能一对一映射到 8 比特（bit）的值，但也有好几种语言需要非常多的字符来书面通讯，以至于它们的编码范围不能仅仅包含在一个字节里（一个字节 Byte 由 8 比特 bit 构成。每一比特仅能包含两种不同的值： 1 或 0。所以，一字节仅能够表示 256 种不同的值，即 2 的八次方）。 开发多字节字符编码方案是为了在基于字节的常规编码系统中表达超过 256 个字符。</p>
+</blockquote>
+
+<blockquote>
+  <p>在你操作（trim、split、splice 等等）多字节编码的字符串的时候，由于在这种编码方案下，两个或多个连续字节可能只表达了一个字符，所以你需要使用专门的函数。 否则，当你将不能检测多字节字符串的函数应用到这个字符串的时候，它可能无法检测多字节字符的起始位置，并以乱码字符串结尾，基本丢失了它原来的意思。</p>
+</blockquote>
+
+<blockquote>
+  <p>mbstring 提供了针对多字节字符串的函数，能够帮你处理 PHP 中的多字节编码。 除此以外，mbstring 还能在可能的字符编码之间相互进行编码转换。 为了方便起见，mbstring 设计成了处理基于 Unicode 的编码，类似 UTF-8、UCS-2 及诸多单字节的编码（在以下列出了）。</p>
+</blockquote>
+
+<h2 id="多字节转码函数mbstring和iconv有什么区别如何选择">多字节转码函数mbstring和iconv有什么区别，如何选择？</h2>
+
+<p>PHP supports multi byte in two extensions: iconv  and mbstring</p>
+
+<ul>
+  <li>iconv uses an external library (supports more encodings but less portable)</li>
+  <li>mbstring has the library bundled with PHP (less encodings but more portable)</li>
+</ul>
+
+<h2 id="在开发中如何做怎么才能不乱码">在开发中，如何做怎么才能不乱码？</h2>
+
+<blockquote>
+  <p>使用多字节字符串函数，如：
+mb_substr 根据字符数执行一个多字节安全的 substr() 操作。</p>
+</blockquote>
+
+<h2 id="绝对乱码现象如何产生的">“绝对乱码”现象如何产生的？</h2>
+
+<hr />
+
+<h1 id="字符串类型转换">字符串类型转换</h1>
+
+<h2 id="其它数据类型转换为字符串有什么规律">其它数据类型转换为字符串有什么规律？</h2>
+
+<blockquote>
+  <p>一个值可以通过在其前面加上 (string) 或用 strval() 函数来转变成字符串。在一个需要字符串的表达式中，会自动转换为 string。比如在使用函数 echo 或 print 时，或在一个变量和一个 string 进行比较时，就会发生这种转换。类型和类型转换可以更好的解释下面的事情，也可参考函数 settype()。</p>
+</blockquote>
+
+<blockquote>
+  <p>一个布尔值 boolean 的 TRUE 被转换成 string 的 “1”。Boolean 的 FALSE 被转换成 ““（空字符串）。这种转换可以在 boolean 和 string 之间相互进行。</p>
+</blockquote>
+
+<blockquote>
+  <p>一个整数 integer 或浮点数 float 被转换为数字的字面样式的 string（包括 float 中的指数部分）。使用指数计数法的浮点数（4.1E+6）也可转换。</p>
+</blockquote>
+
+<blockquote>
+  <p>数组 array 总是转换成字符串 “Array”，因此，echo 和 print 无法显示出该数组的内容。要显示某个单元，可以用 echo $arr[‘foo’] 这种结构。要显示整个数组内容见下文。</p>
+</blockquote>
+
+<blockquote>
+  <p>在 PHP 4 中对象 object 总是被转换成字符串 “Object”，如果为了调试原因需要打印出对象的值，请继续阅读下文。为了得到对象的类的名称，可以用 get_class() 函数。自 PHP 5 起，适当时可以用 __toString 方法。</p>
+</blockquote>
+
+<blockquote>
+  <p>资源 resource 总会被转变成 “Resource id #1” 这种结构的字符串，其中的 1 是 PHP 在运行时分配给该 resource 的唯一值。不要依赖此结构，可能会有变更。要得到一个 resource 的类型，可以用函数 get_resource_type()。</p>
+</blockquote>
+
+<blockquote>
+  <p>NULL 总是被转变成空字符串。</p>
+</blockquote>
+
+<blockquote>
+  <p>如上面所说的，直接把 array，object 或 resource 转换成 string 不会得到除了其类型之外的任何有用信息。可以使用函数 print_r() 和 var_dump() 列出这些类型的内容。</p>
+</blockquote>
+
+<blockquote>
+  <p>大部分的 PHP 值可以转变成 string 来永久保存，这被称作串行化，可以用函数 serialize() 来实现。如果 PHP 引擎设定支持 WDDX，PHP 值也可被串行化为格式良好的 XML 文本。</p>
+</blockquote>
+
+<h2 id="什么是串行化实现串行化有哪些常用方法">什么是“串行化”？实现“串行化”有哪些常用方法？</h2>
+
+<blockquote>
+  <p>串行化(Serialization)是计算机科学中的一个概念，它是指将对象存储到介质（如文件、内存缓冲区等）中或是以二进制方式通过网络传输。之后可以通过反串行化从这些连续的字节（byte）数据重新构建一个与原始对象状态相同的对象，因此在特定情况下也可以说是得到一个副本，但并不是所有情况都这样。</p>
+</blockquote>
+
+<blockquote>
+  <p>序列化在计算机科学中通常有以下定义:</p>
+  <ol>
+    <li>对同步控制而言，表示强制在同一时间内进行单一存取。</li>
+    <li>在数据储存与传送的部分是指将一个对象存储至一个储存媒介，例如档案或是记亿体缓冲等，或者透过网络传送资料时进行编码的过程，可以是字节或是XML等格式。而字节的或XML编码格式可以还原完全相等的对象。这程序被应用在不同应用程序之间传送对象，以及服务器将对象储存到档案或数据库。相反的过程又称为反序列化。</li>
+  </ol>
+</blockquote>
+
+<ul>
+  <li><code>serialize</code>/<code>unserialize</code></li>
+  <li><code>json_encode</code>/<code>json_decode</code></li>
+  <li><code>wddx_serialize_value</code></li>
+</ul>
+
+<hr />
+
+<h1 id="正则表达式">正则表达式</h1>
+
+<h2 id="什么是posix兼容表达式">什么是POSIX兼容表达式？</h2>
+
+<h2 id="什么时perl兼容正则表达式pcre">什么时Perl兼容正则表达式（PCRE）？</h2>
+
+<h2 id="pcre和posix的对比有什么不同该如何选择">PCRE和POSIX的对比有什么不同，该如何选择？</h2>
+
+<p>自 PHP 5.3.0起， POSIX 正则表达式扩展被废弃。在 POSIX 正则和 PCRE 正则之间有一些不同，本页列出了在转向PCRE 时最显著的需要知道的不同点。</p>
+
+<ol>
+  <li>PCRE 函数需要模式以分隔符闭合。</li>
+  <li>不像POSIX，PCRE 扩展没有专门用于大小写不敏感匹配的函数。取而代之的是，支持使用i (PCRE_CASELESS) 模式修饰符完成同样的工作。 其他模式修饰符同样可用于改变匹配策略。</li>
+  <li>POSIX 函数从最左面开始寻找最长的匹配，但是 PCRE 在第一个合法匹配后停止。如果字符串 不匹配这没有什么区别，但是如果匹配，两者在结果和速度上都会有差别。 为了说明这个不同, 考虑下面的例子(来自Jeffrey Friedl 的《精通正则表达式》一书)。 使用模式 one(self)?(selfsufficient)? 在字符串oneselfsufficient 上匹配，PCRE 会匹配到oneself，但是使用 POSIX，结果将是整个字符串 oneselfsufficient。 两个子串都匹配原始字符串，但是 POSIX 将 最长的最为结果。</li>
+</ol>
+
+<h2 id="pcre正则的书写有什么技巧">PCRE正则的书写有什么技巧？</h2>
+
+<h2 id="正则表达式匹配的原理是什么">正则表达式匹配的原理是什么？</h2>
+
+<blockquote>
+  <p>正则引擎大体上可分为不同的两类：DFA和NFA，而NFA又基本上可以分为传统型NFA和POSIX NFA。
+DFA Deterministic finite automaton 确定型有穷自动机
+NFA Non-deterministic finite automaton　非确定型有穷自动机</p>
+</blockquote>
+
+<blockquote>
+  <p>DFA引擎因为不需要回溯，所以匹配快速，但不支持捕获组，所以也就不支持反向引用和$number这种引用方式，目前使用DFA引擎的语言和工具主要有awk、egrep 和 lex</p>
+</blockquote>
+
+<blockquote>
+  <p>POSIX NFA主要指符合POSIX标准的NFA引擎，它的特点主要是提供longest-leftmost匹配，也就是在找到最左侧最长匹配之前，它将继续回溯。同DFA一样，非贪婪模式或者说忽略优先量词对于POSIX NFA同样是没有意义的。</p>
+</blockquote>
+
+<ol>
+  <li>优先选择最左端的匹配结果</li>
+  <li>标准量词是匹配优先的</li>
+  <li>DFA：文本主导</li>
+  <li>NFA：表达式主导</li>
+</ol>
+
+<p><strong>回溯(backtracking)</strong></p>
+
+<p>NFA引擎最重要的性质是：它会一次处理各个子表达式或组成元素，遇到需要在两个可能成功的可能中进行选择的时候，它会选择其一，同时记住其他结果，以备后续需要。
+需要做出选择的情形包括 量词（决定是否尝试另一次匹配）和多选结构（决定选择哪个多选分支）两个要点：</p>
+
+<ol>
+  <li>如果需要在“进行尝试”和“跳过尝试”之间选择，对于匹配优先量词来说，引擎会优先选择“进行尝试”，对于忽略优先量词来说，会选择“跳过尝试” 。</li>
+  <li>距离当前最近存储的选项就是当本地失败强制回溯返回的。使用的原则是LIFO（last in first out，后进先出）。</li>
+  <li>实际上，NFA搜索的过程算法就是深度优先，只不过并不一定完全遍历，完成匹配之后就停止搜索了。</li>
+</ol>
+
+<hr />
+
+<h1 id="字符串函数">字符串函数</h1>
+
+<h2 id="如何能巧妙的记忆php中常用字符串函数">如何能巧妙的记忆PHP中常用字符串函数？</h2>
+
+<ol>
+  <li>第一个函数都是<code>string</code></li>
+</ol>
+
+<hr />
+
+<h1 id="字符串常见算法和原理">字符串常见算法和原理</h1>
+
+<h2 id="字符串常用算法如何随机生成字符串">字符串常用算法–如何随机生成字符串？</h2>
+
+<p>1.</p>
+
+<pre><code>function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+    for ($i = 0; $i &lt; $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+    return $randomString;
+}
+</code></pre>
+
+<p>2.</p>
+
+<pre><code>function generateRandomString($length = 10) {
+    return substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, $length);
+}
+</code></pre>
+
+<p>3.</p>
+
+<pre><code>$random = substr( md5(rand()), 0, 7);
+</code></pre>
+
+<p>4.</p>
+
+<pre><code>function rndStr($len = 64) {
+     $randomData = file_get_contents('/dev/urandom', false, null, 0, $len) . uniqid(mt_rand(), true);
+     $str = substr(str_replace(array('/','=','+'),'', base64_encode($randomData)),0,$len);
+    return $str;
+}
+</code></pre>
+
+<h2 id="字符串常用算法如何实现字符串反转">字符串常用算法–如何实现字符串反转？</h2>
+
+<p>1.</p>
+
+<pre><code>strrev
+</code></pre>
+
+<p>2.</p>
+
+<pre><code>$len = mb_strlen($str);
+for($i=$len-1; $i&gt;=0; $i--) {
+	$result .= mb_substr($str,$i,1,$encoding);
+}
+</code></pre>
+
+<p>3.</p>
+
+<pre><code>preg_match_all('/./us', $str, $ar);
+return implode('',array_reverse($ar[0]));
+</code></pre>
+
+<h2 id="字符串常用算法如何对字符串加密解密">字符串常用算法–如何对字符串加密解密？</h2>
+
+<ul>
+  <li><code>crypt</code>单向字符串散列</li>
+  <li><code>crc32</code>计算一个字符串的 crc32 多项式</li>
+  <li><code>hash</code>生成哈希值 （消息摘要）</li>
+  <li><code>hash_file</code>使用给定文件的内容生成哈希值</li>
+  <li><code>hash_hmac</code>使用 HMAC 方法生成带有密钥的哈希值</li>
+  <li><code>md5</code>计算字符串的 MD5 散列值</li>
+  <li><code>sha1</code>计算字符串的 sha1 散列值</li>
+  <li><code>password_hash</code>计算密码的哈希值</li>
+  <li>
+    <p><code>base64_encode</code>Encodes data with MIME base64</p>
+  </li>
+  <li><code>mcrypt_encrypt</code> &amp; <code>mcrypt_decrypt</code></li>
+</ul>
+
+<h2 id="字符串常用算法如何对字符串安全处理">字符串常用算法–如何对字符串安全处理？</h2>
+
+<ol>
+  <li>SQL注入
+    <ul>
+      <li>设置字符集<code>mysql_set_charset</code> and <code>mysql:host=$host;dbname=$db;charset=utf8</code></li>
+      <li>参数绑定<code>PDO::bindValue PDO::bindParam</code></li>
+      <li>禁止本地PDO库模拟prepare（如果数据库支持prepare）<code>$pdo-&gt;setAttribute(PDO::ATTR_EMULATE_PREPARES, false);</code></li>
+    </ul>
+  </li>
+  <li>Shell注入
+    <ul>
+      <li>escapeshellarg</li>
+      <li>escapeshellcmd</li>
+    </ul>
+  </li>
+  <li>过滤
+    <ul>
+      <li><code>filter_var($email, FILTER_VALIDATE_EMAIL)</code></li>
+      <li><code>filter_var($email, FILTER_SANITIZE_EMAIL)</code></li>
+    </ul>
+  </li>
+  <li>转义
+    <ul>
+      <li><code>htmlspecialchars_decode</code></li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="参考">参考</h1>
+
+<p><a href="http://php.net/manual/zh/language.types.string.php">String 字符串</a>
+<a href="http://stackoverflow.com/questions/3264514/in-php-what-does-it-mean-by-a-function-being-binary-safe">In PHP what does it mean by a function being binary-safe?</a>
+<a href="http://weizhifeng.net/php-binary-safe.html">PHP二进制安全</a>
+<a href="http://www.ruanyifeng.com/blog/2007/10/ascii_unicode_and_utf-8.html">字符编码笔记：ASCII，Unicode和UTF-8</a>
+<a href="http://php.net/manual/en/book.mbstring.php">Multibyte String</a>
+<a href="http://blog.ifeeline.com/1172.html">PHP函数参考 – 国际化与字符编码支持 – iconv</a>
+<a href="http://php.net/manual/zh/language.oop5.serialization.php">对象序列化</a>
+<a href="http://blog.csdn.net/lxcnn/article/details/4304651">正则基础之——NFA引擎匹配原理</a>
+<a href="http://progressdaily.diandian.com/post/how-regex-work">正则表达式原理</a>
+<a href="http://www.cnblogs.com/hustskyking/archive/2013/06/04/RegExp.html">正则表达式30分钟入门教程</a>
+<a href="http://segmentfault.com/blog/barretlee/1190000000426455">进阶正则表达式</a></p>
+:ET

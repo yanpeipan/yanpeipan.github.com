@@ -1,0 +1,37 @@
+I"~
+<h2 id="克隆代码">克隆代码</h2>
+
+<pre><code>git clone https://github.com/phacility/xhprof.git /var/xhprof XHPROF_HOME
+</code></pre>
+
+<h2 id="安装依赖">安装依赖</h2>
+
+<pre><code>pecl install pecl install channel://pecl.php.net/xhprof-0.9.4
+</code></pre>
+
+<h2 id="配置phpini">配置php.ini</h2>
+
+<pre><code>extension=xhprof.so
+</code></pre>
+
+<h2 id="添加文件-xhprof_homeexamplesprependphp">添加文件 XHPROF_HOME/examples/prepend.php</h2>
+
+<pre><code>xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+</code></pre>
+
+<h2 id="添加文件-xhprof_homeexamplesappendphp">添加文件 XHPROF_HOME/examples/append.php</h2>
+
+<pre><code>$xhprof_data = xhprof_disable();
+$xhprof_runs = new XHProfRuns_Default();
+$run_id = $xhprof_runs-&gt;save_run($xhprof_data, "xhprof_foo");
+
+echo "\n---------------\n".
+"http://XHPROF_HOST/index.php?run=$run_id&amp;source=xhprof_foo\n".
+"---------------\n";
+</code></pre>
+
+<h2 id="配置nginx">配置nginx</h2>
+
+<pre><code>fastcgi_param PHP_VALUE "auto_prepend_file=XHPROF_HOME/examples/prepend.php \n auto_append_file=XHPROF_HOME/examples/append.php";
+</code></pre>
+:ET

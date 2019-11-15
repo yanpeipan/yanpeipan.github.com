@@ -1,0 +1,174 @@
+I"Z
+<hr />
+
+<h1 id="一个通用问题">一个通用问题</h1>
+
+<p>如何查找所有频道正在播出的节目？ 如何查找所有分类下最热门的内容？ 如何查找所有运动员的最好成绩？<br />
+这些问题都可以抽象为：如何取分组的最值？</p>
+
+<hr />
+
+<h1 id="sql">SQL</h1>
+
+<p>数据库：MySQL</p>
+
+<h2 id="基于sql的几种实现">基于SQL的几种实现</h2>
+
+<p>任务：为每件物品找到标价最高的经销商</p>
+
+<h3 id="关联子查询">关联子查询</h3>
+
+<p>最好理解， 一般情况下，应该避免子查询，效率非常低。</p>
+
+<pre><code>SELECT article, dealer, price
+FROM   shop s1
+WHERE  price=(SELECT MAX(s2.price)
+              FROM shop s2
+              WHERE s1.article = s2.article);
+</code></pre>
+
+<h3 id="非关联子查询">非关联子查询</h3>
+
+<pre><code>SELECT s1.article, dealer, s1.price
+FROM shop s1
+JOIN (
+  SELECT article, MAX(price) AS price
+  FROM shop
+  GROUP BY article) AS s2
+  ON s1.article = s2.article AND s1.price = s2.price;
+</code></pre>
+
+<h3 id="左关联">左关联</h3>
+
+<pre><code>SELECT s1.article, s1.dealer, s1.price
+FROM shop s1
+LEFT JOIN shop s2 ON s1.article = s2.article AND s1.price &lt; s2.price
+WHERE s2.article IS NULL;
+</code></pre>
+
+<hr />
+
+<h2 id="名词解释">名词解释</h2>
+
+<ul>
+  <li>
+    <p>B+树
+B+树是一种经典的数据结构，由平衡树和二叉查找树结合产生，它是为磁盘或其它直接存取辅助设备而设计的一种平衡查找树，在B+树中，所有的记录节点都是按键值大小顺序存放在同一层的叶节点中，叶节点间用指针相连，构成双向循环链表，非叶节点（根节点、枝节点）只存放键值，不存放实际数据。</p>
+  </li>
+  <li>
+    <p>覆盖索引
+包含所有满足查询需要的数据的索引成为覆盖索引(Covering Index)。</p>
+  </li>
+  <li>松散索引扫描
+当 MySQL 完全利用索引扫描来实现 <code>GROUP BY</code> 的时候，并不需要扫描所有满足条件的索引键即可完成操作得出结果。<br />
+要利用到松散索引扫描实现GROUP BY，需要至少满足以下几个条件：
+    <ol>
+      <li>GROUP BY 条件字段必须在同一个索引中最前面的连续位置；</li>
+      <li>在使用GROUP BY 的同时，只能使用MAX 和MIN 这两个聚合函数；</li>
+      <li>如果引用到了该索引中GROUP BY 条件之外的字段条件的时候，必须以常量形式存在；</li>
+    </ol>
+  </li>
+  <li>紧凑索引扫描
+紧凑索引扫描实现GROUP BY 和松散索引扫描的区别主要在于他需要在扫描索引的时候，读取所有满足条件的索引键，然后再根据读取的数据来完成GROUP BY 操作得到相应结果。</li>
+</ul>
+
+<h2 id="实例优化">实例优化</h2>
+
+<h3 id="查找所有频道正在播出的节目">查找所有频道正在播出的节目</h3>
+
+<p>表结构：</p>
+
+<pre><code>CREATE TABLE `pt_l_program` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `lid` int(11) unsigned NOT NULL COMMENT '频道ID',
+  `starttime` timestamp DEFAULT '0' COMMENT '节目开始时间',
+  `program` varchar(255) DEFAULT '' COMMENT '节目单',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique` (`lid`,`starttime`),
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='节目单';
+</code></pre>
+
+<p>SQL：</p>
+
+<pre><code>select SQL_SMALL_RESULT SQL_NO_CACHE  p1.id, p1.program, p1.starttime, p1.lid  from pt_l_program p1 inner join 
+(select  max(starttime) as starttime,lid from pt_l_program where starttime&lt;=UNIX_TIMESTAMP()  group by lid order by null) p2 
+on p1.lid=p2.lid and p1.starttime=p2.starttime;
+</code></pre>
+
+<p>索引：</p>
+
+<pre><code>CREATE  INDEX Group_Search ON pt_l_program (lid,starttime,id,program);
+</code></pre>
+
+<p>Explain:<br />
+分组时使用松散索引扫描，聚合数据时使用覆盖索引，完全避免了磁盘IO。如果需要考虑插入性能，则可以去掉<code>Group_Search</code>。
+<img src="/assets/image/20141214001406.png" alt="" /></p>
+
+<h2 id="问题扩展">问题扩展</h2>
+
+<h3 id="分组取前n条值分组取第n条值">分组取前n条值/分组取第n条值</h3>
+
+<p>问题有点难度，但SQL还是可以实现：</p>
+
+<pre><code>set @num :=0, @lid := '';
+select id, program,from_unixtime( starttime),channel_id  from (
+	select id, program,starttime,
+      @num := if(@lid = lid, @num + 1, 1) as row_number,
+      @lid := lid as channel_id
+  from pt_l_program
+	where   starttime&lt;=unix_timestamp()
+  order by lid, starttime desc 
+) as p where p.row_number &lt;= 2;
+</code></pre>
+
+<p>利用Having过滤：</p>
+
+<pre><code>set @num :=0, @lid := '', @now := 0;
+desc select id, program,from_unixtime(starttime),
+      @num := if(@lid = lid and @now&lt;starttime, @num + 1, 1) as row_number,
+      @lid := lid as channel_id
+from pt_l_program
+where starttime&lt;=unix_timestamp() group by lid, starttime desc having row_number&lt;=2;
+</code></pre>
+
+<hr />
+
+<h1 id="nosql">NoSQL</h1>
+
+<p>数据库：MongoDB</p>
+
+<h2 id="名词解释-1">名词解释</h2>
+
+<p>聚合管道：管道是MongoDB2.2版本引入新的功能 ，它是数据聚合的一个新框架，其概念类似于数据处理的管道。</p>
+
+<h2 id="导入数据">导入数据</h2>
+
+<pre><code>mongoimport --type csv --file ~/program.csv --db pt --collection program --fields id,lid,starttime,program
+</code></pre>
+
+<h2 id="聚合">聚合</h2>
+
+<pre><code>db.program.aggregate(
+[
+{$match:{}},
+{ $project : { id : 1 , lid : 1, program:1, starttime:{$multiply:["$starttime", 1000]} } },
+{$sort:{"lid":-1, "starttime":1}},
+{$group : { _id :"$lid", program:{$first:"$program"}, starttime:{$first:"$starttime"  }}}
+],
+{explain:true}
+)
+</code></pre>
+
+<hr />
+
+<h1 id="参考">参考</h1>
+<p><a href="http://www.xaprb.com/blog/2006/12/07/how-to-select-the-firstleastmax-row-per-group-in-sql/">How to select the first/least/max row per group in SQL</a><br />
+<a href="http://www.51testing.com/html/52/n-229952.html">详解MySQL分组查询Group By实现原理</a><br />
+<a href="http://www.cnmiss.cn/?p=373">MySQL优化GROUP BY－松散索引扫描与紧凑索引扫描</a><br />
+<a href="http://www.iteedu.com//database/mysql/mysqlmanualcn/optimization/group-by-optimization.php">MySQL如何优化GROUP BY</a><br />
+<a href="http://www.coder4.com/archives/1344">松散的索引扫描(Loose index scan)</a><br />
+<a href="http://blog.csdn.net/dbanote/article/details/9083109">[MySQL] 索引与性能（1）- 索引类型</a><br />
+<a href="http://www.cnblogs.com/Arlen/articles/1751227.html">MyISAM 索引结构了解 – MyISAM Index Structure</a><br />
+<a href="http://blog.codinglabs.org/articles/theory-of-mysql-index.html">MySQL索引背后的数据结构及算法原理</a></p>
+
+:ET

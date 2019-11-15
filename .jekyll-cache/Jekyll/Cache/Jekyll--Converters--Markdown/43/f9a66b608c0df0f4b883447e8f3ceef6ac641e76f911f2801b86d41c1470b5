@@ -1,0 +1,184 @@
+I"�
+<hr />
+
+<nav>
+<ul id="markdown-toc">
+  <li><a href="#搭建开发环境" id="markdown-toc-搭建开发环境">搭建开发环境</a></li>
+  <li><a href="#知识点" id="markdown-toc-知识点">知识点</a>    <ul>
+      <li><a href="#javascript" id="markdown-toc-javascript">JavaScript</a></li>
+      <li><a href="#testing" id="markdown-toc-testing">Testing</a></li>
+      <li><a href="#development" id="markdown-toc-development">Development</a></li>
+    </ul>
+  </li>
+  <li><a href="#redux异步" id="markdown-toc-redux异步">Redux异步</a>    <ul>
+      <li><a href="#redux-thunk" id="markdown-toc-redux-thunk">Redux-thunk</a></li>
+      <li><a href="#redux-promise" id="markdown-toc-redux-promise">redux-promise</a></li>
+      <li><a href="#redux-promise-middleware" id="markdown-toc-redux-promise-middleware">redux-promise-middleware</a></li>
+      <li><a href="#redux-loop" id="markdown-toc-redux-loop">redux-loop</a></li>
+      <li><a href="#redux-sage" id="markdown-toc-redux-sage">redux-sage</a></li>
+    </ul>
+  </li>
+  <li><a href="#alias-in-react-native" id="markdown-toc-alias-in-react-native">Alias in React Native</a>    <ul>
+      <li><a href="#use-providesmodule" id="markdown-toc-use-providesmodule">use @providesModule</a></li>
+      <li><a href="#use-babel-plugins" id="markdown-toc-use-babel-plugins">Use Babel Plugins</a></li>
+    </ul>
+  </li>
+  <li><a href="#参考资料" id="markdown-toc-参考资料">参考资料</a></li>
+</ul>
+
+</nav>
+
+<p>总结近段时间以来的经验（深坑）。</p>
+
+<h1 id="搭建开发环境">搭建开发环境</h1>
+<p>文档已经非常详尽， 暂不赘述。</p>
+
+<hr />
+
+<h1 id="知识点">知识点</h1>
+
+<h2 id="javascript">JavaScript</h2>
+<blockquote>
+
+  <ol>
+    <li><a href="https://facebook.github.io/react/"><code>React</code></a>: React是由Facebook和Instagram开发的用于构建用户界面的JS库，在MVC架构中属于V. A JAVASCRIPT LIBRARY FOR BUILDING USER INTERFACES</li>
+    <li><a href="https://jsx.github.io/"><code>JSX</code></a> is a statically-typed, object-oriented programming language designed to run on modern web browsers</li>
+    <li><a href="http://redux.js.org/"><code>Redux</code></a> 状态容器，提供可预测的状态管理。Predictable state container for JavaScript apps</li>
+    <li><a href="https://github.github.io/fetch/"><code>Fetch</code></a> is a Promise-based mechanism for programatically making web requests in the browser</li>
+    <li><a href="http://facebook.github.io/flux/"><code>Flux</code></a> APPLICATION ARCHITECTURE FOR BUILDING USER INTERFACES</li>
+    <li><a href="http://www.ecma-international.org/ecma-262/6.0/index.html">ES6</a> ECMAScript® 2015 Language Specification</li>
+  </ol>
+</blockquote>
+
+<h2 id="testing">Testing</h2>
+<blockquote>
+
+  <ol>
+    <li><a href="http://facebook.github.io/jest/"><code>Jest</code></a> Jest is a JavaScript testing framework, used by Facebook to test all JavaScript code including React applications.</li>
+  </ol>
+</blockquote>
+
+<h2 id="development">Development</h2>
+<blockquote>
+
+  <ol>
+    <li><a href="https://nuclide.io/"><code>Nuclide</code></a> A unified developer experience for web and mobile development</li>
+    <li><a href="https://flowtype.org/"><code>Flow</code></a> A STATIC TYPE CHECKER FOR JAVASCRIPT</li>
+  </ol>
+</blockquote>
+
+<hr />
+
+<h1 id="redux异步">Redux异步</h1>
+
+<blockquote>
+
+  <p>Javascript语言的执行环境是”单线程”（single thread）。</p>
+
+  <p>Thund定义：编译器的”传名调用”实现，往往是将参数放到一个临时函数之中，再将这个临时函数传入函数体。这个临时函数就叫做 Thunk 函数。求值策略（即函数的参数到底应该何时求值）：传值调用（call by value)，传名调用（call by name)。</p>
+
+  <p>Promise对象是CommonJS工作组提出的一种规范，目的是为异步操作提供统一接口。</p>
+
+  <p><code>Optimistic updates</code>，是指不等待请求成功，在发送请求的同时立即渲染数据。</p>
+</blockquote>
+
+<h2 id="redux-thunk">Redux-thunk</h2>
+
+<blockquote>
+  <p>Thunk middleware for Redux</p>
+</blockquote>
+
+<h2 id="redux-promise">redux-promise</h2>
+
+<blockquote>
+  <p>FSA-compliant promise middleware for Redux.</p>
+</blockquote>
+
+<h2 id="redux-promise-middleware">redux-promise-middleware</h2>
+
+<blockquote>
+  <p>Redux middleware for resolving and rejecting promises with conditional <code>optimistic updates</code></p>
+</blockquote>
+
+<h2 id="redux-loop">redux-loop</h2>
+
+<blockquote>
+  <p>A library that ports Elm’s effect system to Redux</p>
+</blockquote>
+
+<h2 id="redux-sage">redux-sage</h2>
+
+<blockquote>
+  <p>An alternative side effect model for Redux apps</p>
+</blockquote>
+
+<hr />
+
+<h1 id="alias-in-react-native">Alias in React Native</h1>
+<blockquote>
+
+  <p>令人厌烦的引入方式：<code>import themes from '../../config/themes';</code></p>
+</blockquote>
+
+<h2 id="use-providesmodule">use @providesModule</h2>
+<blockquote>
+
+  <p>在文件头部引入注释, 了解更多：<a href="https://github.com/facebook/fbjs">FBJS</a></p>
+
+  <div class="language-Javascript highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>/**
+ * @providesModule login
+ */
+</pre></div>
+</div>
+  </div>
+</blockquote>
+
+<h2 id="use-babel-plugins">Use Babel Plugins</h2>
+<blockquote>
+
+  <p><a href="http://babeljs.io/">Babel</a> is a JavaScript compiler.</p>
+
+  <div class="language-bash highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>npm install --g babel-cli
+npm install --save babel babel-plugin-module-resolver
+</pre></div>
+</div>
+  </div>
+  <p>.babelrc文件</p>
+
+  <div class="language-json highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>{
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>presets</span><span style="color:#404">&quot;</span></span>: [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">react-native</span><span style="color:#710">&quot;</span></span>],
+  <span style="color:#606"><span style="color:#404">&quot;</span><span>plugins</span><span style="color:#404">&quot;</span></span>: [
+    [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">module-resolver</span><span style="color:#710">&quot;</span></span>, {
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>root</span><span style="color:#404">&quot;</span></span>: [<span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">./js</span><span style="color:#710">&quot;</span></span>],
+      <span style="color:#606"><span style="color:#404">&quot;</span><span>alias</span><span style="color:#404">&quot;</span></span>: {
+      }
+    }]
+  ]
+}
+</pre></div>
+</div>
+  </div>
+  <p>.flowconfig文件（兼容Flow）</p>
+
+  <pre><code>module.name_mapper='themes' -&gt; '&lt;PROJECT_ROOT&gt;/js/themes'
+module.name_mapper='actions' -&gt; '&lt;PROJECT_ROOT&gt;/js/actions'
+module.name_mapper='tabs' -&gt; '&lt;PROJECT_ROOT&gt;/js/tabs'
+module.name_mapper='reducers' -&gt; '&lt;PROJECT_ROOT&gt;/js/reducers'
+</code></pre>
+  <p>Atom安装<code>autocomplete-modules</code>插件，并启用<code>babel-plugin-module-resolver</code>。启动：<code>npm start -- --reset-cache</code></p>
+</blockquote>
+
+<hr />
+
+<h1 id="参考资料">参考资料</h1>
+<ol>
+  <li><a href="http://es6.ruanyifeng.com/">ECMAScript 6 入门</a></li>
+  <li><a href="http://www.ruanyifeng.com/blog/2015/05/thunk.html">Thunk 函数的含义和用法</a></li>
+  <li><a href="https://segmentfault.com/a/1190000007248878">Redux异步方案选型</a></li>
+  <li><a href="https://github.com/thunks/thunks/issues/1">有Promise了为什么还要用Thunk？</a></li>
+  <li><a href="https://github.com/jondot/awesome-react-native">awesome-react-native</a></li>
+</ol>
+:ET

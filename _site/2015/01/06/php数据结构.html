@@ -1,0 +1,473 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <title>PHP数据结构 &larr; </title>
+  <meta name="author" content="Yan Peipan" />
+  <link rel="start" href="/" />
+  
+  
+  
+  <!-- syntax highlighting CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/syntax.css" type="text/css" />
+  <!-- Homepage CSS -->
+  <link rel="stylesheet" href="/assets/themes/mark-reid/css/screen.css" type="text/css" />
+</head>
+<body id="">
+  <div id="site">
+    <div id="header">
+      <h1>
+        <a href="/" title="Yan">Yan</a>
+        <span class="byline">&larr; <a href="/">Yan Peipan</a></span>
+      </h1>
+      <ul class="nav">
+        <li><a href="/" class="home">Home</a></li>
+        <li><a href="/archive.html">Archive</a></li>
+        <li><a href="/pages.html">Pages</a></li>
+        <li><a href="/categories.html">Categories</a></li>
+        <li><a href="/tags.html">Tags</a></li>
+      </ul>
+    </div>
+    
+
+<div id="page">
+  <h1 class="emphnext">PHP数据结构</h1>
+  <ul class="tag_box inline">
+    
+    
+
+  
+    
+    	<li><a href="/tags.html#PHP-ref">PHP <span>9</span></a></li>
+    
+  
+
+
+
+  </ul>
+  
+<hr />
+
+<h1 id="数据逻辑结构">数据逻辑结构</h1>
+
+<h2 id="数据逻辑结构-1">数据逻辑结构</h2>
+
+<blockquote>
+  <p>数据的逻辑结构是对数据之间关系的描述，有时就把逻辑结构简称为数据结构。逻辑结构形式地定义为（K，R）（或（D，S）），其中，K是 数据元素的有限集，R是K上的关系的有限集。</p>
+</blockquote>
+
+<blockquote>
+  <p>逻辑结构有四种基本类型：集合结构、 线性结构、树状结构和网络结构。</p>
+</blockquote>
+
+<hr />
+
+<h1 id="数据结构概念">数据结构概念</h1>
+
+<h2 id="数据结构到底是什么">数据结构到底是什么？</h2>
+
+<blockquote>
+  <p>数据结构（英语：data structure）是计算机中存储、组织数据的方式。通常情况下，精心选择的数据结构可以带来最优效率的算法。</p>
+</blockquote>
+
+<h2 id="数据元素与数据项是什么">数据元素与数据项是什么？</h2>
+
+<blockquote>
+  <p>数据元素是数据的基本单位，在计算机程序中通常作为一个整体考虑。一个数据元素由若干个数据项组成。数据项是数据的不可分割的最小单位。</p>
+</blockquote>
+
+<h2 id="数据结构包括哪些东西">数据结构包括哪些东西？</h2>
+
+<blockquote>
+  <p>数据结构分别为逻辑结构、存储结构（物理结构）和数据的运算。数据的逻辑结构是从具体问题抽象出来的数学模型，是描述数据元素及其关系的数学特性的，有时就把逻辑结构简称为数据结构。逻辑结构是在计算机存储中的映像，形式地定义为（K，R）（或（D，S）），其中，K是数据元素的有限集，R是K上的关系的有限集。</p>
+</blockquote>
+
+<h2 id="散列存储与索引存储有啥不一样的地方">散列存储与索引存储有啥不一样的地方？</h2>
+
+<blockquote>
+  <p>索引存储方法：除建立存储结点信息外，还建立附加的索引表来标识结点的地址。
+散列存储方法：就是根据结点的关键字直接计算出该结点的存储地址。</p>
+</blockquote>
+
+<hr />
+
+<h1 id="运算效率">运算效率</h1>
+
+<h2 id="如何判断算法效率">如何判断算法效率？</h2>
+
+<blockquote>
+  <p>一个算法的评价主要从时间复杂度和空间复杂度来考虑。</p>
+</blockquote>
+
+<p><strong>时间复杂度</strong></p>
+
+<p>算法的时间复杂度是指执行算法所需要的计算工作量。一般来说，计算机算法是问题规模n 的函数f(n)，算法的时间复杂度也因此记做。
+T(n)=Ο(f(n))
+因此，问题的规模n 越大，算法执行的时间的增长率与f(n) 的增长率正相关，称作渐进时间复杂度（Asymptotic Time Complexity）。</p>
+
+<p><strong>空间复杂度</strong></p>
+
+<p>算法的空间复杂度是指算法需要消耗的内存空间。其计算和表示方法与时间复杂度类似，一般都用复杂度的渐近性来表示。同时间复杂度相比，空间复杂度的分析要简单得多。</p>
+
+<h2 id="什么是时间复杂度如何计算时间复杂度">什么是时间复杂度？如何计算时间复杂度？</h2>
+
+<blockquote>
+  <p>算法的时间复杂度是一个函数，它定量描述了该算法的运行时间。这是一个关于代表算法输入值的字符串的长度的函数。时间复杂度常用大O符号表述，不包括这个函数的低阶项和首项系数。使用这种方式时，时间复杂度可被称为是渐近的，它考察当输入值大小趋近无穷时的情况。</p>
+</blockquote>
+
+<blockquote>
+  <p>时间复杂度常用大O符号表述，不包括这个函数的低阶项和首项系数。</p>
+</blockquote>
+
+<ol>
+  <li>一般情况下，算法的基本操作重复执行的次数是模块n的某一个函数f(n)，因此，算法的时间复杂度记做：T(n)=O(f(n))</li>
+  <li>在计算时间复杂度的时候，先找出算法的基本操作，然后根据相应的各语句确定它的执行次数，再找出 T(n) 的同数量级（它的同数量级有以下：1，log(2)n，n，n log(2)n ，n的平方，n的三次方，2的n次方，n!），找出后，f(n) = 该数量级，若 T(n)/f(n) 求极限可得到一常数c，则时间复杂度T(n) = O(f(n))</li>
+</ol>
+
+<h2 id="二分法的时间复杂度是多少暴力破解不重复的6位密码的时间复杂度是多少">二分法的时间复杂度是多少？暴力破解不重复的6位密码的时间复杂度是多少？</h2>
+<p><code>logN</code></p>
+
+<hr />
+
+<h1 id="常见数据结构">常见数据结构</h1>
+
+<h2 id="单链表的逻辑结构是什么样的">单链表的逻辑结构是什么样的？</h2>
+
+<blockquote>
+  <p>链接方式存储的线性表简称为链表（Linked List）。</p>
+</blockquote>
+
+<p>线性表（Linear List）是由n（n≥0）个数据元素（结点）a1，a2，…，an组成的有限序列。</p>
+
+<ol>
+  <li>数据元素的个数n定义为表的长度（n=0时称为空表）。</li>
+  <li>将非空的线性表（n＞0）记作：（a1，a2，…，an）</li>
+  <li>数据元素ai（1≤i≤n）只是个抽象符号，其具体含义在不同情况下可以不同。</li>
+</ol>
+
+<h2 id="单链表如何插入数据如何删除数据">单链表如何插入数据？如何删除数据？</h2>
+
+<blockquote>
+  <p>单链表是链表的其中一种，关于单链表就是其节点中有数据域和只有一个指向下个节点的指针域。创建单链表的方法有两种，分别是头插法和尾插法。</p>
+</blockquote>
+
+<blockquote>
+  <p>所谓头插法，就是按节点的逆序方法逐渐将结点插入到链表的头部。反之尾插法就是按节点的顺序逐渐将节点插入到链表的尾部。相对来说，头插法要比尾插法算法简单，但是最后产生的链表是逆序的，即第一个输入的节点实际是链表的最后一个节点。</p>
+</blockquote>
+
+<h2 id="单链表头插法和尾插法的时间复杂度是一样的吗为什么">单链表头插法和尾插法的时间复杂度是一样的吗？为什么？</h2>
+
+<h2 id="如何使用php实现单链表结构">如何使用PHP实现单链表结构？</h2>
+
+<p><code>SplDoublyLinkedList</code></p>
+
+<h2 id="双向链表和单链表有什么不同">双向链表和单链表有什么不同？</h2>
+
+<p>双向链表也叫双链表，是链表的一种，它的每个数据结点中都有两个指针，分别指向直接后继和直接前驱。所以，从双向链表中的任意一个结点开始，都可以很方便地访问它的前驱结点和后继结点。一般我们都构造双向循环链表。</p>
+
+<h2 id="网站可以用循环链表实现某种摇奖算法吗怎么做">网站可以用循环链表实现某种摇奖算法吗？怎么做？</h2>
+
+<p>随机数与链表长度取余</p>
+
+<h2 id="队列的逻辑结构是什么样的">队列的逻辑结构是什么样的？</h2>
+
+<blockquote>
+  <p>队列，又称为伫列（queue），是先进先出（FIFO, First-In-First-Out）的线性表。在具体应用中通常用链表或者数组来实现。队列只允许在后端（称为rear）进行插入操作，在前端（称为front）进行删除操作。</p>
+</blockquote>
+
+<h2 id="队列需要排序吗为什么">队列需要排序吗？为什么？</h2>
+
+<blockquote>
+  <p>优先级队列 是不同于先进先出队列的另一种队列。每次从队列中取出的是具有最高优先权的元素。</p>
+</blockquote>
+
+<h2 id="队列一般用在哪些场景下">队列一般用在哪些场景下？</h2>
+
+<h2 id="如果用php实现一个队列">如果用PHP实现一个队列？</h2>
+
+<p><code>SplQueue</code></p>
+
+<h2 id="栈与队列哪里不一样">栈与队列哪里不一样？</h2>
+
+<blockquote>
+  <p>队列的操作方式和堆栈类似，唯一的区别在于队列只允许新数据在后端进行添加。</p>
+</blockquote>
+
+<h2 id="如何用php实现栈结构">如何用PHP实现栈结构？</h2>
+
+<p><code>SplStack</code></p>
+
+<h2 id="树的逻辑结构是什么">树的逻辑结构是什么？</h2>
+
+<ul>
+  <li>G 是没有回路的连通图。</li>
+  <li>G 没有回路，但是在G内添加任意一条边，就会形成一个回路。</li>
+  <li>G 是连通的，但是如果去掉任意一条边，就不再连通。</li>
+  <li>G 是连通的，并且3顶点的完全图 K_3 不是G的子图。</li>
+  <li>G内的任意两个顶点能被唯一路径所连通。</li>
+</ul>
+
+<h2 id="什么是二叉树的先序遍历中序遍历和后序遍历">什么是二叉树的先序遍历，中序遍历和后序遍历？</h2>
+
+<blockquote>
+  <p>对于一般的树，可以用和普通的图一样的方法遍历，比如深度优先搜索和宽度优先搜索。如果和树的每个节点相邻的点有固定的顺序，深度优先搜索可以不储存当前点以外的任何信息，而且不用判重。而在有根树中更方便，所以有根树中很少使用宽度优先搜索。</p>
+</blockquote>
+
+<p>对于有根树的从根开始的深度优先搜索遍历，有三种特定的顺序：</p>
+
+<p><strong>前序遍历</strong>
+先访问根节点，然后再访问所有的子树；</p>
+
+<p><strong>后序遍历</strong>
+先访问子树，然后再访问根节点；</p>
+
+<p><strong>中序遍历</strong>
+二叉树专用，先访问左子树，然后是根节点，最后是右子树。</p>
+
+<h2 id="已知二叉树的先序遍历中序遍历的结果如何推断后续遍历的结果">已知二叉树的先序遍历，中序遍历的结果，如何推断后续遍历的结果？</h2>
+
+<blockquote>
+  <p>已知中序遍历和任一其他遍历的情况下，可以还原一个二叉树。一个直观的方法是按前序或者反转的后序插入一个按中序排序的搜索树。已知前序和中序也可以还原一棵树，但是不能知道二叉树中一个节点唯一的子树是在左边还是右边。</p>
+</blockquote>
+
+<h2 id="如何用php实现二叉树">如何用PHP实现二叉树？</h2>
+
+<p><code>SplHeap</code></p>
+
+<h2 id="二叉查找树与二分法是什么关系">二叉查找树与二分法是什么关系？</h2>
+
+<blockquote>
+  <p>二叉查找树（英语：Binary Search Tree），也称二叉搜索树、有序二叉树（英语：ordered binary tree），排序二叉树（英语：sorted binary tree），是指一棵空树或者具有下列性质的二叉树：</p>
+</blockquote>
+
+<ul>
+  <li>若任意节点的左子树不空，则左子树上所有结点的值均小于或等于它的根结点的值；</li>
+  <li>任意节点的右子树不空，则右子树上所有结点的值均大于它的根结点的值；</li>
+  <li>任意节点的左、右子树也分别为二叉查找树。</li>
+  <li>没有键值相等的节点（英语：no duplicate nodes）。</li>
+  <li>二叉查找树相比于其他数据结构的优势在于查找、插入的时间复杂度较低。为O(log n)。二叉查找树是基础性数据结构，用于构建更为抽象的数据结构，如集合、multiset、关联数组等。</li>
+</ul>
+
+<blockquote>
+  <p>二叉查找树相比于其他数据结构的优势在于查找、插入的时间复杂度较低。为O(log n)。二叉查找树是基础性数据结构，用于构建更为抽象的数据结构，如集合、multiset、关联数组等。</p>
+</blockquote>
+
+<blockquote>
+  <p>折半搜索每次把搜索区域减少一半，时间复杂度为O\left( \log n  \right)。（n代表集合中元素的个数）</p>
+</blockquote>
+
+<ul>
+  <li>在最坏情况下，二叉排序树是通过把一个有序表的n个结点依次插入而生成的，此时所得的二叉排序树蜕化为棵深度为n的单支树，它的平均查找长度和单链表上的顺序查找相同，亦是(n+1)/2。</li>
+  <li>在最好情况下，二叉排序树在生成的过程中，树的形态比较匀称，最终得到的是一棵形态与二分查找的判定树相似的二叉排序树，此时它的平均查找长度大约是lgn。</li>
+  <li>插入、删除和查找算法的时间复杂度均为O(lgn)。</li>
+</ul>
+
+<blockquote>
+  <p>就平均时间性能而言，二叉排序树上的查找和二分查找差不多。就维护表的有序性而言，二叉排序树无须移动结点，只需修改指针即可完成插入和删除操作，且其平均的执行时间均为O(lgn)，因此更有效。二分查找所涉及的有序表是一个向量，若有插入和删除结点的操作，则维护表的有序性所花的代价是O(n)。当有序表是静态查找表时，宜用向量作为其存储结构，而采用二分查找实现其查找操作；若有序表里动态查找表，则应选择二叉排序树作为其存储结构。</p>
+</blockquote>
+
+<hr />
+
+<h1 id="递归和循环">递归和循环</h1>
+
+<h2 id="什么是递归">什么是递归？</h2>
+
+<blockquote>
+  <p>递归（英语：Recursion），又译为递回，在数学与计算机科学中，是指在函数的定义中使用函数自身的方法。递归一词还较常用于描述以自相似方法重复事物的过程。</p>
+</blockquote>
+
+<h2 id="递归和循环能相互转换吗">递归和循环能相互转换吗？</h2>
+
+<blockquote>
+  <p>“递归的数据总是需要递归的程序来处理。虽然递归有时候表现为另外的形式，比如循环(loop)，但是“递归”这个概念比“循环”更广泛一些。有很多递归程序不能用循环来表达”</p>
+</blockquote>
+
+<h2 id="一般我们使用递归可能出现内存溢出或者无限级递归如何解决">一般我们使用递归可能出现内存溢出或者无限级递归，如何解决？</h2>
+
+<p>php.ini</p>
+
+<pre><code>;PCRE library recursion limit.
+;Please note that if you set this value to a high number you may consume all
+;the available process stack and eventually crash PHP (due to reaching the
+;stack size limit imposed by the Operating System).
+; http://php.net/pcre.recursion-limit
+;pcre.recursion_limit=100000
+</code></pre>
+
+<hr />
+
+<h1 id="查找和排序算法">查找和排序算法</h1>
+
+<h2 id="二分查找算法的思想是什么">二分查找算法的思想是什么？</h2>
+
+<blockquote>
+  <p>二分查找可以解决（预排序数组的查找）问题：只要数组中包含T（即要查找的值），那么通过不断缩小包含T的范围，最终就可以找到它。一开始，范围覆盖整个数组。将数组的中间项与T进行比较，可以排除一半元素，范围缩小一半。就这样反复比较，反复缩小范围，最终就会在数组中找到T，或者确定原以为T所在的范围实际为空。对于包含N个元素的表，整个查找过程大约要经过log(2)N次比较。</p>
+</blockquote>
+
+<h2 id="插值查找与而分发查找是什么关系">插值查找与而分发查找是什么关系？</h2>
+
+<blockquote>
+  <p>也叫按比例查找。该查找是按照一定比例去修改每次分割的值</p>
+</blockquote>
+
+<p>插值查找通过下列公式</p>
+
+<p><img src="/assets/image/1-120301115116330.jpg" alt="" /></p>
+
+<blockquote>
+  <p>插值查找是平均性能最好的查找方法，但只适合于关键码均匀分布的表，其时间效率依然是O(log2n)。</p>
+</blockquote>
+
+<h2 id="斐波那契查找的思想是什么">斐波那契查找的思想是什么？</h2>
+
+<blockquote>
+  <p>斐波那契查找分割的思想为：对于表长为F(i)-1 的有序表，以相对low 偏移量F(i-1)-1 取中点，即mid=low+F(i-1)-1，对表进行分割，则左子表表长为F(i-1)-1，右子表表长为F(i)-1-[F(i-1)-1]-1=F(i-2)-1。可见，两个子表表长也都是某个斐波那契数-1，因而，可以对子表继续分割。</p>
+</blockquote>
+
+<blockquote>
+  <p>当n 很大时，该查找方法称为黄金分割法，其平均性能比折半查找好，但其时间效率仍为O(log2n)，而且，在最坏情况下比折半查找差，优点是计算中点仅作加、减运算。</p>
+</blockquote>
+
+<h2 id="什么叫排序">什么叫排序？</h2>
+
+<blockquote>
+  <p>排序是计算机内经常进行的一种操作，其目的是将一组“无序”的记录序列调整为“有序”的记录序列。分内部排序和外部排序。若整个排序过程不需要访问外存便能完成，则称此类排序问题为内部排序。反之，若参加排序的记录数量很大，整个序列的排序过程不可能在内存中完成，则称此类排序问题为外部排序。内部排序的过程是一个逐步扩大记录的有序序列长度的过程。</p>
+</blockquote>
+
+<h2 id="什么是稳定的排序算法">什么是稳定的排序算法？</h2>
+
+<blockquote>
+  <p>稳定排序 假设在待排序的文件中，存在两个或两个以上的记录具有相同的关键字，在
+用某种排序法排序后，若这些相同关键字的元素的相对次序仍然不变，则这种排序方法
+是稳定的。其中冒泡，插入，基数，归并属于稳定排序，选择，快速，希尔，堆属于不稳定排序。</p>
+</blockquote>
+
+<blockquote>
+  <p>就地排序 若排序算法所需的辅助空间并不依赖于问题的规模n，即辅助空间为O（1）,
+则称为就地排序。</p>
+</blockquote>
+
+<h2 id="快速排序的思想是怎么样的php如何实现">快速排序的思想是怎么样的？PHP如何实现？</h2>
+
+<blockquote>
+  <p>快速排序（Quicksort）是对冒泡排序的一种改进。由C. A. R. Hoare在1962年提出。它的基本思想是：通过一趟排序将要排序的数据分割成独立的两部分，其中一部分的所有数据都比另外一部分的所有数据都要小，然后再按此方法对这两部分数据分别进行快速排序，整个排序过程可以递归进行，以此达到整个数据变成有序序列。</p>
+</blockquote>
+
+<blockquote>
+  <p>快速排序是二叉查找树（二叉查找树）的一个空间优化版本。不是循序地把数据项插入到一个明确的树中，而是由快速排序组织这些数据项到一个由递归调用所隐含的树中。这两个算法完全地产生相同的比较次数，但是顺序不同。对于排序算法的稳定性指标，原地分区版本的快速排序算法是不稳定的。其他变种是可以通过牺牲性能和空间来维护稳定性的。</p>
+</blockquote>
+
+<blockquote>
+  <p>快速排序的最直接竞争者是堆排序（Heapsort）。堆排序通常比快速排序稍微慢，但是最坏情况的运行时间总是O(n log n)。快速排序是经常比较快，除了introsort变化版本外，仍然有最坏情况性能的机会。如果事先知道堆排序将会是需要使用的，那么直接地使用堆排序比等待 introsort 再切换到它还要快。堆排序也拥有重要的特点，仅使用固定额外的空间（堆排序是原地排序），而即使是最佳的快速排序变化版本也需要Θ(log n)的空间。然而，堆排序需要有效率的随机存取才能变成可行。</p>
+</blockquote>
+
+<blockquote>
+  <p>快速排序也与归并排序（Mergesort）竞争，这是另外一种递归排序算法，但有坏情况O(n log n)运行时间的优势。不像快速排序或堆排序，归并排序是一个稳定排序，且可以轻易地被采用在链表（linked list）和存储在慢速访问媒体上像是磁盘存储或网络连接存储的非常巨大数列。尽管快速排序可以被重新改写使用在炼串行上，但是它通常会因为无法随机存取而导致差的基准选择。归并排序的主要缺点，是在最佳情况下需要Ω(n)额外的空间。</p>
+</blockquote>
+
+<pre><code>function qsort($arr) {
+  $len = count($arr);
+  $mid = array_pop($arr);
+  $left = [];
+  $right = [];
+  if ($len &lt;= 1) {
+    return $arr;
+  }
+
+  foreach($arr as $value) {
+    if ($value &gt; $mid) {
+      $right[] = $value;
+    }elseif ($value &lt; $mid) {
+      $left[] = $value;
+    }
+  }
+  $left = qsort($left);
+  $right = qsort($right);
+  return array_merge($left, array($mid), $right);
+}
+</code></pre>
+
+<h2 id="如何改进快排算法">如何改进快排算法？</h2>
+
+<p>快速排序的三个步骤：</p>
+
+<ol>
+  <li>通过优化基准元素的选取：在待排序列中，按照某种方式挑出一个元素，作为 “基准”（pivot）
+    <ul>
+      <li>取序列的第一个，最后一个或中间元素作为基准</li>
+      <li>随机选取基准 引入的原因：在待排序列是部分有序时，固定选取枢轴使快排效率底下，要缓解这种情况，就引入了随机选取枢轴</li>
+      <li>三数取中（median-of-three） 引入的原因：虽然随机选取枢轴时，减少出现不好分割的几率，但是还是最坏情况下还是O(n^2），要缓解这种情况，就引入了三数取中选取枢轴</li>
+    </ul>
+  </li>
+  <li>分割操作：以该基准在序列中的实际位置，把序列分成两个子序列。此时，在基准左边的元素都比该基准小，在基准右边的元素都比基准大
+    <ul>
+      <li>在一次分割结束后，可以把与Key相等的元素聚在一起，继续下次分割时，不用再对与key相等元素分割</li>
+    </ul>
+  </li>
+  <li>递归地对两个序列进行快速排序，直到序列为空或者只有一个元素。
+    <ul>
+      <li>如果待排序的序列划分极端不平衡，递归的深度将趋近于n，而栈的大小是很有限的，每次递归调用都会耗费一定的栈空间，函数的参数越多，每次递归耗费的空间也越多。使用尾递归优化后，可以缩减堆栈深度，由原来的O(n)缩减为O(logn)，将会提高性能。</li>
+    </ul>
+  </li>
+  <li>用插入排序改进快速排序算法
+    <ul>
+      <li>根据插入排序在待排对象基本有序下具有较好性能这一特点，改进快速排序，在快速排序的递归调用中，只对长度大于等于某数k时递归，最后再对整个序列用插入排序来完成排序过程。</li>
+    </ul>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="参考">参考</h1>
+<p><a href="http://student.zjzk.cn/course_ware/data_structure/web/chazhao/chazhao9.3.1.5.htm">数据结构</a><br />
+<a href="http://php.net/manual/zh/pcre.configuration.php#ini.pcre.recursion-limit">ini.pcre.recursion-limit</a><br />
+<a href="http://blog.csdn.net/v_july_v/article/details/7093204">Jon Bentley：90%无法正确实现二分查找</a><br />
+<a href="http://zh.wikipedia.org/wiki/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F">快速排序</a><br />
+<a href="http://blog.csdn.net/insistgogo/article/details/7785038">三种快速排序以及快速排序的优化</a></p>
+
+  <address class="signature">
+    <a class="author" href="/">Yan Peipan</a>
+    <span class="date">06 January 2015</span>
+    <span class="location"></span>
+  </address>
+  <div class="prev-next">
+    
+    <a href="/2015/01/09/nosql%E4%B8%89%E5%89%91%E5%AE%A2.html" class="next" title="NoSQL三剑客">Next Post &rarr;</a>
+    
+    
+    <a href="/2015/01/03/JavaScript%E7%B2%BE%E9%AB%93.html" class="prev" title="JavaScript精髓">&larr; Earlier Post</a>
+    
+  </div>
+</div><!-- End Page -->
+
+
+
+
+    <div id="footer">
+      <address>
+        <span class="copyright">
+          Content by <a href="/sitemap.txt">Yan Peipan</a>.
+        </span>
+        <span class="engine">
+          Powered by <a href="http://github.com/mojombo/jekyll/" title="A static, minimalist CMS">Jekyll</a>
+        </span>
+      </address>
+    </div>
+  </div>
+  <!--[if IE 6]>
+  <script type="text/javascript">
+  /*Load jQuery if not already loaded*/ if(typeof jQuery == 'undefined'){ document.write("<script type=\"text/javascript\"   src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js\"></"+"script>"); var __noconflict = true; }
+  var IE6UPDATE_OPTIONS = {
+  icons_path: "http://static.ie6update.com/hosted/ie6update/images/"
+}
+</script>
+<script type="text/javascript" src="http://static.ie6update.com/hosted/ie6update/ie6update.js"></script>
+<![endif]-->
+
+
+</body>
+</html>
+

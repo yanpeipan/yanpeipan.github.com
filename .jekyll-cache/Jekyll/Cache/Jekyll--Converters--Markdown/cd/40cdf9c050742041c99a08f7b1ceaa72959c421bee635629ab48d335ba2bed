@@ -1,0 +1,666 @@
+I"�
+<hr />
+
+<h1 id="php-是什么">PHP 是什么？</h1>
+<p>PHP原始为<code>Personal Home Page</code>的缩写,已经正式更名为 <code>PHP: Hypertext Preprocessor</code>（超文本预处理器的字母缩写）
+PHP是一种被广泛应用的开放源代码的多用途脚本语言，它可嵌入到 HTML中，尤其适合 web 开发。
+PHP 脚本主要用于以下三个领域：服务端脚本，命令行脚本，编写桌面应用程序</p>
+
+<hr />
+
+<h1 id="语言参考"><strong>语言参考</strong></h1>
+
+<h2 id="数据类型">数据类型</h2>
+<p>四种标量类型：<code>string</code> <code>integer</code> <code>float</code> <code>boolean</code>
+两种复合类型：<code>array</code> <code>object</code>
+两种特殊类型：<code>resource</code> <code>NULL</code>
+回调类型: <code>callback</code></p>
+
+<h3 id="数据类型转换">数据类型转换</h3>
+<ol>
+  <li><strong>自动类型转换</strong>
+PHP 在变量定义中不需要（或不支持）明确的类型定义；变量类型是根据使用该变量的上下文所决定的。也就是说，如果把一个 <code>string</code> 值赋给变量 <code>$var</code>，<code>$var</code> 就成了一个 <code>string</code>。如果又把一个<code>integer</code> 赋给 <code>$var</code>，那它就成了一个<code>integer</code>。
+PHP 的自动类型转换的一个例子是加法运算符<code>+</code>。如果任何一个操作数是<code>float</code>，则所有的操作数都被当成<code>float</code>，结果也是<code>float</code>。否则操作数会被解释为<code>integer</code>，结果也是<code>integer</code>。注意这并没有改变这些操作数本身的类型；改变的仅是这些操作数如何被求值以及表达式本身的类型。</li>
+  <li><strong>强制类型转换</strong>
+    <ul>
+      <li><code>(int)</code> <code>(integer)</code> - 转换为整形 <code>integer</code></li>
+      <li><code>(bool)</code> <code>(boolean)</code> - 转换为布尔类型 <code>boolean</code></li>
+      <li><code>(float)</code> <code>(double)</code> <code>(real)</code> - 转换为浮点型 <code>float</code></li>
+      <li><code>(string)</code> - 转换为字符串 <code>string</code></li>
+      <li><code>(array)</code> - 转换为数组 <code>array</code></li>
+      <li><code>(object)</code> - 转换为对象 <code>object</code></li>
+      <li><code>(unset)</code> - 转换为 <code>NULL</code> (PHP 5)</li>
+      <li><code>(binary)</code> <code>b"string"</code> - 换为二进制字符串</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="魔术常量">魔术常量</h2>
+<p><code>__LINE__</code>   文件中的当前行号。
+<code>__FILE__</code>   文件的完整路径和文件名。如果用在被包含文件中，则返回被包含的文件名。自 PHP 4.0.2 起，<code>__FILE__</code> 总是包含一个绝对路径（如果是符号连接，则是解析后的绝对路径），而在此之前的版本有时会包含一个相对路径。
+<code>__DIR__</code>  文件所在的目录。如果用在被包括文件中，则返回被包括的文件所在的目录。它等价于 <code>dirname(__FILE__)</code>。除非是根目录，否则目录中名不包括末尾的斜杠。（PHP 5.3.0中新增）
+<code>__FUNCTION__</code>   函数名称（PHP 4.3.0 新加）。自 PHP 5 起本常量返回该函数被定义时的名字（区分大小写）。在 PHP 4 中该值总是小写字母的。
+<code>__CLASS__</code>  类的名称（PHP 4.3.0 新加）。自 PHP 5 起本常量返回该类被定义时的名字（区分大小写）。在 PHP 4 中该值总是小写字母的。类名包括其被声明的作用区域（例如 <code>Foo\Bar</code>）。注意自 PHP 5.4 起 <code>__CLASS__</code> 对 trait 也起作用。当用在 trait 方法中时，<code>__CLASS__</code> 是调用 trait 方法的类的名字。
+<code>__TRAIT__</code>  Trait 的名字（PHP 5.4.0 新加）。自 PHP 5.4 起此常量返回 trait 被定义时的名字（区分大小写）。Trait 名包括其被声明的作用区域（例如 <code>Foo\Bar</code>）。
+<code>__METHOD__</code>   类的方法名（PHP 5.0.0 新加）。返回该方法被定义时的名字（区分大小写）。
+<code>__NAMESPACE__</code>  当前命名空间的名称（区分大小写）。此常量是在编译时定义的（PHP 5.3.0 新增）。</p>
+
+<hr />
+
+<h2 id="魔术方法">魔术方法</h2>
+<p><code>__construct()</code>
+<code>__destruct()</code>
+<code>__call()</code>
+<code>__callStatic()</code>
+<code>__get()</code>
+<code>__set()</code>
+<code>__isset()</code>
+<code>__unset()</code>
+<code>__sleep()</code>
+<code>__wakeup()</code>
+<code>__toString()</code>
+<code>__invoke()</code>
+<code>__set_state()</code>
+<code>__clone()</code></p>
+
+<h2 id="全局环境变量">全局环境变量</h2>
+<p><code>超全局变量</code> — 超全局变量是在全部作用域中始终可用的内置变量
+<code>$GLOBALS</code> — 引用全局作用域中可用的全部变量
+<code>$_SERVER</code> — 服务器和执行环境信息
+<code>$_GET</code> — HTTP GET 变量
+<code>$_POST</code> — HTTP POST 变量
+<code>$_FILES</code> — HTTP 文件上传变量
+<code>$_REQUEST</code> — HTTP Request 变量
+<code>$_SESSION</code> — Session 变量
+<code>$_ENV</code> — 环境变量
+<code>$_COOKIE</code> — HTTP Cookies
+<code>$php_errormsg</code> — 前一个错误信息
+<code>$HTTP_RAW_POST_DATA</code> — 原生POST数据
+<code>$http_response_header</code> — HTTP 响应头
+<code>$argc</code> — 传递给脚本的参数数目
+<code>$argv</code> — 传递给脚本的参数数组</p>
+
+<h2 id="表达式">表达式</h2>
+
+<pre><code>gettype( PHP_INT_MAX + 1 );
+function_exists('print');
+(int) ( ( 0.1 + 0.7) * 10 );
+is_nan( acos( 8 ) );
+( bool )'0';
+false || true;
+array( 1 =&gt; "a", "1"  =&gt; "b", 1.5  =&gt; "c", true =&gt; "d" );
+array( "a", "b", 6 =&gt; "c", "d" );
+count( 'string' );
+count( null );
+$null = null; isset( $null );
+$object = (object) 'string'; $object-&gt;scalar;
+8 % ( -2 );
+$srcArr = array( 'a', 'b', 'c', 'd' ); is_string( array_rand( $srcArr ) );
+$a = 1; function sum(){ echo $a;} sum();
+</code></pre>
+
+<p><a href="http://cn2.php.net/manual/zh/function.count.php#refsect1-function.count-returnvalues">count 返回值 ¶</a>
+<a href="http://www.php.net/manual/zh/function.isset.php#refsect1-function.isset-description">isset 说明 ¶</a>
+<a href="http://www.php.net/manual/zh/language.types.object.php#language.types.object.casting">转换为对象 ¶</a>
+你可能注意到 PHP 的全局变量和 C 语言有一点点不同，在 C 语言中，全局变量在函数中自动生效，除非被局部变量覆盖。这可能引起一些问题，有些人可能不小心就改变了一个全局变量。PHP 中全局变量在函数中使用时必须声明为 global。
+<a href="http://php.net/manual/zh/language.variables.scope.php">变量范围 ¶</a></p>
+
+<hr />
+
+<h4 id="不借助额外变量交换两个变量的值">不借助额外变量，交换两个变量的值</h4>
+<pre><code>$a = $a - $b;
+$b = $b + $a;
+$a = $b - $a;   /* 优点：运算简单 ；缺点：只支持整形，存在溢出问题（精度丢失） */
+
+$a = $a ^ $b;
+$b = $b ^ $a;
+$a = $a ^ $b;  /* 优点：运算简单 ，不纯在溢出问题；缺点：字符串长度相同时才能正确交换，若是两个数值相同的数 就不能交换 */
+
+$a .= $b;
+$b = substr($a, 0, ( strlen($a) - strlen($b) ) );
+$a = substr($a, strlen($b) );   /* 优点：支持字符串和整形，以及格式化的数组，对象等，不存在溢出问题 */
+
+$a .= $b;
+$b = str_replace( $b, "", $a );
+$a = str_replace( $b, "", $a );  /* 字符串改进版 */
+
+list($var1, $var2) = array($var2, $var1);  /* 优点：通用 */
+</code></pre>
+<h4 id="用最少的代码写3值最大值的函数">用最少的代码写3值最大值的函数</h4>
+<pre><code>function () {
+  return max(func_get_args());
+};
+</code></pre>
+<h4 id="echoprintprint_r的区别">echo,print,print_r的区别</h4>
+<ul>
+  <li>void echo ( string $arg1 [, string $… ] )</li>
+</ul>
+
+<p>echo 不是一个函数（它是一个语言结构）， 因此你不一定要使用小括号来指明参数，单引号，双引号都可以。 echo （不像其他语言构造）不表现得像一个函数， 所以不能总是使用一个函数的上下文。 另外，如果你想给echo 传递多个参数， 那么就不能使用小括号。
+没有返回值。</p>
+<ul>
+  <li>int print ( string $arg )</li>
+</ul>
+
+<p>print 实际上不是一个函数（它是一个语言结构），因此你可以不必使用圆括号来括起它的参数列表。总是返回 1。</p>
+<ul>
+  <li>bool print_r ( mixed $expression [, bool $return ] )</li>
+</ul>
+
+<p>print_r() 显示关于一个变量的易于理解的信息。如果给出的是 string、integer 或 float，将打印变量值本身。如果给出的是 array，将会按照一定格式显示键和元素。object 与数组类似。print_r() 将把数组的指针移到最后边。使用 reset() 可让指针回到开始处。</p>
+<pre><code>#语言结构/函数,参数,返回值
+echo $a, $b, PHP_EOL;
+print $a . $b . PHP_EOL;
+print_r(array($a,$b,PHP_EOL), true);
+</code></pre>
+<h4 id="如何实现字符串翻转">如何实现字符串翻转</h4>
+<pre><code>strrev($s); // 中文乱码
+
+preg_match_all('/./u', $s, $match);
+implode('', array_reverse($match[0]));
+
+$length = mb_strlen($s);
+$r = '';
+while($length) {
+  $r .= mb_substr($s, --$length, 1, 'utf-8');
+}
+</code></pre>
+<h4 id="翻转字符串中的单词字符串仅包含大小写字母和空格单词使用空格分割如输入this-is-php输出php-is-this">翻转字符串中的单词,字符串仅包含大小写字母和空格,单词使用空格分割.如:输入”This is PHP”,输出”PHP is This”</h4>
+<pre><code>implode(' ', array_reverse(explode(' ', $s)));
+</code></pre>
+<h4 id="将1234567890转换成1234567890每3位用逗号隔开的形式">将1234567890转换成1,234,567,890每3位用逗号隔开的形式</h4>
+<pre><code>strrev(implode(',', str_split(strrev($n), 3)));
+
+number_format($n);
+
+ltrim(strrev(chunk_split(strrev($n), 3, ',')), ',');
+
+preg_replace('/(?&lt;=\d{3})(\d{3})/',', $1', preg_replace('/^(\d{1,3})((\d{3})+)$/','$1,$2',$n));
+</code></pre>
+<h4 id="php-的命令行模式-">PHP 的命令行模式 ¶</h4>
+<p>从版本 4.3.0 开始，PHP 提供了一种新类型的 CLI SAPI（Server Application Programming Interface，服务端应用编程端口）支持，名为 CLI，意为 Command Line Interface，即命令行接口。顾名思义，该 CLI SAPI 模块主要用作 PHP 的开发外壳应用。CLI SAPI 和其它 CLI SAPI 模块相比有很多的不同之处，我们将在本章中详细阐述。值得一提的是，CLI 和 CGI 是不同的 SAPI，尽管它们之间有很多共同的行为。</p>
+
+<p>以下为 CLI SAPI 和其它 CLI SAPI 模块相比的显著区别：</p>
+<ul>
+  <li>与 CGI SAPI 不同，其输出没有任何头信息。
+尽管 CGI SAPI 提供了取消 HTTP 头信息的方法，但在 CLI SAPI 中并不存在类似的方法以开启 HTTP 头信息的输出。
+CLI 默认以安静模式开始，但为了保证兼容性，-q 和 –no-header 参数为了向后兼容仍然保留，使得可以使用旧的 CGI 脚本。
+在运行时，不会把工作目录改为脚本的当前目录（可以使用 -C 和 –no-chdir 参数来兼容 CGI 模式）。
+出错时输出纯文本的错误信息（非 HTML 格式）。</li>
+  <li>CLI SAPI 强制覆盖了 php.ini 中的某些设置，因为这些设置在外壳环境下是没有意义的。</li>
+  <li>为了减轻外壳环境下的工作，我们定义了CLI 专用常量：STDIN, STDOUT, STDERR</li>
+  <li>CLI SAPI 不会将当前目录改为已运行的脚本所在的目录。</li>
+</ul>
+
+<p>CLI SAPI 模块有以下三种不同的方法来获取要运行的 PHP 代码：</p>
+<ul>
+  <li>让 PHP 运行指定文件 : php -f my_script.php</li>
+  <li>在命令行直接运行 PHP 代码 : php -r ‘print_r(get_defined_constants());’</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>通过标准输入（stdin）提供需要运行的 PHP 代码 : some_application</td>
+          <td>some_filter</td>
+          <td>php</td>
+          <td>sort -u &gt;final_output.txt</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h4 id="请写出并说明如何在命令行下运行php脚本写出两种方式同时向php脚本传递参数">请写出并说明如何在命令行下运行PHP脚本（写出两种方式）同时向PHP脚本传递参数？</h4>
+<pre><code>getopt('f:sed::', array('option::'));
+!php % -f'/home/' -f ~ --option=\a\b\c
+
+$argv;
+!php % '/home'
+
+fgets(STDIN);
+</code></pre>
+<h4 id="写5个不同的自己函数来获取一个全路径文件的扩展名">写5个不同的自己函数,来获取一个全路径文件的扩展名</h4>
+<pre><code>function extension($filename) {
+    $pathinfo = pathinfo($filename);
+    return strtolower($pathinfo['extension']);
+}
+</code></pre>
+<h4 id="语句include-和-require都能把另外一个文件包含到当前文件中它们的区别是为了避免多次包含同一文件可以用什么语句来代替它们">语句include 和 require都能把另外一个文件包含到当前文件中，它们的区别是?为了避免多次包含同一文件，可以用什么语句来代替它们?</h4>
+<p>被包含文件先按参数给出的路径寻找，如果没有给出目录（只有文件名）时则按照 include_path 指定的目录寻找。如果在 include_path 下没找到该文件则 include 最后才在调用脚本文件所在的目录和当前工作目录下寻找。如果最后仍未找到文件则 include 结构会发出一条警告；这一点和 require 不同，后者会发出一个致命错误。</p>
+
+<p>如果定义了路径——不管是绝对路径（在 Windows 下以盘符或者 \ 开头，在 Unix/Linux 下以 / 开头）还是当前目录的相对路径（以 . 或者 .. 开头）——include_path 都会被完全忽略。例如一个文件以 ../ 开头，则解析器会在当前目录的父目录下寻找该文件。</p>
+<pre><code>require 和 include 几乎完全一样，除了处理失败的方式不同之外。require 在出错时产生 E_COMPILE_ERROR 级别的错误。换句话说将导致脚本中止而 include 只产生警告（E_WARNING），脚本会继续运行。
+</code></pre>
+<h4 id="简述如何得到当前执行脚本路径包括所得到参数">简述如何得到当前执行脚本路径,包括所得到参数</h4>
+<pre><code>__DIR__;
+__FILE__;
+
+getopt();
+$argv;
+$_REQUEST;
+$_PUT = file_get_contents('php://input');
+</code></pre>
+<h4 id="统计数组中所有值出现的次数对统计的结果按出现的次数排序">统计数组中所有值出现的次数，对统计的结果，按出现的次数排序。</h4>
+<pre><code>$b = array_count_values($a);
+arsort($b);
+</code></pre>
+<h4 id="上传文件的时候提示413-request-entity-too-large-的解决方法">上传文件的时候提示413 Request Entity Too Large 的解决方法</h4>
+<pre><code>#nginx.conf
+client_max_body_size 10M
+#php.ini
+upload_max_filesize 所上传的文件的最大大小。
+post_max_size       设定 POST 数据所允许的最大大小。
+memory_limit        设定了一个脚本所能够申请到的最大内存字节数。
+/*Sets max size of post data allowed. This setting also affects file upload. To upload large files, this value must be larger than upload_max_filesize. If memory limit is enabled by your configure script, memory_limit also affects file uploading. Generally speaking, memory_limit should be larger than post_max_size. */
+</code></pre>
+<h4 id="用php打印出北京前一天的时间格式是2008-2-8-180010">用PHP打印出北京前一天的时间格式是2008-2-8 18:00:10</h4>
+<pre><code>date('Y-n-j H:i:s',strtotime('-1 days));
+</code></pre>
+<h4 id="编写函数取得上一月的第一天和最后一天">编写函数取得上一月的第一天和最后一天</h4>
+<pre><code>date('Y-m-d', strtotime('last day of -1 months'));
+date('Y-m-d', strtotime('first day of -1 months'));
+
+strtotime('-1 days', strtotime(date('Y-m-01', time()))); //上一月的最后一天
+mktime(0, 0, 0, date('m')-1, 1, date('Y')); //上一月的第一天
+</code></pre>
+<h4 id="设有这样一个数组a--array-arrayid0-arrayid1-请问如何判断id500是否在这个数组内">设有这样一个数组$a = array( array(id=&gt;0), array(id=&gt;1) ),请问如何判断id=&gt;500是否在这个数组内?</h4>
+<pre><code>in_array(array('id' =&gt; 500), $a);
+</code></pre>
+<h4 id="计算字符串中某个字符的出现次数">计算字符串中某个字符的出现次数</h4>
+<pre><code>str_word_count($string);
+</code></pre>
+<h4 id="将字符012转换成十进制数字">将字符012转换成十进制数字。</h4>
+<pre><code>octdec('012');
+(int)012;
+</code></pre>
+<h4 id="如何让php程序设置报错">如何让PHP程序设置报错？</h4>
+<pre><code>error_reporting(E_ALL);
+ini_set('display_errors', 1);
+</code></pre>
+<h4 id="php的elseif-和else-if区别">php的elseif 和else if区别?</h4>
+<pre><code>elseif可以用于冒号，而else if则不能。
+</code></pre>
+
+<h1 id="php正则表达式">PHP正则表达式</h1>
+<p>preg是与Perl兼容正则表达式(Regular Expressions(Perl-Compatible));ereg以POSIX为基础(Regular Expression (POSIX Extended)),UNIX的可移植操作系统接口(As of PHP 5.3.0 this extension is deprecated, calling any function provided by this extension will issue an E_DEPRECATED notice).</p>
+
+<h2 id="正则表达的元素">正则表达的元素:</h2>
+
+<h4 id="分隔符">分隔符</h4>
+
+<p>模式需要由分隔符闭合包裹。分隔符可以使任意非字母数字、非反斜线、非空白字符。
+经常使用的分隔符是正斜线(/)、hash符号(#) 以及取反符号(~)</p>
+
+<h4 id="原子">原子</h4>
+<h4 id="元字符">元字符</h4>
+<h4 id="转义序列">转义序列</h4>
+<h4 id="模式修正符">模式修正符</h4>
+
+<p><a href="http://www.php.net/manual/zh/book.pcre.php">PCRE 函数 ¶</a>
+<a href="http://book.douban.com/subject/2154713/"><em>精通正则表达式 : 第3版</em></a></p>
+<h4 id="请用正则匹配href的属性">请用正则匹配href的属性</h4>
+<pre><code>$link = '&lt;a href="http://yanpeipan.github.io/" title="PHP面试总结"&gt;PHP面试总结&lt;/a&gt;';
+preg_match('/href="(.*)"/U', $link, $match);
+</code></pre>
+<h4 id="请写一个函数验证电子邮箱的格式是否正确">请写一个函数验证电子邮箱的格式是否正确</h4>
+<p>除了使用正则之外，还可以使用<a href="http://cn2.php.net/manual/zh/book.filter.php">Data Filtering ¶</a></p>
+<pre><code>preg_match('/^[\d\w-_]+@[\d\w-_]+(\.[\d\w-_]+)+$/', $email, $match);
+
+filter_var($email, FILTER_VALIDATE_EMAIL);
+</code></pre>
+<h4 id="从字符串中提取日期时间格式y-m-dy-n-jymdynj">从字符串中提取日期，时间格式：Y-m-d,Y-n-j,Ymd,Ynj</h4>
+<pre><code>if (preg_match('/(?&lt;!\d)(?:[\d]{4}+-?\d{1,2}-?\d{1,2})(?!\d)/', $title, $match)) {
+        var_dump($match);
+}
+</code></pre>
+<hr />
+
+<h1 id="引用">引用</h1>
+<p>在 PHP 中引用意味着用不同的名字访问同一个变量内容。这并不像 C 的指针，替代的是，引用是符号表别名。注意在 PHP 中，变量名和变量内容是不一样的，因此同样的内容可以有不同的名字。最接近的比喻是 Unix 的文件名和文件本身——变量名是目录条目，而变量内容则是文件本身。引用可以被看作是 Unix 文件系统中的 hardlink。
+写复制(copy on write)
+写改变(change on write)</p>
+<h4 id="请说明php中传值与引用的区别和使用场景">请说明PHP中传值与引用的区别和使用场景</h4>
+<pre><code>应该避免使用引用，除非你非常清楚要做什么，如调用函数修改多个变量。
+</code></pre>
+<h4 id="请解释以下代码每一步的运行a最后的结果为">请解释以下代码每一步的运行,$a最后的结果为?</h4>
+<pre><code>$a = array('a', 'b', 'c');
+  foreach($a as $key =&gt; $value) {
+    $val = &amp;$a[$key];
+}
+</code></pre>
+<hr />
+
+<h1 id="session--cookie">Session &amp; Cookie</h1>
+
+<p><a href="http://cn2.php.net/manual/zh/intro.session.php">Session 简介 ¶</a>
+session被用于表示一个持续的连接状态，在网站访问中一般指代客户端浏览器的进程从开启到结束的过程。session其实就是网站分析的访问（visits）度量，表示一个访问的过程。PHP session 变量用于存储有关用户会话的信息，或更改用户会话的设置。Session 变量保存的信息是单一用户的，并且可供应用程序中的所有页面使用。</p>
+
+<p>cookie 是一小段文本信息，伴随着用户请求和页面在Web服务器和浏览器之间传递。用户每次访问站点时，Web应用程序都可以读取cookie包含的信息。</p>
+
+<p>cookie的作用就是为了解决HTTP协议无状态的缺陷所作的努力，定义于：<a href="http://www.ietf.org/rfc/rfc2965.txt">IETF RFC 2965 HTTP State Management Mechanism</a></p>
+
+<p>cookie分为二种:</p>
+<ol>
+  <li>session的常见实现形式是会话cookie（session cookie），即未设置过期时间的cookie，这个cookie的默认生命周期为浏览器会话期间，只要关闭浏览器窗口，cookie就消失了。</li>
+  <li>持久cookie（persistent cookies）是指存放于客户端硬盘中的 cookie信息（设置了一定的有效期限），当用户访问某网站时，浏览器就会在本地硬盘上查找与该网站相关联的cookie。</li>
+</ol>
+
+<p>浏览器的cookie被禁止后session就需要用get方法的URL重写的机制或使用POST方法提交隐藏表单的形式来实现。</p>
+<h4 id="session与cookie的区别">session与cookie的区别?</h4>
+<pre><code>1. 作用 : session被用于表示一个持续的连接状态;cookie被用于跟踪会话
+2. 作用域 : Session 变量保存的信息是单一用户的，并且可供应用程序中的所有页面使用;cookie path/domain,同源策略
+3. 数据 : session存放于服务端,cookie存放于客户端,并会被附加在每个HTTP请求中;在发送 cookie 时
+4. 编码 ：cookie 的值会自动进行 URL 编码，在取回时进行自动解码
+4. 生命周期 : session在session.gc_maxlifetime之后有几率被回收;持久cookie会在过期后立刻失效;临时cookie生命周期为浏览器会话期间
+5. 安全性 : 客户端可以查看/修改cookie;cookie是通过HTTP协议明文传递的;session对用户是透明的;(cookie窃取与会话劫持)
+6. 限制 : Cookie的大小限制在4KB左右
+</code></pre>
+<h4 id="session的垃圾回收机制gc">session的垃圾回收机制gc</h4>
+<p><a href="http://www.laruence.com/2011/03/29/1949.html">深入理解PHP原理之Session Gc的一个小概率Notice</a></p>
+<pre><code>在php中，session的回收机制主要依靠三个配置共同实现(在php.ini文件中)，分别是：
+session.gc_maxlifetime = 1440 ;设置php session的有效期
+session.gc_probability = 1 ;设置gc回收机制的被除数
+session.gc_divisor     = 100  ;设置gc回收机制的除数
+在PHP中, 如果使用file_handler作为Session的save handler，
+那么就有概率在每次session_start的时候运行Session的Gc过程。
+session gc被触发时,就会检查/tmp/sess_*的文件,
+如果最后的修改时间到现在超过了1440秒(gc_maxlifetime的值),就将其删除,意味着这些session过期失效.
+其调用概率相当于session.gc_probability/session.gc_divisor。
+对于大型网站来说，频繁地回收会给服务器带来很大的开销,
+一般会将session.gc_probability/session.gc_divisor设置的足够小。
+</code></pre>
+<h4 id="如何设置一个严格30分钟过期的session">如何设置一个严格30分钟过期的Session</h4>
+<p><a href="http://www.laruence.com/2012/01/10/2469.html">如何设置一个严格30分钟过期的Session</a></p>
+<h4 id="大型网站使用session时应该注意哪些问题">大型网站使用Session时，应该注意哪些问题？</h4>
+<pre><code>
+</code></pre>
+<h4 id="如何实现session跨域同步">如何实现session跨域同步？</h4>
+<h4 id="如何解决多站点session冲突">如何解决多站点session冲突？</h4>
+<h4 id="单点登陆如何实现">单点登陆如何实现？</h4>
+<pre><code>
+</code></pre>
+
+<hr />
+
+<h1 id="http">HTTP</h1>
+<h4 id="404页面">404页面</h4>
+<h4 id="重定向">重定向</h4>
+<h4 id="如何利用header实现直接下载保存而不是读取">如何利用header实现直接下载保存而不是读取</h4>
+<pre><code>header('Content-type: application/pdf');
+header('Content-Disposition: attachment; filename="保存时的文件名.pdf"');
+</code></pre>
+<h4 id="用php写出显示客户端ip与服务端ip的代码">用PHP写出显示客户端IP与服务端IP的代码</h4>
+<h4 id="get与post提交方法的区别和限制">get与post提交方法的区别和限制?</h4>
+<h4 id="ajax跨域访问">AJAX跨域访问</h4>
+<pre><code>使用domain属性只能实现AJAX跨子域访问；
+iframe需要双方服务器请求和被请求页面都要做轮询监听location对象的hash属性；
+使用script标记则要求被访问数据格式为js可调用的变量或函数；
+使用flash调用需要被请求服务器根目录有crossdomain.xml文件；
+使用jsonp需要被请求服务器接受地址加回调函数参数和返回json数据；
+Ajax请求本地的php，由php通过fopen完成跨域请求；
+设置本域apache服务器的反向代理。
+</code></pre>
+
+<hr />
+
+<h1 id="design-pattern">Design pattern</h1>
+<p><a href="http://book.douban.com/subject/3765462/"><em>设计模式_Gang of Four](http://book.douban.com/subject/1052241/)
+[_PHP高级程序设计</em></a>
+<a href="http://book.douban.com/subject/4746407/"><em>深入PHP：面向对象、模式与实践（第2版）</em></a></p>
+<h4 id="惰性加载">惰性加载</h4>
+<h4 id="观察者模式">观察者模式</h4>
+<pre><code>class Observable implements SplSubject
+{
+    private $storage;
+
+    function __construct()
+    {
+        $this-&gt;storage = new SplObjectStorage();
+    }
+
+    function attach(SplObserver $observer)
+    {
+        $this-&gt;storage-&gt;attach($observer);
+    }
+
+    function detach(SplObserver $observer)
+    {
+        $this-&gt;storage-&gt;detach($observer);
+    }
+
+    function notify()
+    {
+        foreach ($this-&gt;storage as $obj) {
+            $obj-&gt;update($this);
+        }
+    }
+    //...
+}
+
+abstract class Observer implements SplObserver
+{
+    private $observable;
+
+    function __construct(Observable $observable)
+    {
+        $this-&gt;observable = $observable;
+        $observable-&gt;attach($this);
+    }
+
+    function update(SplSubject $subject)
+    {
+        if ($subject === $this-&gt;observable) {
+            $this-&gt;doUpdate($subject);
+        }
+    }
+
+    abstract function doUpdate(Observable $observable);
+}
+
+class ConcreteObserver extends Observer
+{
+    function doUpdate(Observable $observable)
+    {
+        //...
+    }
+}
+
+$observable = new Observable();
+new ConcreteObserver($observable);
+</code></pre>
+<h4 id="单例模式">单例模式</h4>
+<p><a href="http://www.lfyzjck.com/php-sington-best-practice/">PHP单例模式最佳实践</a>
+<a href="http://php.net/manual/zh/language.oop5.late-static-bindings.php">后期静态绑定 ¶</a></p>
+<pre><code>class Singleton
+{
+    protected static $_instance = null;
+    protected function __construct()
+    {
+
+    }
+    protected function __clone()
+    {
+        //disallow clone
+        trigger_error('Clone is not allow !', E_USER_ERROR);
+    }
+    public function getInstance()
+    {
+        if (static::$_instance === null) {
+            static::$_instance = new static;
+        }
+        return static::$_instance;
+    }
+}
+class D extends Singleton
+{
+    protected static $_instance = null;
+}
+$c = Singleton::getInstance();
+$d = D::getInstance();
+var_dump($c === $d);
+</code></pre>
+
+<hr />
+
+<h1 id="php-predefined-interfaces">PHP Predefined Interfaces</h1>
+<p><a href="http://www.nowamagic.net/librarys/veda/detail/2167">PHP Predefined Interfaces 预定义接口</a>
+<a href="http://www.php.net/manual/en/reserved.interfaces.php">Predefined Interfaces and Classes ¶</a></p>
+<h4 id="traversable">Traversable</h4>
+<p>This interface has no methods, its only purpose is to be the base interface for all traversable classes.</p>
+<pre><code>if( !is_array( $items ) &amp;&amp; !$items instanceof Traversable )
+    //Throw exception here
+</code></pre>
+<h4 id="iterator">Iterator</h4>
+<p>Interface for external iterators or objects that can be iterated themselves internally.</p>
+<pre><code>Iterator extends Traversable
+{
+    //返回当前索引游标指向的元素
+    abstract public mixed current(void)
+    //返回当前索引游标指向的元素的键名
+    abstract public scalar key(void)
+    //移动当前索引游标指向下一元素
+    abstract public void next(void)
+    //重置索引游标的指向第一个元素
+    abstract public void rewind(void)
+    //判断当前索引游标指向的是否是一个元素，常常在调用 rewind()或 next()使用
+    abstract public boolean valid(void)
+}
+</code></pre>
+<h4 id="iteratoraggregate">IteratorAggregate</h4>
+<p><a href="http://cn2.php.net/manual/en/class.iteratoraggregate.php">The IteratorAggregate interface ¶</a></p>
+<pre><code>class myData implements IteratorAggregate {
+    public $property1 = "Public property one";
+    public $property2 = "Public property two";
+    public $property3 = "Public property three";
+
+    public function __construct() {
+        $this-&gt;property4 = "last property";
+    }
+
+    public function getIterator() {
+        return new ArrayIterator($this);
+    }
+}
+
+$obj = new myData;
+
+foreach($obj as $key =&gt; $value) {
+    var_dump($key, $value);
+    echo "\n";
+}
+</code></pre>
+<h4 id="arrayaccess">ArrayAccess</h4>
+<p>Interface to provide accessing objects as arrays.</p>
+<pre><code> ArrayAccess {
+/#### Methods ####/
+abstract public boolean offsetExists ( mixed $offset )
+abstract public mixed offsetGet ( mixed $offset )
+abstract public void offsetSet ( mixed $offset , mixed $value )
+abstract public void offsetUnset ( mixed $offset )
+}
+</code></pre>
+<h4 id="serializable">Serializable</h4>
+<pre><code> Serializable {
+/#### Methods ####/
+abstract public string serialize ( void )
+abstract public void unserialize ( string $serialized )
+}
+</code></pre>
+<h4 id="closure">Closure</h4>
+<pre><code>class A {
+    private static $sfoo = 1;
+    private $ifoo = 2;
+}
+$cl1 = static function() {
+    return A::$sfoo;
+};
+$cl2 = function() {
+    return $this-&gt;ifoo;
+};
+
+$bcl1 = Closure::bind($cl1, null, 'A');
+$bcl2 = Closure::bind($cl2, new A(), 'A');
+echo $bcl1(), "\n";
+echo $bcl2(), "\n";
+/################################################################################################################/
+class A {
+    function __construct($val) {
+        $this-&gt;val = $val;
+    }
+    function getClosure() {
+        //returns closure bound to this object and scope
+        return function() { return $this-&gt;val; };
+    }
+}
+
+$ob1 = new A(1);
+$ob2 = new A(2);
+
+$cl = $ob1-&gt;getClosure();
+echo $cl(), "\n";
+$cl = $cl-&gt;bindTo($ob2);
+echo $cl(), "\n";
+</code></pre>
+<h4 id="generator">Generator</h4>
+
+<hr />
+
+<h1 id="spl">SPL</h1>
+<p>SPL是Standard PHP Library（PHP标准库）的缩写。
+根据官方定义，它是”a collection of interfaces and classes that are meant to solve standard problems”。但是，目前在使用中，SPL更多地被看作是一种使object（物体）模仿array（数组）行为的interfaces和classes。
+<a href="http://www.ruanyifeng.com/blog/2008/07/php_spl_notes.html">PHP SPL笔记</a>
+<a href="http://cn2.php.net/manual/zh/book.spl.php">PHP标准库 (SPL) ¶</a></p>
+<h4 id="datastructures">Datastructures</h4>
+<h4 id="iterators">Iterators</h4>
+<h4 id="interfaces">Interfaces</h4>
+<h4 id="exceptions">Exceptions</h4>
+<h4 id="spl-functions">SPL Functions</h4>
+<h4 id="file-handling">File Handling</h4>
+<h4 id="miscellaneous-classes-and-interfaces">Miscellaneous Classes and Interfaces</h4>
+
+<hr />
+
+<h1 id="网络编程">网络编程</h1>
+<h4 id="http响应码以及含义">HTTP响应码以及含义</h4>
+<h4 id="linux端口与服务">Linux端口与服务</h4>
+<h4 id="禁用cookie后session还能使用吗">禁用Cookie后Session还能使用吗?</h4>
+<h4 id="通过页面输入用户名abc和密码123登陆到www10086cn请写出该次请求的http协议报文包括请求行消息报头请求正文请并使用socket相关函数实现">通过页面输入用户名abc和密码123登陆到www.10086.cn,请写出该次请求的HTTP协议报文(包括请求行,消息报头,请求正文),请并使用socket相关函数实现</h4>
+
+<hr />
+
+<h1 id="php高级">PHP高级</h1>
+<h4 id="ajax数据库触发器gui中断机制的共同思想谈一谈该种思想机制">Ajax,数据库触发器，GUI，中断机制的共同思想。谈一谈该种思想（机制）。</h4>
+<h4 id="把一篇英文文档中所有单词的首字母转为大写文档存在doctxt中可以在多种编程语言中选择ccjavaphp写出你的思路尽量优化你的程序">把一篇英文文档中所有单词的首字母转为大写，文档存在doc.txt中。可以在多种编程语言中选择（C\C++,JAVA,PHP…)写出你的思路，尽量优化你的程序。</h4>
+<h4 id="php的垃圾收集机制是怎样的">PHP的垃圾收集机制是怎样的</h4>
+<h4 id="写一个函数能够遍历一个文件夹下的所有文件和子文件夹">写一个函数，能够遍历一个文件夹下的所有文件和子文件夹</h4>
+<h4 id="写出一个能够创建多级目录的php函数">写出一个能够创建多级目录的PHP函数</h4>
+
+<pre><code>
+</code></pre>
+<h4 id="请写一段php代码确保多个进程同时写入同一个文件成功">请写一段PHP代码，确保多个进程同时写入同一个文件成功</h4>
+<pre><code>$fp = fopen("lock.txt", "w+");//本地测试文件加下的txt文件，为了测试，可以为空或者写入一些东西
+if (flock($fp, LOCK_EX)) { // 进行排它型锁定
+    fwrite($fp, "Write something here\n");
+    flock($fp, LOCK_UN); // 释放锁定
+    echo 123;
+}
+</code></pre>
+<h4 id="有-一群猴子排成一圈按12n依次编号然后从第1只开始数数到第m只把它踢出圈从它后面再开始数--再数到第m只在把它踢出去如此不停的进行下去--直到最后只剩下一只猴子为止那只猴子就叫做大王要求编程模拟此过程输入mn-输出最后那个大王的编号">有 一群猴子排成一圈，按1,2,…,n依次编号。然后从第1只开始数，数到第m只,把它踢出圈，从它后面再开始数，  再数到第m只，在把它踢出去…，如此不停的进行下去，  直到最后只剩下一只猴子为止，那只猴子就叫做大王。要求：编程模拟此过程，输入m、n, 输出最后那个大王的编号。</h4>
+<h4 id="用php实现一个双向队列">用PHP实现一个双向队列</h4>
+<h4 id="使对象可以像数组一样进行foreach循环要求属性必须是私有">使对象可以像数组一样进行foreach循环，要求属性必须是私有。</h4>
+
+<h4 id="谈谈你对单点登录的理解比如原理与实现以及实现过程中有哪些问题需要注意">谈谈你对单点登录的理解,比如原理与实现,以及实现过程中有哪些问题需要注意</h4>
+<h4 id="对于大流量的网站您采用什么样的方法来解决访问量问题">对于大流量的网站,您采用什么样的方法来解决访问量问题?</h4>
+<pre><code>1 有效使用缓存，增加缓存命中率
+2 使用负载均衡
+3 对静态文件使用CDN进行存储和加速
+4 想法减少数据库的使用
+5 查看出现统计的瓶颈在哪里
+</code></pre>
+<h4 id="写出一种排序算法要写出代码并说出优化它的方法">写出一种排序算法(要写出代码),并说出优化它的方法</h4>
+
+<h1 id="参考">参考</h1>
+<p><a href="https://github.com/php/php-langspec/tree/master/spec">php-langspec</a>
+<a href="http://php.net/manual/zh/">PHP官方手册</a>
+<a href="https://github.com/PizzaLiu/PHP-FIG">PHP编码规范 PHP-FIG PSR中文版</a></p>
+:ET

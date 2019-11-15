@@ -1,0 +1,72 @@
+I"W
+<blockquote>
+  <p>Z shell（Zsh）是一款可用作交互式登录的shell及脚本编写的命令解释器。Zsh对Bourne shell做出了大量改进，同时加入了Bash、ksh及tcsh的某些功能。(引用自维基百科)</p>
+</blockquote>
+
+<h1 id="安装">安装</h1>
+
+<blockquote>
+  <p><code>brew install zsh zsh-completions</code></p>
+</blockquote>
+
+<h1 id="oh-my-zsh">Oh My ZSH</h1>
+
+<blockquote>
+  <p>oh my zsh是一个管理Zsh配置的框架，捆绑了很多使用的功能、助手工具、插件、主题等。</p>
+</blockquote>
+
+<h1 id="参数配置">参数配置</h1>
+
+<h2 id="history">History</h2>
+
+<pre><code> export HISTSIZE=2000 # 改变历史纪录大小
+ setopt HIST_FIND_NO_DUPS # 搜索结果去重
+ setopt HIST_IGNORE_ALL_DUPS # 纪录去重，新纪录替换旧纪录
+ setopt HIST_IGNORE_SPACE # 忽略以空格开头命令，如果想让它立刻消失，输入：空格并换行
+ setopt INC_APPEND_HISTORY # 以追加方式增加历史纪录
+</code></pre>
+
+<p>配置完成后，最好使用<code>histroy -c</code>清空历史纪录，让History重新纪录。也可以手动清除<code>sort -t ";" -k 2 -u ~/.zsh_history | sort -o ~/.zsh_history</code></p>
+
+<h2 id="更多配置">更多配置</h2>
+
+<p>http://zsh.sourceforge.net/Doc/Release/Options.html</p>
+
+<h1 id="主题">主题</h1>
+
+<h2 id="dracula-theme">Dracula Theme</h2>
+<blockquote>
+  <p>吸血鬼主题</p>
+</blockquote>
+
+<h1 id="插件">插件</h1>
+
+<h2 id="fzf">fzf</h2>
+<blockquote>
+  <p>模糊搜索神器</p>
+</blockquote>
+
+<pre><code>brew install fzf
+/usr/local/opt/fzf/install
+</code></pre>
+
+<h2 id="zsh-autosuggestions">zsh-autosuggestions</h2>
+<pre><code>brew install zsh-syntax-highlighting
+</code></pre>
+
+<h2 id="zsh-completions">zsh-completions</h2>
+
+<h2 id="autojump">autojump</h2>
+
+<pre><code>brew install autojump
+[ -f /usr/local/etc/profile.d/autojump.sh ] &amp;&amp; . /usr/local/etc/profile.d/autojump.sh
+</code></pre>
+
+<h2 id="zsh-syntax-highlighting">zsh-syntax-highlighting</h2>
+<blockquote>
+  <p>Fish shell-like syntax highlighting for Zsh.</p>
+</blockquote>
+
+<pre><code>brew install zsh-syntax-highlighting
+</code></pre>
+:ET

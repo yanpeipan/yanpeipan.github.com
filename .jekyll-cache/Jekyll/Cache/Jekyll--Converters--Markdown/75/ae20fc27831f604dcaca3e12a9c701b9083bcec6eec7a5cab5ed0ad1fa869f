@@ -1,0 +1,126 @@
+I"U
+<hr />
+
+<h1 id="为何是git">为何是Git</h1>
+
+<blockquote>
+  <p>对于Git与其他集中式代码管理工具相比的优缺点的全面讨论，请参见<a href="https://git.wiki.kernel.org/index.php/GitSvnComparsion">这里</a>。这样的争论总是喋喋不休。作为一个开发者，与现今的其他开发工具相比较，我更喜欢Git。Git真得改变了开发者对于合并和分支的思考。我曾经使用经典的CVS/Subversion，然而每次的合并/分支和其他行为总让人担惊受怕（“小心合并里的冲突，简直要命！”）。
+但是对于Git来说，这些行为非常简单和搞笑，它们被认为是日常工作中的核心部分。例如，在很多CVS/Subversion书里，分支与合并总是在后面的章节中被讨论（对于高级用户使用），然而在每个Git<a href="https://pragprog.com/book/tsgit/pragmatic-version-control-using-git">书</a>中，在第3章就已经完全涵盖了（作为基础）。
+简单和重复的特性带来的结果是：分支与合并不再是什么可以害怕的东西。分支/合并被认为对于版本管理工具比其他功能更重要。
+关于工具，不再多说，让我们直接看开发模型吧。这个模型并不是如下模型：在管理软件开发进度方面，面对每个开发过程，每个队员必须按一定次序开发。</p>
+</blockquote>
+
+<hr />
+
+<h1 id="初次运行-git-前的配置">初次运行 Git 前的配置</h1>
+
+<pre><code>$ git config --global user.name "John Doe"
+$ git config --global user.email johndoe@example.com
+</code></pre>
+
+<p>更多信息可以参考：<a href="http://git-scm.com/book/zh/v1/%E8%B5%B7%E6%AD%A5-%E5%88%9D%E6%AC%A1%E8%BF%90%E8%A1%8C-Git-%E5%89%8D%E7%9A%84%E9%85%8D%E7%BD%AE">Git 起步</a></p>
+
+<hr />
+
+<h1 id="快速开始">快速开始</h1>
+
+<h2 id="将本地项目inmi-推送到httpluxtonered16com88inmigit">将本地项目<code>Inmi</code>, 推送到<code>http://luxtone.red16.com:88/inmi.git</code></h2>
+
+<pre><code>git init
+git add *
+git commit -m "" --allow-empty-message
+git remote add origin http://luxtone.red16.com:88/inmi.git
+git push -u origin master
+</code></pre>
+
+<h2 id="如果在inmi文件夹中已经创建本地仓库">如果在<code>Inmi</code>文件夹中已经创建本地仓库</h2>
+
+<pre><code>git remote add origin http://luxtone.red16.com:88/inmi.git
+git push -u origin master
+</code></pre>
+
+<hr />
+
+<h1 id="常见问题">常见问题</h1>
+
+<h2 id="忽略某些文件">忽略某些文件</h2>
+
+<p>在工作根目录中添加一个叫<code>.gitignore</code>的文件，来告诉Git系统要忽略 掉哪些文件，下面是文件内容的示例:</p>
+
+<pre><code># 以'#' 开始的行，被视为注释.
+# 忽略掉所有文件名是 foo.txt 的文件.
+foo.txt
+# 忽略所有生成的 html 文件,
+*.html
+# foo.html是手工维护的，所以例外.
+!foo.html
+#  忽略所有.o 和 .a文件.
+*.[oa]
+#  忽略.svn目录
+.svn
+</code></pre>
+
+<h2 id="添加空目录">添加空目录</h2>
+
+<p>Git 和 SVN 不同，仅仅跟踪文件的变动，不跟踪目录。可以在空目录下添加一个空文件， 常用<code>.gitignore</code> 或者 <code>.gitkeep</code></p>
+
+<p><code>find . -type d -empty -exec touch {}/.gitignore \;</code></p>
+
+<h2 id="从svn导入">从SVN导入</h2>
+<p><code>clone-url</code>替换为真实SVN地址</p>
+
+<p><code>git svn clone clone-url</code></p>
+
+<hr />
+
+<h1 id="git-flow-一个成功的git分支模型">git-flow 一个成功的Git分支模型</h1>
+<p>git-flow 是一个 git 扩展集，按 Vincent Driessen 的分支模型提供高层次的库操作。 <a href="http://nvie.com/posts/a-successful-git-branching-model/">查看详情</a></p>
+
+<h2 id="特性">特性</h2>
+
+<ol>
+  <li>为即将发布的版本开发新功能特性。</li>
+  <li>这通常只存在开发者的库中。</li>
+  <li>新特性的开发是基于 <code>develop</code> 分支的。</li>
+</ol>
+
+<h2 id="release版本">release版本</h2>
+
+<ol>
+  <li>支持一个新的用于生产环境的发布版本。</li>
+  <li>允许修正小问题，并为发布版本准备元数据。</li>
+</ol>
+
+<h2 id="热点">热点</h2>
+
+<ol>
+  <li>热点修复来自这样的需求：生产环境的版本处于一个不预期状态，需要立即修正。</li>
+  <li>有可能是需要修正 master 分支上某个 TAG 标记的生产版本。</li>
+</ol>
+
+<h2 id="git-flow命令">git-flow命令</h2>
+
+<p><img src="/assets/image/git-flow-commands.png" alt="Git-flow commands" /></p>
+
+<h1 id="topgit">TopGit</h1>
+
+<p>TopGit aims to make handling of large amounts of interdependent topic
+branches easier.</p>
+
+<hr />
+
+<h1 id="参考资料">参考资料</h1>
+<ul>
+  <li><a href="https://learngitbranching.js.org/">Learn Git Branching</a></li>
+  <li><a href="http://www.bootcss.com/p/git-guide/">git - 简易指南</a></li>
+  <li><a href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">Git教程</a></li>
+  <li><a href="http://danielkummer.github.io/git-flow-cheatsheet/index.zh_CN.html">git-flow 备忘清单</a></li>
+  <li><a href="http://www.juvenxu.com/2010/11/28/a-successful-git-branching-model/">一个成功的Git分支模型</a></li>
+  <li><a href="http://nvie.com/posts/a-successful-git-branching-model/">A successful Git branching model</a></li>
+  <li><a href="http://git-scm.com/book/zh/v1">Pro Git</a></li>
+  <li><a href="http://git-scm.com/doc">git –fast-version-control</a></li>
+  <li><a href="https://help.github.com/">GitHub Help</a></li>
+  <li><a href="https://github.com/greenrd/topgit">TopGit - A different patch queue manager</a></li>
+  <li><a href="http://haacked.com/archive/2014/07/28/github-flow-aliases/">GitHub Flow Like a Pro with these 13 Git Aliases</a></li>
+</ul>
+:ET
