@@ -36,6 +36,6 @@ deploy:
 after_success:
 - ssh -i ~/travis_ssh_key root@yanpeipan.cn "mkdir -p /home/www/yanpeipan.github.com/_site"
   #- scp -i ~/travis_ssh_key -r _site/* root@yanpeipan.cn:/home/www/yanpeipan.github.com/_site/
-- rsync -r --delete-after --quiet _site/* root@yanpeipan.cn:/home/www/yanpeipan.github.com/_site/
+- rsync -e "ssh -i ~/travis_ssh_key" -r --delete-after --quiet _site/* root@yanpeipan.cn:/home/www/yanpeipan.github.com/_site/
 exclude:
 - vendor
