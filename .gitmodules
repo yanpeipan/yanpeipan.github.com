@@ -1,0 +1,3 @@
+[submodule "assets/tocmd-generator"]
+	path = assets/tocmd-generator
+	url = https://github.com/dafi/tocmd-generator.git
