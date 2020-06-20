@@ -1,0 +1,156 @@
+I"�
+<hr />
+
+<h1 id="高并发库存防控超量">高并发库存防控超量</h1>
+<p>在秒杀，抽奖等活动中，避免商品超卖甚至库存变负数的问题。</p>
+
+<h2 id="锁">锁</h2>
+<p>锁是用来做并发最简单的方式，其代价也是最高的</p>
+
+<h3 id="数据库锁">数据库锁</h3>
+<p>通过<code>update</code>返回值来判断库存:</p>
+
+<p><code>update  set number=number-1 where number &gt; 0</code></p>
+
+<p><code>update  set number=if(number&gt;0, number-1, number)</code></p>
+
+<ul>
+  <li>MyISAM 表级锁，大量的更新操作会造成查询操作的阻塞, 可以用存储过程来实现数据一致性</li>
+  <li>InnoDB 多版本行级锁, 更小的锁粒度, 支持更多的并发，同时性能下降很快，支持事物</li>
+</ul>
+
+<h3 id="文件锁">文件锁</h3>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>if (flock($fp, LOCK_EX)) {
+    flock($fp, LOCK_UN);
+}
+</pre></div>
+</div>
+</div>
+
+<h2 id="消息队列">消息队列</h2>
+<p>把奖品塞到队列里, 按照<code>FIFO</code>顺序执行</p>
+
+<h3 id="beanstalk">Beanstalk</h3>
+<p>Beanstalk is a simple, fast work queue.</p>
+
+<h3 id="redis">Redis</h3>
+<p>redis的数据类list可以用来实现队列, 左边压入<code>lpush</code>, 右边弹出<code>rpop</code>。</p>
+
+<h3 id="memcacheq">MemcacheQ</h3>
+<p>Simple Queue Service over Memcache</p>
+
+<h1 id="抽奖算法">抽奖算法</h1>
+
+<h2 id="逢几中奖">逢“几”中奖</h2>
+<p>微博转发得奖就常常使用这种算法，即根据转发次数来决定奖品归属，透明而且具有激励性。</p>
+
+<h3 id="基本算法">基本算法</h3>
+
+<blockquote>
+  <p>“几”=(抽奖人数/奖品数)*第几个奖品+特定数, 如果是实时抽奖, 则需要预估抽奖人数和奖品数。</p>
+</blockquote>
+
+<h2 id="美团抽奖">美团抽奖</h2>
+<p>依赖开奖日<code>收盘时的上证指数</code> &amp; <code>收盘时的深证成指</code> 这种不可控的物理随机数A，算法约等为：</p>
+
+<blockquote>
+  <p>“几”=不可空物理随机数%抽奖人数 + 特定数*第几个奖品</p>
+</blockquote>
+
+<hr />
+
+<h2 id="概率抽奖">概率抽奖</h2>
+<p>概率抽奖可以理解为一个转盘，指针最终都会指向某个扇形区域, 触发概率为<code>100%</code>即<code>1</code></p>
+
+<p><img src="/assets/image/9f56a65fgc4e939ac7c35&amp;690.jpg" alt="" /></p>
+
+<h3 id="tp线">TP线</h3>
+<p>指针最终都会指向扇形的弧上的某一点，因而可以把转盘展开成一条长为周长的线段，命名为TP线（Total probability-Line）。在TP线上随机任取一点。随机取出的这一点出自哪一条线段，则此线段对应的项目被抽中。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">项目</th>
+      <th style="text-align: center">概率</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">A</td>
+      <td style="text-align: center">0.3</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">B</td>
+      <td style="text-align: center">0.2</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">C</td>
+      <td style="text-align: center">0.4</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>将项目A, B, C的概率进行求和以作为TP线的总长。用函数random(0,1)*TP线的长度来取TP线上的点。若取得的结果在[0，0.3）时，项目A被抽中；取得的结果在[0.3，0.5）时，项目B被抽中；取得的结果在[0.6，0.9）时，项目C被抽中；</p>
+</blockquote>
+
+<h3 id="离散算法">离散算法</h3>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>function random($prizes) {
+  $index = null;
+  $probabilitySum = array_sum($prizes);
+  $rand = mt_rand(1, $probabilitySum);
+  foreach ($prizes as $key =&gt; $probability) {
+    if ($rand &lt;= $probability) {
+      $index = $key;
+      break;
+    } else {
+      $rand -= $probability;
+    }
+  }
+  return $index;
+}
+</pre></div>
+</div>
+</div>
+
+<h3 id="优先级算法">优先级算法</h3>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>function random($prizes) {
+  $index = null;
+  $probabilitySum = array_sum($prize);
+  foreach ($prizes as $key =&gt; $probability) {
+    $rand = mt_rand(1, $probabilitySum);
+    if ($rand &lt;= $probability) {
+      $index = $key;
+      break;
+    } else {
+      $probabilitySum -= $probability;
+    }
+  }
+  return $index;
+}
+</pre></div>
+</div>
+</div>
+
+<hr />
+
+<h1 id="参考">参考</h1>
+<p><a href="http://www.guokr.com/question/323304/">美团网的抽奖是什么原理?</a>
+<a href="http://blog.sina.com.cn/s/blog_9f56a65f01014v30.html">如何高效设计游戏——从抽奖模型到圆桌算法（上）</a>
+<a href="http://blog.sina.com.cn/s/blog_9f56a65f01015npm.html">如何高效设计游戏——从抽奖模型到圆桌算法（下）</a>
+<a href="http://www.cnblogs.com/StarOfWorld/archive/2012/02/07/2341050.html">游戏命中判定：圆桌算法和程序实现</a>
+<a href="http://www.cnblogs.com/miloyip/archive/2010/04/21/1717109.html">用JavaScript玩转游戏编程(一)掉宝类型概率</a>
+<a href="http://www.keithschwarz.com/darts-dice-coins/">Darts, Dice, and Coins: Sampling from a Discrete Distribution</a></p>
+
+<p><a href="http://www.taobaotest.com/blogs/2338">双11抽奖活动平台测试总结</a>
+<a href="http://www.searchtb.com/2012/10/introduction_to_disruptor.html">一种高效无锁内存队列的实现</a>
+<a href="http://kr.github.io/beanstalkd/">Beanstalk  is a simple, fast work queue</a>
+<a href="http://redis.readthedocs.org/en/latest/index.html">Redis 命令参考</a>
+<a href="http://www.oschina.net/translate/redis-distlock">使用 Redis 实现分布式锁</a></p>
+:ET

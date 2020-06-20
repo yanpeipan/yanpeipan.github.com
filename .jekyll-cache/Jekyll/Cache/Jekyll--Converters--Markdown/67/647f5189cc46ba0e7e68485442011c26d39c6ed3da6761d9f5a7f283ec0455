@@ -1,0 +1,96 @@
+I"o
+<h1 id="远程调试">远程调试</h1>
+
+<h2 id="原理">原理</h2>
+<p>Xdebug使用DBGp（2.1版本之后只支持DBGp），与支持DGBp的终端建立连接（如：PHPStorm），Xdebug在服务端过滤每一行执行代码并暂停，向终端发送执行情况，并等待终端决策（断点等）。<a href="https://xdebug.org/docs-dbgp.php">DBGp</a> - A common debugger protocol for languages and debugger UI communication</p>
+
+<blockquote>
+  <p>使用Wireshark抓取PHP Server [PSH，ACK]的消息 (过滤条件：<code>tcp.port==9000 &amp;&amp; tcp.flags.push == 1</code>)</p>
+</blockquote>
+
+<p><img src="/assets/image/1540976019586.jpg" alt="" /></p>
+
+<h2 id="通信设置">通信设置</h2>
+
+<h3 id="静态ip--单个开发者">静态IP / 单个开发者</h3>
+
+<p>Xdebug收到调试请求，并与 <code>xdebug.remote_host</code> &amp; <code>xdebug.remote_port</code> 建立连接</p>
+
+<p><img src="/assets/image/dbgp-setup.gif" alt="" /></p>
+
+<h3 id="动态ip--多个开发者">动态IP / 多个开发者</h3>
+
+<p><code>xdebug.remote_connect_back = 1</code>时，Xdebug收到调试请求，并与检测到的请求IP &amp; <code>xdebug.remote_port</code> 建立连接</p>
+
+<p><img src="/assets/image/dbgp-setup2.gif" alt="" /></p>
+
+<h2 id="配置参数">配置参数</h2>
+
+<h3 id="phpini">php.ini</h3>
+<div class="language-php highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>[xdebug]
+zend_extension = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">xdebug.so</span><span style="color:#710">&quot;</span></span>
+xdebug.enable = <span style="color:#00D">1</span>
+xdebug.idekey = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">PHPSTORM</span><span style="color:#710">&quot;</span></span>
+;xdebug.profiler_enable = <span style="color:#00D">1</span>
+xdebug.remote_enable = <span style="color:#00D">1</span>
+xdebug.remote_connect_back = <span style="color:#00D">0</span>
+xdebug.remote_mode = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">req</span><span style="color:#710">&quot;</span></span>
+xdebug.remote_handler = <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">dbgp</span><span style="color:#710">&quot;</span></span>
+xdebug.remote_host = <span style="color:#60E">192.168</span><span style="color:#60E">.99</span><span style="color:#60E">.1</span>
+xdebug.remote_port = <span style="color:#00D">9000</span>
+;xdebug.remote_autostart = <span style="color:#00D">1</span>
+xdebug.remote_log= <span style="background-color:hsla(0,100%,50%,0.05)"><span style="color:#710">&quot;</span><span style="color:#D20">/tmp/xdebug.log</span><span style="color:#710">&quot;</span></span>
+</pre></div>
+</div>
+</div>
+<blockquote>
+  <p>不要忘记重启php-fpm</p>
+</blockquote>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>sudo service php-fpm restart
+</pre></div>
+</div>
+</div>
+
+<h3 id="phpstorm配置">PHPSTORM配置</h3>
+
+<h4 id="针对单文件调试">针对单文件调试</h4>
+
+<blockquote>
+  <p>PhpStorm -&gt; Preferences -&gt; Languages &amp; Frameworks -&gt; PHP -&gt; CLI Interpreter</p>
+</blockquote>
+
+<h4 id="针对项目调试">针对项目调试</h4>
+
+<blockquote>
+  <p>PhpStorm -&gt; Preferences -&gt; Languages &amp; Frameworks -&gt; PHP -&gt; Debug
+PhpStorm -&gt; Preferences -&gt; Languages &amp; Frameworks -&gt; PHP -&gt; Servers</p>
+</blockquote>
+
+<h3 id="http-debug-sessions">HTTP Debug Sessions</h3>
+
+<p>当HTTP请求GET/POST传递<code>XDEBUG_SESSION_START</code>变量、或者Cookie<code>XDEBUG_SESSION</code>设置值，Xdebug才会尝试连接到调试终端。一般可以安装浏览器助手，省去手写Debug Sessions变量（如： <code>?XDEBUG_SESSION_START=PHPSTORM</code>）</p>
+
+<blockquote>
+  <p>浏览器Xdebug助手</p>
+</blockquote>
+
+<ul>
+  <li><a href="https://addons.mozilla.org/en-GB/firefox/addon/xdebug-helper-for-firefox/">Xdebug Helper for Firefox</a></li>
+  <li><a href="https://chrome.google.com/extensions/detail/eadndfjplgieldjbigjakmdgkmoaaaoc">Xdebug Helper for Chrome</a></li>
+</ul>
+
+<h3 id="最终结果">最终结果</h3>
+
+<p><img src="/assets/image/1540979635588.jpg" alt="" /></p>
+
+<hr />
+<ul>
+  <li><a href="https://xdebug.org/docs/remote">Remote Debugging</a></li>
+  <li><a href="https://xdebug.org/docs-dbgp.php">DBGP</a></li>
+  <li><a href="https://laravel-china.org/articles/4090/the-first-step-to-becoming-a-senior-php-programmer-debugging-xdebug-principle">成为高级 PHP 程序员的第一步——调试（xdebug 原理篇）</a></li>
+  <li><a href="https://laravel-china.org/articles/4098/the-first-step-to-becoming-a-senior-php-programmer-debug-xdebug-configuration">成为高级 PHP 程序员的第一步——调试（xdebug 配置篇）</a></li>
+</ul>
+:ET

@@ -1,0 +1,55 @@
+I"
+<h2 id="克隆代码">克隆代码</h2>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>git clone https://github.com/phacility/xhprof.git /var/xhprof XHPROF_HOME
+</pre></div>
+</div>
+</div>
+
+<h2 id="安装依赖">安装依赖</h2>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>pecl install pecl install channel://pecl.php.net/xhprof-0.9.4
+</pre></div>
+</div>
+</div>
+
+<h2 id="配置phpini">配置php.ini</h2>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>extension=xhprof.so
+</pre></div>
+</div>
+</div>
+
+<h2 id="添加文件-xhprof_homeexamplesprependphp">添加文件 XHPROF_HOME/examples/prepend.php</h2>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>xhprof_enable(XHPROF_FLAGS_NO_BUILTINS | XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
+</pre></div>
+</div>
+</div>
+
+<h2 id="添加文件-xhprof_homeexamplesappendphp">添加文件 XHPROF_HOME/examples/append.php</h2>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>$xhprof_data = xhprof_disable();
+$xhprof_runs = new XHProfRuns_Default();
+$run_id = $xhprof_runs-&gt;save_run($xhprof_data, &quot;xhprof_foo&quot;);
+
+echo &quot;\n---------------\n&quot;.
+&quot;http://XHPROF_HOST/index.php?run=$run_id&amp;source=xhprof_foo\n&quot;.
+&quot;---------------\n&quot;;
+</pre></div>
+</div>
+</div>
+
+<h2 id="配置nginx">配置nginx</h2>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>fastcgi_param PHP_VALUE &quot;auto_prepend_file=XHPROF_HOME/examples/prepend.php \n auto_append_file=XHPROF_HOME/examples/append.php&quot;;
+</pre></div>
+</div>
+</div>
+:ET

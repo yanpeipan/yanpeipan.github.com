@@ -1,0 +1,293 @@
+I")8
+<hr />
+
+<h1 id="协议的表达方式">协议的表达方式</h1>
+
+<h2 id="什么是协议">什么是协议？</h2>
+
+<blockquote>
+  <p>网络传输协议或简称为传送协议（Communications Protocol），是指计算机通信或网络设备的共同语言。</p>
+</blockquote>
+
+<h2 id="协议一般都包括哪些内容">协议一般都包括哪些内容？</h2>
+
+<ul>
+  <li>语法：即数据与控制信息的结构或格式；</li>
+  <li>语义：即需要发出何种控制信息，完成何种动作以及做出何种响应；</li>
+  <li>时序（同步），即事件实现顺序的详细说明。</li>
+</ul>
+
+<h2 id="如何创建一个协议">如何创建一个协议？</h2>
+
+<hr />
+
+<h1 id="http协议的作用">HTTP协议的作用</h1>
+
+<h2 id="我们可以用http协议做什么事情">我们可以用HTTP协议做什么事情？</h2>
+
+<blockquote>
+  <p>超文本传输协议（英文：HyperText Transfer Protocol，缩写：HTTP）是互联网上应用最为广泛的一种网络协议。设计HTTP最初的目的是为了提供一种发布和接收HTML页面的方法。通过HTTP或者HTTPS协议请求的资源由统一资源标识符（Uniform Resource Identifiers，URI）来标识。</p>
+</blockquote>
+
+<hr />
+
+<h1 id="http协议包括的内容">HTTP协议包括的内容</h1>
+
+<h2 id="http协议的执行流程是什么">HTTP协议的执行流程是什么？</h2>
+
+<ol>
+  <li>连接 当我们输入这样一个请求时，首先要建立一个socket连接，因为socket是通过ip和端口建立的，所以之前还有一个DNS解析过程，把www.mycompany.com 变成ip，如果url里不包含端口号，则会使用该协议的默认端口号。</li>
+  <li>请求 连接成功建立后，开始向web服务器发送请求</li>
+  <li>应答 web服务器收到这个请求，进行处理。</li>
+  <li>关闭连接：当应答结束后，Web浏览器与Web服务器断开连接</li>
+</ol>
+
+<h2 id="http协议包括哪些内容">HTTP协议包括哪些内容？</h2>
+
+<ol>
+  <li>请求报文</li>
+  <li>响应报文</li>
+</ol>
+
+<h2 id="http协议格式是什么样的">HTTP协议格式是什么样的？</h2>
+
+<p>Client request</p>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>GET /index.html HTTP/1.1
+Host: www.example.com
+</pre></div>
+</div>
+</div>
+
+<p>Server response</p>
+
+<div class="language-plaintext highlighter-coderay"><div class="CodeRay">
+  <div class="code"><pre>HTTP/1.1 200 OK
+Date: Mon, 23 May 2005 22:38:34 GMT
+Server: Apache/1.3.3.7 (Unix) (Red-Hat/Linux)
+Last-Modified: Wed, 08 Jan 2003 23:11:55 GMT
+ETag: &quot;3f80f-1b6-3e1cb03b&quot;
+Content-Type: text/html; charset=UTF-8
+Content-Length: 131
+Accept-Ranges: bytes
+Connection: close
+
+&lt;html&gt;
+&lt;head&gt;
+  &lt;title&gt;An Example Page&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  Hello World, this is a very simple HTML document.
+  &lt;/body&gt;
+&lt;/html&gt;
+</pre></div>
+</div>
+</div>
+
+<h2 id="http协议中的头域有哪些内容">HTTP协议中的头域有哪些内容？</h2>
+
+<blockquote>
+  <p>通用头域包含Cache-Control、Connection、Date、Pragma、Transfer-Encoding、Upgrade、Via</p>
+</blockquote>
+
+<h2 id="http协议中的状态码有哪些">HTTP协议中的状态码有哪些？</h2>
+
+<p><strong>1xx消息</strong><br />
+这一类型的状态码，代表请求已被接受，需要继续处理。这类响应是临时响应，只包含状态行和某些可选的响应头信息，并以空行结束。由于HTTP/1.0协议中没有定义任何1xx状态码，所以除非在某些试验条件下，服务器禁止向此类客户端发送1xx响应。 这些状态码代表的响应都是信息性的，标示客户应该采取的其他行动。</p>
+
+<p><strong>2xx成功</strong><br />
+这一类型的状态码，代表请求已成功被服务器接收、理解、并接受。</p>
+
+<p><strong>3xx重定向</strong><br />
+这类状态码代表需要客户端采取进一步的操作才能完成请求。通常，这些状态码用来重定向，后续的请求地址（重定向目标）在本次响应的Location域中指明。
+当且仅当后续的请求所使用的方法是GET或者HEAD时，用户浏览器才可以在没有用户介入的情况下自动提交所需要的后续请求。客户端应当自动监测无限循环重定向（例如：A→B→C→……→A或A→A），因为这会导致服务器和客户端大量不必要的资源消耗。按照HTTP/1.0版规范的建议，浏览器不应自动访问超过5次的重定向。</p>
+
+<p><strong>4xx客户端错误</strong><br />
+这类的状态码代表了客户端看起来可能发生了错误，妨碍了服务器的处理。除非响应的是一个HEAD请求，否则服务器就应该返回一个解释当前错误状况的实体，以及这是临时的还是永久性的状况。这些状态码适用于任何请求方法。浏览器应当向用户显示任何包含在此类错误响应中的实体内容。
+如果错误发生时客户端正在传送数据，那么使用TCP的服务器实现应当仔细确保在关闭客户端与服务器之间的连接之前，客户端已经收到了包含错误信息的数据包。如果客户端在收到错误信息后继续向服务器发送数据，服务器的TCP栈将向客户端发送一个重置数据包，以清除该客户端所有还未识别的输入缓冲，以免这些数据被服务器上的应用程序读取并干扰后者。</p>
+
+<p><strong>5xx服务器错误</strong><br />
+这类状态码代表了服务器在处理请求的过程中有错误或者异常状态发生，也有可能是服务器意识到以当前的软硬件资源无法完成对请求的处理。除非这是一个HEAD请求，否则服务器应当包含一个解释当前错误状态以及这个状况是临时的还是永久的解释信息实体。浏览器应当向用户展示任何在当前响应中被包含的实体。
+这些状态码适用于任何响应方法。</p>
+
+<h2 id="http协议中get和post有什么不一样">HTTP协议中GET和POST有什么不一样？</h2>
+
+<blockquote>
+  <p>根据HTTP规范，GET用于信息获取，而且应该是安全的和幂等的 。
+根据HTTP规范，POST表示可能修改变服务器上的资源的请求 。
+POST的安全性要比GET的安全性高。</p>
+</blockquote>
+
+<hr />
+
+<h1 id="cookie和session">COOKIE和SESSION</h1>
+
+<h2 id="cookie是什么">COOKIE是什么？</h2>
+
+<blockquote>
+  <p>Cookie（复数形态Cookies），中文名称为小型文本文件或小甜饼[1]，指某些网站为了辨别用户身份而储存在用户本地终端（Client Side）上的数据（通常经过加密）。</p>
+</blockquote>
+
+<h2 id="cookie在两个不同的子域名aabccom和babccom中可以相互调用吗">COOKIE在两个不同的子域名a.abc.com和b.abc.com中可以相互调用吗？</h2>
+
+<p>Cookies域设置为abc.com或.abc.com</p>
+
+<h2 id="cookie的存储是安全的吗">COOKIE的存储是安全的吗？</h2>
+
+<h2 id="session是什么">SESSION是什么？</h2>
+
+<blockquote>
+  <p>会话（session）是一种持久网络协议，在用户（或用户代理）端和服务器端之间创建关联，从而起到交换数据包的作用机制，session在网络协议（例如telnet或FTP）中是非常重要的部分。</p>
+</blockquote>
+
+<h2 id="session是怎么工作的">SESSION是怎么工作的？</h2>
+
+<blockquote>
+  <p>PHP会用session_start()函数为用户创建一个session ID，这就是针对这个用户的唯一标识，每一个访问的用户都会得到一个自己独有的session ID，这个session ID会存放在响应头里的cookie中，之后发送给客户端。这样客户端就会拥有一个该站点给他的session ID。</p>
+</blockquote>
+
+<p>当用户第二次访问该站点时，浏览器会带着本地存放的cookie(里面存有上次得到的session ID)随着请求一起发送到服务器，服务端接到请求后会检测是否有session ID，如果有就会找到响应的session文件，把其中的信息读取出来；如果没有就跟第一次一样再创建个新的。</p>
+
+<h2 id="session存储在哪里存储的格式是怎么样的呢">SESSION存储在哪里？存储的格式是怎么样的呢？</h2>
+
+<blockquote>
+  <p>session.save_path
+<code>session_set_save_handler</code></p>
+</blockquote>
+
+<blockquote>
+  <p>session.serialize_handler 定义用来序列化／解序列化的处理器名字。当前支持 PHP 内部格式（名为 php）和 WDDX（名为 wddx）。如果 PHP 编译时加入了 WDDX 支持，则只能用 WDDX。默认为 php。</p>
+</blockquote>
+
+<h2 id="session和cookie是什么关系">SESSION和COOKIE是什么关系？</h2>
+
+<p>session实际上是依赖与cookie的，当用户访问某一站点时，浏览器会根据用户访问的站点自动搜索可用的cooki</p>
+
+<h2 id="如何设置session严格的过期时间">如何设置SESSION严格的过期时间？</h2>
+
+<ol>
+  <li>设置Cookie过期时间30分钟, 并设置Session的lifetime也为30分钟.</li>
+  <li>自己为每一个Session值增加Time stamp.</li>
+  <li>每次访问之前, 判断时间戳.</li>
+</ol>
+
+<h2 id="多服务器之间session如何共享">多服务器之间SESSION如何共享？</h2>
+
+<ol>
+  <li>不使用session，换作cookie</li>
+  <li>应用服务器自行实现共享，用数据库或memcached来保存session</li>
+  <li>nginx中的ip_hash技术能够将某个ip的请求定向到同一台后端</li>
+  <li>upstream_hash</li>
+</ol>
+
+<hr />
+
+<h1 id="http性能优化">HTTP性能优化</h1>
+
+<h2 id="跟缓存相关的头域有哪些">跟缓存相关的头域有哪些？</h2>
+
+<p>Request</p>
+
+<ul>
+  <li>Cache-Control: max-age=0以秒为单位</li>
+  <li>If-Modified -Since: Mon, 19 Nov 2012 08:38:01 GMT缓存文件的最后修改时间 。</li>
+  <li>If-None-Match: “0693f67a67cc1:0”缓存文件的Etag值</li>
+  <li>Cache-Contr ol: no-cache不使用缓存</li>
+  <li>Pragma: no-cache不使用缓存</li>
+</ul>
+
+<p>Response</p>
+
+<ul>
+  <li>Cache-Control: public响应被缓存，并且在多用户间共享</li>
+  <li>Cache-Control: privateå应只能作为私有缓存，不能在用户之间共享</li>
+  <li>Cache-Control:no-cache提醒浏览器要从服务器提取文档进行验证</li>
+  <li>Cache -Control:no-store绝对禁止缓存（用于机密，敏感文件）</li>
+  <li>Cache-Control: max-age=6060秒之后缓存过期（相对时间）</li>
+  <li>Date  : Mon, 19 Nov 2012 08:39:00 GMT当前response发送的时间</li>
+  <li>Expires:  Mon, 19 Nov 2012 08:40:01 GMT缓存过期的时间（绝对时间）</li>
+  <li>L ast-Modified: Mon, 19 Nov 2012 08:38:01 GMT服务器端文件的最后 修改时间</li>
+  <li>ETag: “20b1add7ec1cd1:0”服务器端文件的Etag值</li>
+</ul>
+
+<h2 id="如何在php中设置分块传输">如何在PHP中设置分块传输？</h2>
+
+<p>ob_flush() 与 flush() 将缓冲区的内容提前输出，浏览器可提早加载这部分的内容，无需等待所有输出完成再加载。</p>
+
+<h2 id="如何在php中设置只读请求实体内容的前512个字符">如何在PHP中设置只读请求实体内容的前512个字符？</h2>
+
+<p>fgets($a,512);</p>
+
+<h2 id="如何用压缩内容浏览器怎么知道如何解压缩">如何用压缩内容，浏览器怎么知道如何解压缩？</h2>
+
+<p>Request:
+<code>Accept-Encoding:gzip</code></p>
+
+<p>Response:
+<code>Content-Encoding: gzip</code></p>
+
+<hr />
+
+<h1 id="http安全">HTTP安全</h1>
+
+<h2 id="如何避免xss攻击">如何避免XSS攻击？</h2>
+
+<blockquote>
+  <p>XSS 全称为 Cross Site Scripting，因为 CSS 已经用作样式表的简称，故称为 XSS。 XSS 是一种常见的网站攻击的方法。其原理是通过在网页的输入框输入一些恶意的内容，通常是 JavaScript 脚本片段，而这些恶意输入在提交之后并重新读回到客户端时，浏览器会解释执行这些恶意的脚本内容，从而影响网页的正常显示。</p>
+</blockquote>
+
+<ol>
+  <li>过滤特殊字符</li>
+</ol>
+
+<p>避免XSS的方法之一主要是将用户所提供的内容进行过滤，Go语言提供了HTML的过滤函数：</p>
+
+<p>text/template包下面的HTMLEscapeString、JSEscapeString等函数</p>
+
+<ol>
+  <li>使用HTTP头指定类型</li>
+</ol>
+
+<p>w.Header().Set(“Content-Type”,”text/javascript”)</p>
+
+<p>这样就可以让浏览器解析javascript代码，而不会是html输出。</p>
+
+<h2 id="如何避免csrf攻击">如何避免csrf攻击？</h2>
+
+<blockquote>
+  <p>CSRF（Cross-site request forgery），中文名称：跨站请求伪造，也被称为：one click attack/session riding，缩写为：CSRF/XSRF。</p>
+</blockquote>
+
+<ol>
+  <li>验证 HTTP Referer 字段</li>
+  <li>在请求地址中添加 token 并验证</li>
+  <li>在 HTTP 头中自定义属性并验证</li>
+</ol>
+
+<h2 id="如何避免sniffer">如何避免sniffer？</h2>
+
+<blockquote>
+  <p>Sniffer，中文可以翻译为嗅探器，是一种基于被动侦听原理的网络分析方式。使用这种技术方式，可以监视网络的状态、数据流动情况以及网络上传输的信息。</p>
+</blockquote>
+
+<ol>
+  <li>使用检测工具 Tripwire</li>
+  <li>会话加密 https</li>
+  <li>注意网络异常 ping掉包</li>
+</ol>
+
+<hr />
+
+<h1 id="参考">参考</h1>
+<p><a href="http://www.w3.org/Protocols/">HTTP - Hypertext Transfer Protocol</a><br />
+<a href="http://www.laruence.com/2012/01/10/2469.html">如何设置一个严格30分钟过期的Session</a><br />
+<a href="http://www.cnblogs.com/skynet/archive/2012/11/28/2792503.html">浏览器缓存机制</a><br />
+<a href="http://www.cnblogs.com/tankxiao/archive/2012/11/28/2793365.html#gainian">HTTP协议 (四) 缓存</a><br />
+<a href="http://www.ibm.com/developerworks/cn/web/wa-httpiis/">启用动态 HTTP 压缩</a><br />
+<a href="http://www.ibm.com/developerworks/cn/opensource/os-cn-php-xss/">使用 PHP 构建的 Web 应用如何避免 XSS 攻击</a><br />
+<a href="https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/09.3.md">避免XSS攻击</a><br />
+<a href="http://www.rising.com.cn/newsletter/news/2011-08-18/9621.html">从新浪微博被攻击事件看SNS网站的安全问题</a><br />
+<a href="http://www.ibm.com/developerworks/cn/web/1102_niugang_csrf/">CSRF 攻击的应对之道</a><br />
+<a href="http://astaxie.gitbooks.io/build-web-application-with-golang/content/zh/09.1.html">预防CSRF攻击</a></p>
+:ET
