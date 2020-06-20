@@ -4,6 +4,7 @@ rvm:
 before_install:
 - openssl aes-256-cbc -K $encrypted_f2cee5d76fc5_key -iv $encrypted_f2cee5d76fc5_iv
   -in travis_ssh_key.enc -out ~/travis_ssh_key -d
+- chmod 600 ~/travis_ssh_key
 before_script:
 - chmod +x ./script/cibuild
 - gem i bundle
