@@ -40,5 +40,9 @@ deploy:
   on:
     branch: master
 
+after_success:
+- ssh -i ~/.ssh/deploy_ecdsa root@yanpeipan.cn "mkdir /home/jekyll/_site/"
+- scp -i ~/.ssh/deploy_ecdsa -r _site/* root@yanpeipan.cn:/home/www/yanpeipan.github.com/_site/
+
 exclude: [vendor]
 
