@@ -10,6 +10,7 @@ Thumbs.db
 
 .rbenv-version
 .rvmrc
+.vscode
 
 nohup.out
 

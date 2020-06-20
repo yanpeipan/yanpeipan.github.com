@@ -1,8 +1,0 @@
-:syntax_highlighter: :coderay
-:syntax_highlighter_opts:
-  block:
-    css: class
-  default_lang: ruby
-  wrap: span
-  line_numbers: null
-
