@@ -13,6 +13,7 @@ before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 ~/travis_ssh_key
 - ssh-add ~/travis_ssh_key
+- gulp build
 script: "./script/cibuild"
 env:
   global:
@@ -50,5 +51,12 @@ jobs:
           - npm install gulp-clean-css --save-dev
           - npm install gulp-htmlclean --save-dev
           - npm install gulp-htmlmin --save-dev
-      script:
-      - gulp build
+      script: 
+          - gulp build
+    - language: ruby
+      rvm: 2.6.3
+      before_script:
+          - chmod +x ./script/cibuild
+          - gem i bundle
+          - gem i kramdown-syntax-coderay
+      script: "./script/cibuild"
