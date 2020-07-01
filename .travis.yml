@@ -11,6 +11,7 @@ before_script:
 - gem i kramdown-syntax-coderay
 - npm install -g npm
 - npm install -g gulp
+- npm install -g gulp-cli
 - npm install -g gulp-clean-css
 before_deploy:
 - eval "$(ssh-agent -s)"
