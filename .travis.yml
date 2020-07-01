@@ -44,9 +44,7 @@ jobs:
   include:
     - language: node_js
       node_js: stable
-      install:
-        - npm install -g npm
-        - npm install -g gulp-cli
-        - npm install -g gulp-clean-css
+      before_script:
+          - npm install -g gulp
       script:
       - gulp build
