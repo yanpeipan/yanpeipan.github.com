@@ -39,3 +39,14 @@ after_success:
 - rsync -e "ssh -i ~/travis_ssh_key" -r --delete-after --quiet _site/* root@yanpeipan.cn:/home/www/yanpeipan.github.com/_site/
 exclude:
 - vendor
+
+jobs:
+  include:
+    - language: node_js
+      node_js: stable
+      before_script:
+          - npm install -g gulp-cli
+          - npm install gulp --save-dev
+          - npm install gulp-clean-css --save-dev
+      script:
+      - gulp build
