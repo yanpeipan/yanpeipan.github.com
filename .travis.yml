@@ -48,5 +48,7 @@ jobs:
           - npm install -g gulp-cli
           - npm install gulp --save-dev
           - npm install gulp-clean-css --save-dev
+          - npm install gulp-htmlclean --save-dev
+          - npm install gulp-htmlmin --save-dev
       script:
       - gulp build
