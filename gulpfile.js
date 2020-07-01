@@ -2,7 +2,7 @@ const gulp     = require('gulp');
 const cleanCSS = require('gulp-clean-css');
 
 
-function build() {
+function minifyCss() {
     return gulp.src('./**/*.css')
     .pipe(cleanCSS({debug: true}, (details) => {
       console.log(`${details.name}: ${details.stats.originalSize}`);
@@ -10,7 +10,7 @@ function build() {
     }))
     .pipe(gulp.dest('.'))
 }
-function mini() {
+function minifyHtml() {
     return gulp.src('./**/*.html')
       .pipe(htmlclean())
       .pipe(htmlmin({
@@ -28,4 +28,4 @@ function mini() {
 }
 
 
-exports.build = build
+exports.build = gulp.parallel(minifyHtml, minifyCss)
