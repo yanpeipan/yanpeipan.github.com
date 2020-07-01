@@ -47,5 +47,6 @@ jobs:
       before_script:
           - npm install -g gulp-cli
           - npm install gulp --save-dev
+          - npm install gulp-clean-css --save-dev
       script:
       - gulp build
