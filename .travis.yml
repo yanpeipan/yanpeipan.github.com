@@ -45,6 +45,7 @@ jobs:
     - language: node_js
       node_js: stable
       before_script:
-          - npm install -g gulp
+          - npm install -g gulp-cli
+          - npm install gulp --save-dev
       script:
       - gulp build
