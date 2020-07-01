@@ -9,4 +9,4 @@ function build() {
 }
 
 
-exports.default = build
+exports.build = build
