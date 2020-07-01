@@ -9,10 +9,13 @@ before_script:
 - chmod +x ./script/cibuild
 - gem i bundle
 - gem i kramdown-syntax-coderay
+- npm install -g gulp
+- npm install -g gulp-clean-css
 before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 ~/travis_ssh_key
 - ssh-add ~/travis_ssh_key
+- gulp build
 script: "./script/cibuild"
 env:
   global:
