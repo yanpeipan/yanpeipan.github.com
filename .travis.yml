@@ -13,6 +13,7 @@ before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 ~/travis_ssh_key
 - ssh-add ~/travis_ssh_key
+- gulp build
 script: "./script/cibuild"
 env:
   global:
@@ -50,6 +51,3 @@ jobs:
           - npm install gulp-clean-css --save-dev
           - npm install gulp-htmlclean --save-dev
           - npm install gulp-htmlmin --save-dev
-      script:
-      - bundle exec jekyll build
-      - gulp build
