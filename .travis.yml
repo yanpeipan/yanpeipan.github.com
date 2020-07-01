@@ -9,14 +9,10 @@ before_script:
 - chmod +x ./script/cibuild
 - gem i bundle
 - gem i kramdown-syntax-coderay
-- npm install -g npm
-- npm install -g gulp-cli
-- npm install -g gulp-clean-css
 before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 ~/travis_ssh_key
 - ssh-add ~/travis_ssh_key
-- gulp build
 script: "./script/cibuild"
 env:
   global:
@@ -43,3 +39,14 @@ after_success:
 - rsync -e "ssh -i ~/travis_ssh_key" -r --delete-after --quiet _site/* root@yanpeipan.cn:/home/www/yanpeipan.github.com/_site/
 exclude:
 - vendor
+
+jobs:
+  include:
+    - language: node_js
+      node_js: stable
+      install:
+        - npm install -g npm
+        - npm install -g gulp-cli
+        - npm install -g gulp-clean-css
+      script:
+      - gulp build
