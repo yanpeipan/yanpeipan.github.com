@@ -2,6 +2,7 @@ language: ruby
 rvm:
 - 2.6.3
 before_install:
+- nvm node_js stable
 - openssl aes-256-cbc -K $encrypted_f2cee5d76fc5_key -iv $encrypted_f2cee5d76fc5_iv
   -in travis_ssh_key.enc -out ~/travis_ssh_key -d
 - chmod 600 ~/travis_ssh_key
@@ -9,6 +10,14 @@ before_script:
 - chmod +x ./script/cibuild
 - gem i bundle
 - gem i kramdown-syntax-coderay
+- npm install -g gulp-cli
+- npm install gulp --save-dev
+- npm install gulp-clean-css --save-dev
+- npm install gulp-htmlclean --save-dev
+- npm install gulp-htmlmin --save-dev
+script: 
+- ./script/cibuild
+- gulp build
 before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 ~/travis_ssh_key
@@ -38,23 +47,3 @@ after_success:
 - rsync -e "ssh -i ~/travis_ssh_key" -r --delete-after --quiet _site/* root@yanpeipan.cn:/home/www/yanpeipan.github.com/_site/
 exclude:
 - vendor
-
-jobs:
-  include:
-    - language: node_js
-      node_js: stable
-      before_script:
-          - npm install -g gulp-cli
-          - npm install gulp --save-dev
-          - npm install gulp-clean-css --save-dev
-          - npm install gulp-htmlclean --save-dev
-          - npm install gulp-htmlmin --save-dev
-      script: 
-          - gulp build
-    - language: ruby
-      rvm: 2.6.3
-      before_script:
-          - chmod +x ./script/cibuild
-          - gem i bundle
-          - gem i kramdown-syntax-coderay
-      script: "./script/cibuild"
