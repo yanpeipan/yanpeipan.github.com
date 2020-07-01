@@ -12,7 +12,7 @@ function minifyCss() {
     .pipe(gulp.dest('.'))
 }
 function minifyHtml() {
-    return gulp.src('./**/*.html')
+    return gulp.src('_site/**/*.html')
       .pipe(htmlclean())
       .pipe(htmlmin({
           removeComments: true,//清除HTML注释
@@ -25,7 +25,7 @@ function minifyHtml() {
           minifyCSS: true,//压缩页面 CSS
           minifyURLs: true
       }))
-      .pipe(gulp.dest('.'))
+      .pipe(gulp.dest('_site/'))
 }
 
 
