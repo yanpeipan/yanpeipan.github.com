@@ -51,4 +51,5 @@ jobs:
           - npm install gulp-htmlclean --save-dev
           - npm install gulp-htmlmin --save-dev
       script:
+      - bundle exec jekyll build
       - gulp build
