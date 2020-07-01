@@ -13,8 +13,6 @@ before_deploy:
 - eval "$(ssh-agent -s)"
 - chmod 600 ~/travis_ssh_key
 - ssh-add ~/travis_ssh_key
-- gulp build
-script: "./script/cibuild"
 env:
   global:
   - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
