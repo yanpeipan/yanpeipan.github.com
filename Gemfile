@@ -6,8 +6,8 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 #gem "github-pages", group: :jekyll_plugins
 gem "minimal-mistakes-jekyll"
-
 gem "jekyll-include-cache"
+
 group :jekyll_plugins do
   #gem "jekyll", ">= 4.1.1", "< 5.0"
   gem "jekyll-paginate", "~> 1.1"
@@ -19,4 +19,6 @@ group :jekyll_plugins do
   gem "html-proofer"
   gem "minimal-mistakes-jekyll"
   gem 'jekyll-seo-tag'
+  gem 'jekyll-redirect-from'
 end
+

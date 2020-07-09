@@ -68,7 +68,7 @@ facebook:
   username               : 
   app_id                 :
   publisher              :
-og_image                 : "/assets/images/site-logo.png" # Open Graph/Twitter default site image
+#og_image                 : "/assets/images/site-logo.png" # Open Graph/Twitter default site image
 # For specifying social profiles, used in _includes/seo.html
 # - https://developers.google.com/structured-data/customize/social-profiles
 social:
@@ -212,6 +212,7 @@ plugins:
   - jemoji
   - jekyll-include-cache
   - jekyll-seo-tag
+  - jekyll-redirect-from
 
 # mimic GitHub Pages with --safe
 whitelist:
