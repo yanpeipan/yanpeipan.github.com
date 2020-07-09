@@ -1,11 +1,10 @@
 ---
-layout: post
 title: "JavaScript精髓"
 description: ""
 category: 
 tags: [JavaScript]
+toc: true
 ---
-{% include JB/setup %}
 
 # JavaScript基础
 
