@@ -23,7 +23,7 @@ teaser                   : # path of fallback teaser image, e.g. "/assets/images
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
 # breadcrumbs            : false # true, false (default)
-words_per_minute         : 200
+words_per_minute         : 20
 comments:
   provider               : "false" # false (default), "disqus", "discourse", "facebook", "staticman_v2", "staticman", "utterances", "custom"
   disqus:
@@ -152,7 +152,7 @@ kramdown:
 
 # Collections
 collections:
-  JAVA:
+  java:
     output: true
     permalink: /:collection/:path/
 
@@ -179,7 +179,7 @@ defaults:
   # _docs
   - scope:
       path: ""
-      type: docs
+      type: java
     values:
       layout: single
       read_time: false
@@ -187,7 +187,7 @@ defaults:
       share: false
       comments: false
       sidebar:
-        nav: "docs"
+        nav: "java"
 
 
 # Sass/SCSS

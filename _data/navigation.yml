@@ -10,3 +10,17 @@ main:
     url: /collection-archive/
   - title: "Terms &amp; Privacy Policy"
     url: /terms/
+
+java:
+        - title: Getting Started
+          children:
+                  - title: "Quick-Start Guide"
+                    url: /java/01-开始
+                  - title: "Structure"
+                    url: /docs/structure/
+                  - title: "Installation"
+                    url: /docs/installation/
+                  - title: "Upgrading"
+                    url: /docs/upgrading/
+                  - title: Customization
+                    children:
