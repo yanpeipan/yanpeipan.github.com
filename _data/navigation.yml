@@ -1,9 +1,9 @@
 # main links
 main:
-  - title: "Quick-Start Guide"
-    url: /docs/quick-start-guide/
-  - title: "About"
-    url: /about/
+  - title: "JAVA"
+    url: /java/01-开始/
+  - title: "关于"
+    url: /关于/
   - title: "Sample Posts"
     url: /year-archive/
   - title: "Sample Collections"
