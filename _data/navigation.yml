@@ -1,7 +1,7 @@
 # main links
 main:
-  - title: "JAVA"
-    url: /java/01-开始/
+  - title: "首页"
+    url: /
   - title: "关于"
     url: /关于/
   - title: "Sample Posts"
@@ -11,16 +11,17 @@ main:
   - title: "Terms &amp; Privacy Policy"
     url: /terms/
 
-java:
-        - title: Getting Started
-          children:
-                  - title: "Quick-Start Guide"
-                    url: /java/01-开始
-                  - title: "Structure"
-                    url: /docs/structure/
-                  - title: "Installation"
-                    url: /docs/installation/
-                  - title: "Upgrading"
-                    url: /docs/upgrading/
-                  - title: Customization
-                    children:
+spring-in-action:
+  - title: Spring实战
+    children:
+      - title: "Spring的核心"
+        url: /spring-in-action/01-Spring的核心
+        children:
+          - title: "Spring的核心111 "
+            url: /spring-in-action/01-Spring的核心
+      - title: "Web中的Spring"
+        url: /spring-in-action/02-Web中的Spring
+      - title: "后端中的Spring"
+        url: /spring-in-action/03-后端中的Spring
+      - title: "Spring集成"
+        url: /spring-in-action/04-Spring集成
