@@ -68,4 +68,87 @@ AOP能够使这些服务模块化，并以声明的方式将它们应用到它�
 将关注点与核心业务逻辑相分离，AOP能够确保POJO的简单性。
 
 ### 1.1.4 使用模板消除样板式代码
-Spring旨在通过模板封装来消除样板式代码（boilerplate code）。JdbcTemplate
+Spring旨在通过模板封装来消除样板式代码（boilerplate code）。
+```
+try {
+	conn = dataSource.getConnection();
+	stmt = conn.prepareStatement("select id, firstname from employee where id=?");
+	stmt.setLong(1, id);
+	rs = stmt.executeQuery();
+	if (rs.next()) {
+	}
+} catch(SQLException e) {
+} finally {
+	if (rs != null) {
+		try {
+			rs.close();
+		} catch(SQLException e) {}
+	}
+		if (stmt != null) {
+		try {
+			stmt.close();
+		} catch(SQLException e) {}
+	}
+		if (conn != null) {
+		try {
+			conn.close();
+		} catch(SQLException e) {}
+	}
+}
+```
+
+JdbcTemplate
+```
+jdbcTemplate.queryForObject(
+	"select id, firstname from employee where id=?", 
+	new RowMapper<Employee>() {},
+	id
+);
+```
+
+## 1.2 容纳你的Bean
+容器（container）是Spring的核心，Spring容器负责创建，装配，并管理对象的整个生命周期。
+
+容器实现：
+* bean工厂（BeanFactory）最简单容器，基本ID支持
+* 应用上下文（ApplicationContext）基于BeanFactory构建，并提供应用框架级别的服务
+
+### 1.2.1 使用应用上下文
+* AnnotationConfigApplicationContext
+* AnnotationConfigWebApplicationContext
+* ClassPathXmlApplicationContext
+* FileSystemXmlapplicationcontext
+* XmlWebApplicationContext
+
+注：Spring Boot默认使用AnnotationConfigServletWebServerApplicationContext
+### 1.2.2 bean的生命周期
+![]({{ 'assets/image/Bean在Spring容器从创建到销毁.png' | relative_url }})
+
+3. 如果bean实现了BeanNameAware接口，Spring将bean的ID传递给setBeanName()方法；
+4. 如果bean实现了BeanFactoryAware接口，Spring将调用setBeanFactory()方法，将BeanFactory容器实例传入；
+5. 如果bean实现了ApplicationContextAware接口，Spring将调用setApplicationContext()方法，将bean所在的应用上下文的引用传入进来；
+6. 如果bean实现了BeanPostProcessor接口，Spring将调用它们的postProcessBeforeInitialization()方法；
+7. 如果bean实现了InitializingBean接口，Spring将调用它们的afterPropertiesSet()方法。类似地，如果bean使用initmethod声明了初始化方法，该方法也会被调用；
+8. 如果bean实现了BeanPostProcessor接口，Spring将调用它们的postProcessAfterInitialization()方法；
+9. 如果bean实现了DisposableBean接口，Spring将调用它的destroy()接口方法。同样，如果bean使用destroymethod声明了销毁方法，该方法也会被调用。
+
+实践：在静态方法中获取Bean
+
+```
+public class BeanUtil implements ApplicationContextAware {
+
+    /***
+     * Spring应用上下文环境
+     */
+    private static ApplicationContext applicationContext;
+
+    public static ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        BeanUtil.applicationContext = applicationContext;
+    }
+}
+```
