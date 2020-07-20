@@ -14,7 +14,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 locale                   : "zh-CN"
 title                    : "颜培攀"
 title_separator          : "-"
-subtitle                 : "滟滟随波千万里，何处春江无月明"
+subtitle                 : ""
 #name                     : &name "Michael Rose"
 description              : &description ""
 url                      : https://yanpeipan.github.io
@@ -116,7 +116,7 @@ defaults:
       author_profile: true
       read_time: true
       comments: true
-      share: true
+      share: false
       related: true
   # _pages
   - scope:
