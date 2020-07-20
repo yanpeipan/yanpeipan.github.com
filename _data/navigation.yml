@@ -1,15 +1,8 @@
 # main links
 main:
-  - title: "首页"
+  - title: ""
     url: /
-  - title: "关于"
-    url: /关于/
-  - title: "Sample Posts"
-    url: /year-archive/
-  - title: "Sample Collections"
-    url: /collection-archive/
-  - title: "Terms &amp; Privacy Policy"
-    url: /terms/
+
 
 spring-in-action:
   - title: Spring的核心
