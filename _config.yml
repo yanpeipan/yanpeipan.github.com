@@ -101,7 +101,7 @@ kramdown:
 
 # Collections
 collections:
-  spring-in-action:
+  spring:
     output: true
     permalink: /:collection/:path/
 
@@ -128,7 +128,7 @@ defaults:
   # _docs
   - scope:
       path: ""
-      type: spring-in-action
+      type: spring
     values:
       layout: single
       read_time: false
@@ -136,7 +136,7 @@ defaults:
       share: false
       comments: false
       sidebar:
-        nav: "spring-in-action"
+        nav: "spring"
 
 
 # Sass/SCSS

@@ -4,19 +4,21 @@ main:
     url: /
 
 
-spring-in-action:
-  - title: Spring的核心
-    url: /spring-in-action/01-Spring的核心
+spring:
+  - title: 概述
+    url: /spring/00-概述
+  - title: Spring核心技术
+    url: /spring/01-Spring核心技术
     children:
-      - title: "Spring之旅"
-        url: /spring-in-action/01-Spring之旅
+      - title: "Ioc容器"
+        url: /spring/01-Ioc容器
       - title: "装配Bean"
-        url: /spring-in-action/02-装配Bean
+        url: /spring/02-装配Bean
       - title: "高级装配"
-        url: /spring-in-action/03-高级装配
+        url: /spring/03-高级装配
       - title: "面向切面的Spring"
-        url: /spring-in-action/04-面向切面的Spring
+        url: /spring/04-面向切面的Spring
   - title: Web中的Spring
     children:
       - title: "Spring之旅"
-        url: /spring-in-action/01-Spring之旅
+        url: /spring/01-Spring之旅
