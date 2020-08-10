@@ -22,3 +22,9 @@ spring:
     children:
       - title: "Spring之旅"
         url: /spring/01-Spring之旅
+
+spring-security:
+  - title: 特性
+    url: /spring-security/00-特性
+  - title: 概况
+    url: /spring-security/01-概况
