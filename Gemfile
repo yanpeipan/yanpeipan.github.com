@@ -11,6 +11,7 @@ gem 'jekyll-admin', group: :jekyll_plugins
 
 group :jekyll_plugins do
   #gem "jekyll", ">= 4.1.1", "< 5.0"
+  gem "kramdown", ">= 2.3.0"
   gem "jekyll-paginate", "~> 1.1"
   gem "jekyll-sitemap", "~> 1.3.0"
   gem "jekyll-gist", "~> 1.5"
