@@ -30,3 +30,5 @@ spring-security:
     url: /spring-security/00-特性
   - title: 概览
     url: /spring-security/01-概览
+  - title: 验证
+    url: /spring-security/02-验证
