@@ -32,3 +32,9 @@ spring-security:
     url: /spring-security/01-概览
   - title: 验证
     url: /spring-security/02-验证
+  - title: 授权
+    url: /spring-security/03-授权
+  - title: 防范漏洞利用
+    url: /spring-security/04-防范漏洞利用
+  - title: 集成
+    url: /spring-security/05-集成
