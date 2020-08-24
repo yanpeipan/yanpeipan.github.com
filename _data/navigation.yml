@@ -12,17 +12,7 @@ spring:
     url: /spring/01-Spring核心技术
     children:
       - title: "Ioc容器"
-        url: /spring/01-Ioc容器
-      - title: "装配Bean"
-        url: /spring/02-装配Bean
-      - title: "高级装配"
-        url: /spring/03-高级装配
-      - title: "面向切面的Spring"
-        url: /spring/04-面向切面的Spring
-  - title: Web中的Spring
-    children:
-      - title: "Spring之旅"
-        url: /spring/01-Spring之旅
+        url: /spring/02-Ioc容器
 
 spring-security:
   - title: Spring Security
