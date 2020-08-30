@@ -12,7 +12,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "zh-CN"
-title                    : "颜培攀"
+title                    : ""
 title_separator          : "-"
 subtitle                 : ""
 #name                     : &name "Michael Rose"
@@ -107,6 +107,10 @@ collections:
   spring-security:
     output: true
     permalink: /:collection/:path/
+  redis:
+    output: true
+    permalink: /:collection/:path/
+   
 
 # Defaults
 defaults:
@@ -151,7 +155,17 @@ defaults:
       comments: false
       sidebar:
         nav: "spring-security"
-
+  - scope:
+      path: ""
+      type: redis
+    values:
+      layout: single
+      read_time: false
+      author_profile: false
+      share: false
+      comments: false
+      sidebar:
+        nav: "redis"
 
 # Sass/SCSS
 sass:

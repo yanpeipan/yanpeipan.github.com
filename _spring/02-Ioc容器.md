@@ -59,7 +59,6 @@ Spring IoC容器管理一个或多个bean。这些bean是使用提供给容器�
 |  Destruction method    |  Destruction Callbacks    | 
 
 ApplicationContext实现还允许注册在容器外部（由用户）创建的现有对象. 这是通过通过`getBeanFactory()`方法访问`ApplicationContext`的`BeanFactory`来完成的，该方法返回`BeanFactory`的实现 `DefaultListableBeanFactory`. `DefaultListableBeanFactory`通过`registerSingleton(..)`和`registerBeanDefinition(..)`方法支持此注册. 但是，典型的应用程序只能与通过常规bean定义元数据定义的bean一起使用.
-
 ### Naming Beans
 每个bean具有一个或多个标识符. 这些标识符在承载Bean的容器内必须唯一. 一个bean通常只有一个标识符. 但是，如果需要多个，则可以将多余的别名视为别名.
 
