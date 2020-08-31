@@ -46,6 +46,7 @@ redis:
   - title: 前言
     url: /redis/00-前言
   - title: 内部数据结构
+    url: /redis/01-内部数据结构
     children:
         - title: 简单动态字符串
           url: /redis/01-简单动态字符串
