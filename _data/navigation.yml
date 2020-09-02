@@ -65,4 +65,6 @@ redis:
         - title: 对象
           url: /redis/08-对象
   - title: 单机数据库
-    url: /spring-security/02-单机数据库
+    children:
+        - title: 数据库
+          url: /redis/09-数据库
