@@ -12,9 +12,9 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 
 # Site Settings
 locale                   : "zh-CN"
-title                    : ""
+title                    : "YanPeiPan"
 title_separator          : "-"
-subtitle                 : ""
+subtitle                 : "  以正合，以奇胜"
 #name                     : &name "Michael Rose"
 description              : &description ""
 url                      : https://yanpeipan.github.io

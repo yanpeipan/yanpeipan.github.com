@@ -9,23 +9,5 @@ a {
   text-decoration: none;
 }
 
-
-.greedy-nav a.site-title {
-  margin-left: 0;
-  background: url(/assets/image/颜培攀.PNG);
-  width: 140px;
-  height: 40px;
-  line-height: 100em;
-  font-size: 0;
-}
-
-.toc .nav__title {
-  color: #fff;
-  font-size: .75em;
-  background: #92B9BD !important;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
-}
-
 @import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
 @import "minimal-mistakes"; // main partials
