@@ -8,7 +8,7 @@
 theme: minimal-mistakes-jekyll
 #remote_theme             : "mmistakes/minimal-mistakes@4.19.3"
 
-minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
+minimal_mistakes_skin    : "dirt" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
 # Site Settings
 locale                   : "zh-CN"
@@ -17,8 +17,8 @@ title_separator          : "-"
 subtitle                 : "  以正合，以奇胜"
 #name                     : &name "Michael Rose"
 description              : &description ""
-url                      : https://yanpeipan.github.io
-baseurl                  : "/"
+url                      : 
+baseurl                  : ""
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
@@ -121,7 +121,7 @@ defaults:
     values:
       layout: single
       author_profile: false
-      read_time: true
+      read_time: false
       comments: false
       share: false
       related: true
@@ -190,6 +190,7 @@ plugins:
   - jekyll-include-cache
   - jekyll-seo-tag
   - jekyll-redirect-from
+  - jekyll-spaceship
 
 # mimic GitHub Pages with --safe
 whitelist:
@@ -236,3 +237,64 @@ compress_html:
   clippings: all
   ignore:
     envs: development
+
+jekyll-spaceship:
+  # default enabled processors
+  processors:
+    - table-processor
+    - mathjax-processor
+    - plantuml-processor
+    - mermaid-processor
+    - polyfill-processor
+    - media-processor
+    - emoji-processor
+    - element-processor
+  mathjax-processor:
+    src:
+      - https://polyfill.io/v3/polyfill.min.js?features=es6
+      - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+    config:
+      tex:
+        inlineMath:
+          - ['$','$']
+          - ['\(','\)']
+        displayMath:
+          - ['$$','$$']
+          - ['\[','\]']
+      svg:
+        fontCache: 'global'
+    optimize: # optimization on building stage to check and add mathjax scripts
+      enabled: true # value `false` for adding to all pages
+      include: []   # include patterns for math expressions checking (regexp)
+      exclude: []   # exclude patterns for math expressions checking (regexp)
+  plantuml-processor:
+    mode: default  # mode value 'pre-fetch' for fetching image at building stage
+    css:
+      class: plantuml
+    syntax:
+      code: 'plantuml!'
+      custom: ['@startuml', '@enduml']
+    src: http://www.plantuml.com/plantuml/svg/
+  mermaid-processor:
+    mode: default  # mode value 'pre-fetch' for fetching image at building stage
+    css:
+      class: mermaid
+    syntax:
+      code: 'mermaid!'
+      custom: ['@startmermaid', '@endmermaid']
+    config:
+      theme: default
+    src: https://mermaid.ink/svg/
+  media-processor:
+    default:
+      id: 'media-{id}'
+      class: 'media'
+      width: '100%'
+      height: 350
+      frameborder: 0
+      style: 'max-width: 600px; outline: none;'
+      allow: 'encrypted-media; picture-in-picture'
+  emoji-processor:
+    css:
+      class: emoji
+    src: https://github.githubassets.com/images/icons/emoji/

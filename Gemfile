@@ -22,5 +22,6 @@ group :jekyll_plugins do
   gem "minimal-mistakes-jekyll"
   gem 'jekyll-seo-tag'
   gem 'jekyll-redirect-from'
+  gem 'jekyll-spaceship'
 end
 
