@@ -257,7 +257,7 @@ jekyll-spaceship:
       tex:
         inlineMath:
           - ['$','$']
-          - ['\(','\)']
+          - ['\\(','\\)']
         displayMath:
           - ['$$','$$']
           - ['\[','\]']

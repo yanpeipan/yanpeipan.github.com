@@ -1,5 +1,5 @@
 ---
-title: "Spring Security官方文档阅读笔记"
+title: "Spring Security Servlet Applications"
 description: "Spring Security"
 category: Spring
 tags: [Spring, Java, Spring Security]
