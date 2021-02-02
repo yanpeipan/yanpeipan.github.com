@@ -76,7 +76,7 @@ ApplicationContext实现还允许注册在容器外部（由用户）创建的�
 DI存在两个主要变体： 基于构造函数的依赖注入和基于Setter的依赖注入 .
 
 可以使用`@ConstructorProperties` JDK注释显式命名构造函数参数：
-```
+```java
 public class ExampleBean {
 
     // Fields omitted
@@ -100,7 +100,7 @@ Spring容器可以自动装配协作bean之间的关系. 您可以通过检查Ap
 
 ### Method Injection
 容器中的大多数bean是singletons，当bean的生命周期不同时会出现问题.解决方案是放弃某些控制反转. 通过实现ApplicationContextAware接口，并通过对容器 进行getBean("B")调用，可以使Bean A知道容器 ，每次bean A需要它时都请求（通常是新的）Bean B实例
-```
+```java
 public class CommandManager implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
@@ -167,7 +167,7 @@ JSR-250 @PostConstruct和@PreDestroy批注通常被认为是在现代Spring应�
 任何Spring管理的对象都可以实现`Lifecycle`接口。当ApplicationContext本身接收到启动和停止信号时（例如，对于运行时的停止/重新启动场景），它将把这些调用级联到在该上下文中定义的所有`Lifecycle`实现. 它通过委派给`LifecycleProcessor`来做到这一点。为了对特定bean的自动启动（包括启动阶段）进行细粒度的控制，请考虑改为实现`org.springframework.context.SmartLifecycle`
 
 如果您在非Web应用程序环境中（例如，在富客户端桌面环境中）使用Spring的IoC容器，要注册关闭挂钩，请调用在`ConfigurableApplicationContext`接口上声明的`registerShutdownHook()`方法
-```
+```java
 public static void main(final String[] args) throws Exception {
     ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
     ctx.registerShutdownHook();
@@ -176,14 +176,14 @@ public static void main(final String[] args) throws Exception {
 
 ### ApplicationContextAware  & BeanNameAware
 当ApplicationContext创建实现org.springframework.context.ApplicationContextAware接口的对象实例时，该实例将获得对该ApplicationContext的引用. 以下清单显示了ApplicationContextAware接口的定义：
-```
+```java
 public interface ApplicationContextAware {
 
     void setApplicationContext(ApplicationContext applicationContext) throws BeansException;
 }
 ```
 当ApplicationContext创建实现org.springframework.beans.factory.BeanNameAware接口的类时，该类将获得对在其关联的对象定义中定义的名称的引用
-```
+```java
 public interface BeanNameAware {
     void setBeanName(String name) throws BeansException;
 }
@@ -217,7 +217,7 @@ public interface BeanNameAware {
 
 ### BeanPostProcessor
 `BeanPostProcessor`接口定义了回调方法，您可以实现这些回调方法以提供自己的（或覆盖容器的默认值）实例化逻辑，依赖项解析逻辑等.配置多个`BeanPostProcessor`实例，并且可以通过设置`order`属性来控制这些`BeanPostProcessor`实例的执行顺序
-```
+```java
 public class InstantiationTracingBeanPostProcessor implements BeanPostProcessor {
 
     // simply return the instantiated bean as-is
@@ -241,7 +241,7 @@ public class InstantiationTracingBeanPostProcessor implements BeanPostProcessor 
 
 ### @Required
 @Required批注适用于bean属性设置器方法，如以下示例所示：
-```
+```java
 @Required
 public void setMovieFinder(MovieFinder movieFinder) {
     this.movieFinder = movieFinder;
@@ -251,7 +251,7 @@ public void setMovieFinder(MovieFinder movieFinder) {
 ### @Autowired
 可以使用JSR 330的@Inject注释代替Spring的@Autowired注释
 您可以将@Autowired注释应用于构造函数，如以下示例所示：
-```
+```java
 @Autowired
 public MovieRecommender(CustomerPreferenceDao customerPreferenceDao) {
     this.customerPreferenceDao = customerPreferenceDao;
@@ -261,7 +261,7 @@ public MovieRecommender(CustomerPreferenceDao customerPreferenceDao) {
 还可以将注释应用于具有任意名称和多个参数的方法
 也可以将@Autowired应用于字段
 还可以通过将@Autowired注释添加到需要该类型数组的字段或方法
-```
+```java
 @Autowired
 private MovieCatalog[] movieCatalogs;
 ```
@@ -276,7 +276,7 @@ private MovieCatalog[] movieCatalogs;
 JSR-250 @Resource批注，该批注的语义定义是通过其唯一名称标识特定目标组件，而声明的类型与匹配过程无关.
 
 创建自己的自定义限定符注释:
-```
+```java
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
@@ -287,7 +287,7 @@ public @interface Genre {
 ```
 
 可以定义自定义限定符批注，该批注除了简单value属性之外或代替简单value属性，都接受命名属性. 如果随后在要自动装配的字段或参数上指定了多个属性值，则bean定义必须与所有此类属性值匹配才能被视为自动装配候选
-```
+```java
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
 @Qualifier
@@ -299,7 +299,7 @@ public @interface MovieQualifier {
 }
 ```
 
-```
+```java
     @Autowired
     @MovieQualifier(format=Format.VHS, genre="Action")
     private MovieCatalog actionVhsCatalog;
@@ -307,7 +307,7 @@ public @interface MovieQualifier {
 
 ### Generics 
 除了@Qualifier批注之外，您还可以将Java泛型类型用作资格的隐式形式. 例如，假设您具有以下配置：
-```
+```java
 @Autowired
 private Store<String> s1; // <String> qualifier, injects the stringStore bean
 
@@ -325,7 +325,7 @@ Spring还通过对字段或bean属性设置器方法使用JSR-250 @Resource批�
 @Value通常用于注入外部属性：Spring提供了一个默认的宽松内嵌值解析器.
 当@Value包含SpEL表达式时，该值将在运行时动态计算
 
-```
+```java
 public MovieRecommender(@Value("#{systemProperties['user.catalog'] + 'Catalog' }") String catalog) {}
 ```
 
@@ -340,7 +340,7 @@ Spring提供了进一步的@Component型注释： @Component ， @Service @Contr
 
 ### 元注释 & 组合注释
 元注释是可以应用于另一个注释的注释. 
-```
+```java
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -353,7 +353,7 @@ public @interface Service {
 组合注释，例如，Spring MVC中的@RestController批注由@Controller和@ResponseBody组成
 
 此外，组合注释可以选择从元注释中重新声明属性，以允许自定义. Spring的@SessionScope批注将作用域名称硬编码为session但仍允许自定义proxyMode
-```
+```java
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
@@ -373,7 +373,7 @@ public @interface SessionScope {
 ### @ComponentScan
 
 要自动检测这些类并注册相应的bean，需要将@ComponentScan添加到@Configuration类中，其中basePackages属性是这两个类的公共父包.
-```
+```java
 @Configuration
 @ComponentScan(basePackages = "org.example")
 public class AppConfig  {
@@ -394,7 +394,7 @@ public class AppConfig  {
 |  regex    |  org\.example\.Default.*    |  要与目标组件的类名匹配的正则表达式.    |
 |  custom    |  org.example.MyTypeFilter    |  `org.springframework.core.type.TypeFilter`接口的自定义实现  |
 
-```
+```java
 @Configuration
 @ComponentScan(basePackages = "org.example",
         includeFilters = @Filter(type = FilterType.REGEX, pattern = ".*Stub.*Repository"),
@@ -406,7 +406,7 @@ public class AppConfig {
 
 ### Metadata Bean
 Spring组件还可以将bean定义元数据贡献给容器. 
-```
+```java
 @Component
 public class FactoryMethodComponent {
 
@@ -453,7 +453,7 @@ public class FactoryMethodComponent {
 
 ### 生产候选组件索引
 尽管类路径扫描非常快，但可以通过在编译时创建候选静态列表来提高大型应用程序的启动性能. 在这种模式下，作为组件扫描目标的所有模块都必须使用此机制.
-```
+```xml
 <dependencies>
     <dependency>
         <groupId>org.springframework</groupId>
@@ -466,7 +466,7 @@ public class FactoryMethodComponent {
 
 ### JSR 330
 从Spring 3.0开始，Spring提供对JSR-330标准注释（依赖注入）的支持.
-```
+```xml
 <dependency>
     <groupId>javax.inject</groupId>
     <artifactId>javax.inject</artifactId>
@@ -485,7 +485,7 @@ Spring的新Java配置支持中的主要工件是@Configuration @Bean类和@Bean
 
 ### AnnotationConfigApplicationContext
 Spring 3.0中引入的Spring的AnnotationConfigApplicationContext . 这种通用的ApplicationContext实现不仅可以接受@Configuration类作为输入，还可以接受普通的@Component类以及带有JSR-330元数据注释的类.
-```
+```java
 public static void main(String[] args) {
     ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
     MyService myService = ctx.getBean(MyService.class);
@@ -496,7 +496,7 @@ public static void main(String[] args) {
 ### @Bean
 @Bean是方法级别的注释
 
-```
+```java
 @Configuration
 public class AppConfig {
 
@@ -523,21 +523,21 @@ Environment接口是集成在容器中的抽象，它对应用程序环境的两
 @Profile批注可让您指示一个或多个指定的配置文件处于活动状态时有资格注册的组件.
 
 激活一个profile
-```
+```java
 AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 ctx.getEnvironment().setActiveProfiles("profile1", "profile2");
 ctx.register(SomeConfig.class, StandaloneDataConfig.class, JndiDataConfig.class);
 ctx.refresh();
 ```
 声明：
-```
+```java
     -Dspring.profiles.active="profile1,profile2"
 ```
 
 ### @PropertySource
 @PropertySource注释为将PropertySource添加到Spring的Environment提供了一种方便的声明性机制.
 
-```
+```java
 @Configuration
 @PropertySource("classpath:/com/myco/app.properties")
 public class AppConfig {
@@ -591,7 +591,7 @@ Spring提供了两个MessageSource实现， ResourceBundleMessageSource和Static
 ### 泛型
 还可以使用泛型来进一步定义事件的结构. 考虑使用`EntityCreatedEvent<T>` ，其中T是已创建的实际实体的类型. 
 	
-```
+```java
 @EventListener
 public void onPersonCreated(EntityCreatedEvent<Person> event) {
     // ...

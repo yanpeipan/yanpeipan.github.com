@@ -56,7 +56,7 @@ AOP能够使这些服务模块化，并以声明的方式将它们应用到它�
 
 ### 1.1.4 使用模板消除样板式代码
 Spring旨在通过模板封装来消除样板式代码（boilerplate code）。
-```
+```java
 try {
 	conn = dataSource.getConnection();
 	stmt = conn.prepareStatement("select id, firstname from employee where id=?");
@@ -121,7 +121,7 @@ jdbcTemplate.queryForObject(
 
 实践：在静态方法中获取Bean
 
-```
+```java
 public class BeanUtil implements ApplicationContextAware {
 
     /***

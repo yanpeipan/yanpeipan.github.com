@@ -6,7 +6,7 @@
 # `jekyll serve`. If you change this file, please restart the server process.
 
 theme: minimal-mistakes-jekyll
-#remote_theme             : "mmistakes/minimal-mistakes@4.19.3"
+#remote_theme             : "mmistakes/minimal-mistakes@4.21.0"
 
 minimal_mistakes_skin    : "dirt" # "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
 
@@ -14,7 +14,7 @@ minimal_mistakes_skin    : "dirt" # "air", "aqua", "contrast", "dark", "dirt", "
 locale                   : "zh-CN"
 title                    : "YanPeiPan"
 title_separator          : "-"
-subtitle                 : "  以正合，以奇胜"
+subtitle                 : "  靡不有初，鲜克有终"
 #name                     : &name "Michael Rose"
 description              : &description ""
 url                      : 
@@ -110,7 +110,12 @@ collections:
   redis:
     output: true
     permalink: /:collection/:path/
-   
+  computer-systems:
+    output: true
+    permalink: /:collection/:path/
+  java-concurrency-in-practice:
+    output: true
+    permalink: /:collection/:path/
 
 # Defaults
 defaults:
@@ -166,7 +171,28 @@ defaults:
       comments: false
       sidebar:
         nav: "redis"
-
+  - scope:
+      path: ""
+      type: computer-systems
+    values:
+      layout: single
+      read_time: false
+      author_profile: false
+      share: false
+      comments: false
+      sidebar:
+        nav: "computer-systems"
+  - scope:
+      path: ""
+      type: java-concurrency-in-practice
+    values:
+      layout: single
+      read_time: false
+      author_profile: false
+      share: false
+      comments: false
+      sidebar:
+        nav: "java-concurrency-in-practice"
 # Sass/SCSS
 sass:
   sass_dir: _sass
@@ -281,7 +307,7 @@ jekyll-spaceship:
       class: mermaid
     syntax:
       code: 'mermaid!'
-      custom: ['@startmermaid', '@endmermaid']
+      custom: ['```mermaid', '```']
     config:
       theme: default
     src: https://mermaid.ink/svg/

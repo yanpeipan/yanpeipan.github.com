@@ -1,6 +1,6 @@
 # main links
 main:
-  - title: ""
+  - title: "Home"
     url: /
 
 
@@ -68,3 +68,67 @@ redis:
     children:
         - title: 数据库
           url: /redis/09-数据库
+
+computer-systems:
+  - title: 第1章 计算机系统漫游
+    url: /computer-systems/01-计算机系统漫游
+  - title: 第一部分：程序结构和执行
+    children:
+      - title: 第2章 信息的表示和处理
+        url: /computer-systems/02-信息的表示和处理
+      - title: 第3章 程序的机器级表示
+      - title: 第4章 处理器体系结构
+      - title: 第5章 优化程序性能
+      - title: 第6章 存储器层次结构
+  - title: 第二部分：程序结构和执行
+    children:
+      - title: 第7章 链接
+      - title: 第8章 异常控制流
+      - title: 第9章 虚拟内存
+  - title: 第三部分：程序间的交流和通信
+    children:
+      - title: 第10章 系统级I/O
+      - title: 第11章 网络编程
+      - title: 第12章 并发编程
+
+java-concurrency-in-practice:
+  - title: 第1章 简介
+    url: /java-concurrency-in-practice/01-简介
+  - title: 第一部分 基础知识
+    children:
+      - title: 第2章 线程安全性
+        url: /java-concurrency-in-practice/02-线程安全性
+      - title: 第3章 对象的共享
+        url: /java-concurrency-in-practice/03-对象的共享
+      - title: 第4章 对象的组合
+        url: /java-concurrency-in-practice/04-对象的组合
+      - title: 第5章 基础构建模块
+        url: /java-concurrency-in-practice/05-基础构建模块
+  - title: 第二部分 结构化并发应用程序
+    children:
+      - title: 第6章 任务执行
+        url: /java-concurrency-in-practice/06-任务执行
+      - title: 第7章 取消与关闭
+        url: /java-concurrency-in-practice/07-取消与关闭
+      - title: 第8章 线程池的使用
+        url: /java-concurrency-in-practice/08-线程池的使用
+      - title: 第9章 图形用户界面程序
+        url: /java-concurrency-in-practice/09-图形用户界面程序
+  - title: 第三部分 活跃性、性能与测试
+    children:
+      - title: 第10章 避免活跃性危险
+        url: /java-concurrency-in-practice/10-避免活跃性危险
+      - title: 第11章 性能与可伸缩性
+        url: /java-concurrency-in-practice/11-性能与可伸缩性
+      - title: 第12章 并发程序的测试
+        url: /java-concurrency-in-practice/12-并发程序的测试
+  - title: 第四部分 高级主题
+    children:
+      - title: 第13章 显示锁
+        url: /java-concurrency-in-practice/13-显示锁
+      - title: 第14章 构建自定义的同步工具
+        url: /java-concurrency-in-practice/14-构建自定义的同步工具
+      - title: 第15章 原子变量与非阻塞同步机制
+        url: /java-concurrency-in-practice/15-原子变量与非阻塞同步机制
+      - title: 第16章 Java内存模型
+        url: /java-concurrency-in-practice/16-Java内存模型
