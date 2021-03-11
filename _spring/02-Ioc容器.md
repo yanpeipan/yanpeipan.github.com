@@ -8,9 +8,9 @@ toc: true
 
 `org.springframework.beans`和`org.springframework.context`包是Spring Framework的IoC容器的基础. 
 
-`BeanFactory`接口提供了一种高级配置机制，能够管理任何类型的对象.
+`BeanFactory`提供了配置框架和基础功能，能够管理任何类型的对象.
 
-`ApplicationContext`是`BeanFactory`的子接口. 它增加了：
+`ApplicationContext`是`BeanFactory`的子接口. 它增加更多企业级功能：
 
 * 与Spring的AOP功能轻松集成
 * 消息资源处理（用于国际化）
@@ -19,7 +19,10 @@ toc: true
 
 在Spring中，**构成应用程序主干并由Spring IoC容器管理的对象称为bean. Bean是由Spring IoC容器实例化，组装和以其他方式管理的对象**. 否则，bean仅仅是应用程序中许多对象之一. Bean及其之间的依赖关系反映在容器使用的配置元数据中.
 
+
+
 ## Container
+
 org.springframework.context.ApplicationContext接口表示Spring IoC容器，并负责实例化，配置和组装Bean.Spring提供了ApplicationContext接口的几种实现：
 
 * AnnotationConfigApplicationContext
@@ -28,13 +31,51 @@ org.springframework.context.ApplicationContext接口表示Spring IoC容器，并
 * FileSystemXmlapplicationcontext
 * XmlWebApplicationContext
 
-##  配置Metadata
+### 配置Metadata
+
 创建应用组件之间协作的行为通常称为装配（wiring），装配Bean的方式：
 
 * XML
 * JAVA
 
 Spring通过应用上下文（ Application Context） 装载bean的定义并把它们组装起来。 Spring应用上下文全权负责对象的创建和组装。
+
+### 实例化容器
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- services -->
+
+    <bean id="petStore" class="org.springframework.samples.jpetstore.services.PetStoreServiceImpl">
+        <property name="accountDao" ref="accountDao"/>
+        <property name="itemDao" ref="itemDao"/>
+        <!-- additional collaborators and configuration for this bean go here -->
+    </bean>
+
+    <!-- more bean definitions for services go here -->
+
+</beans>
+```
+
+### 使用容器
+
+```java
+// create and configure beans
+ApplicationContext context = new ClassPathXmlApplicationContext("services.xml", "daos.xml");
+
+// retrieve configured instance
+PetStoreService service = context.getBean("petStore", PetStoreService.class);
+
+// use configured instance
+List<String> userList = service.getUsernameList();
+```
+
+
 
 ## Bean
 Spring IoC容器管理一个或多个bean。这些bean是使用提供给容器的配置元数据创建的，在容器本身内，这些bean定义表示为`BeanDefinition`对象，其中包含（除其他信息外）以下元数据：
@@ -46,17 +87,17 @@ Spring IoC容器管理一个或多个bean。这些bean是使用提供给容器�
 
 该元数据转换为构成每个bean定义的一组属性. 下表描述了这些属性：
 
-| Property | 在...中解释 | 
+| Property | 在...中解释 |
 | -------- | -------- |
 | Class     |  Instantiating Beans    |
-| Name     |   Naming Beans   | 
-|  Scope    |  Bean Scopes    | 
-| Constructor arguments     | Dependency Injection     | 
-| Properties     |  Dependency Injection    | 
-|  Autowiring mode    |  Autowiring Collaborators    | 
-| Lazy initialization mode     |   Lazy-initialized Beans   | 
-|  Initialization method    |  Initialization Callbacks    | 
-|  Destruction method    |  Destruction Callbacks    | 
+| Name     |   Naming Beans   |
+|  Scope    |  Bean Scopes    |
+| Constructor arguments     | Dependency Injection     |
+| Properties     |  Dependency Injection    |
+|  Autowiring mode    |  Autowiring Collaborators    |
+| Lazy initialization mode     |   Lazy-initialized Beans   |
+|  Initialization method    |  Initialization Callbacks    |
+|  Destruction method    |  Destruction Callbacks    |
 
 ApplicationContext实现还允许注册在容器外部（由用户）创建的现有对象. 这是通过通过`getBeanFactory()`方法访问`ApplicationContext`的`BeanFactory`来完成的，该方法返回`BeanFactory`的实现 `DefaultListableBeanFactory`. `DefaultListableBeanFactory`通过`registerSingleton(..)`和`registerBeanDefinition(..)`方法支持此注册. 但是，典型的应用程序只能与通过常规bean定义元数据定义的bean一起使用.
 ### Naming Beans
@@ -155,7 +196,7 @@ Spring框架提供了许多接口，可用于自定义Bean的性质. 本节将�
 ### Lifecycle Callbacks
 为了与容器对bean生命周期的管理进行交互，可以实现Spring `InitializingBean`和`DisposableBean`接口. 容器为前者调用`afterPropertiesSet()`并为后者调用`destroy()` ，以使Bean在初始化和销毁Bean时执行某些操作.
 
-	
+​	
 
 组合生命周期机制：
 * InitializingBean和DisposableBean回调接口
