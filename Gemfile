@@ -5,6 +5,7 @@ source "https://rubygems.org"
 git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 
 #gem "github-pages", group: :jekyll_plugins
+gem "rack", ">= 2.1.4"
 gem "minimal-mistakes-jekyll"
 gem "jekyll-include-cache"
 gem 'jekyll-admin', group: :jekyll_plugins
