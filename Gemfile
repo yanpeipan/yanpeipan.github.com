@@ -11,17 +11,16 @@ gem 'jekyll-admin', group: :jekyll_plugins
 
 group :jekyll_plugins do
   #gem "jekyll", ">= 4.1.1", "< 5.0"
+  gem "minimal-mistakes-jekyll"
   gem "kramdown"
   gem "jekyll-paginate"
   gem "jekyll-sitemap"
   gem "jekyll-gist"
   gem "jekyll-feed"
-  gem "jemoji"
   gem "jekyll-algolia"
   gem "html-proofer"
-  gem "minimal-mistakes-jekyll"
   gem 'jekyll-seo-tag'
   gem 'jekyll-redirect-from'
-  gem 'jekyll-spaceship'
+  gem 'jekyll-spaceship', git: 'https://github.com/jeffreytse/jekyll-spaceship'
 end
 
