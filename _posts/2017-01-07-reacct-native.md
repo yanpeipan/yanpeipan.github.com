@@ -1,17 +1,9 @@
 ---
-layout: post
 title: "Reacct Native"
 description: ""
 category:
 tags: [Reacct Native, App]
 ---
-{% include JB/setup %}
----
-
-<nav>
-  * 目录
-  {:toc}
-</nav>
 
   总结近段时间以来的经验（深坑）。
 
