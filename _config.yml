@@ -18,7 +18,7 @@ subtitle                 : "  靡不有初，鲜克有终"
 #name                     : &name "Michael Rose"
 description              : &description ""
 url                      : 
-baseurl                  : "/yanpeipan"
+baseurl                  : ""
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
