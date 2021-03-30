@@ -308,9 +308,5 @@ enum IntegerSum implements StackManipulation {
 }
 ```
 
-
-
-
-
 # 实践
 
