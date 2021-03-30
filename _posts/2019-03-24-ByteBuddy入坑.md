@@ -306,7 +306,132 @@ enum IntegerSum implements StackManipulation {
     return new Size(-1, 0);
   }
 }
+
+enum SumMethod implements ByteCodeAppender {
+ 
+  INSTANCE; // singleton
+ 
+  @Override
+  public Size apply(MethodVisitor methodVisitor,
+                    Implementation.Context implementationContext,
+                    MethodDescription instrumentedMethod) {
+    if (!instrumentedMethod.getReturnType().asErasure().represents(int.class)) {
+      throw new IllegalArgumentException(instrumentedMethod + " must return int");
+    }
+    StackManipulation.Size operandStackSize = new StackManipulation.Compound(
+      IntegerConstant.forValue(10),
+      IntegerConstant.forValue(50),
+      IntegerSum.INSTANCE,
+      MethodReturn.INTEGER
+    ).apply(methodVisitor, implementationContext);
+    return new Size(operandStackSize.getMaximalSize(),
+                    instrumentedMethod.getStackSize());
+  }
+}
+
+enum SumImplementation implements Implementation {
+ 
+  INSTANCE; // singleton
+ 
+  @Override
+  public InstrumentedType prepare(InstrumentedType instrumentedType) {
+    return instrumentedType;
+  }
+ 
+  @Override
+  public ByteCodeAppender appender(Target implementationTarget) {
+    return SumMethod.INSTANCE;
+  }
+}
+
+abstract class SumExample {
+  public abstract int calculate();
+}
+ 
+new ByteBuddy()
+  .subclass(SumExample.class)
+    .method(named("calculate"))
+    .intercept(SumImplementation.INSTANCE)
+  .make()
 ```
 
-# 实践
+### 创建自定义赋值器
+
+```java
+enum ToStringAssigner implements Assigner {
+ 
+  INSTANCE; // singleton
+ 
+  @Override
+  public StackManipulation assign(TypeDescription.Generic source,
+                                  TypeDescription.Generic target,
+                                  Assigner.Typing typing) {
+    if (!source.isPrimitive() && target.represents(String.class)) {
+      MethodDescription toStringMethod = new TypeDescription.ForLoadedType(Object.class)
+        .getDeclaredMethods()
+        .filter(named("toString"))
+        .getOnly();
+      return MethodInvocation.invoke(toStringMethod).virtual(sourceType);
+    } else {
+      return StackManipulation.Illegal.INSTANCE;
+    }
+  }
+}
+
+new ByteBuddy()
+  .subclass(Object.class)
+  .method(named("toString"))
+    .intercept(FixedValue.value(42)
+      .withAssigner(new PrimitiveTypeAwareAssigner(ToStringAssigner.INSTANCE),
+                    Assigner.Typing.STATIC))
+  .make();
+```
+
+### 创建自定义参数绑定
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@interface StringValue {
+  String value();
+}
+
+enum StringValueBinder
+    implements TargetMethodAnnotationDrivenBinder.ParameterBinder<StringValue> {
+ 
+  INSTANCE; // singleton
+ 
+  @Override
+  public Class<StringValue> getHandledType() {
+    return StringValue.class;
+  }
+ 
+  @Override
+  public MethodDelegationBinder.ParameterBinding<?> bind(AnnotationDescription.Loaded<StringValue> annotation,
+                                                         MethodDescription source,
+                                                         ParameterDescription target,
+                                                         Implementation.Target implementationTarget,
+                                                         Assigner assigner,
+                                                         Assigner.Typing typing) {
+    if (!target.getType().asErasure().represents(String.class)) {
+      throw new IllegalStateException(target + " makes illegal use of @StringValue");
+    }
+    StackManipulation constant = new TextConstant(annotation.loadSilent().value());
+    return new MethodDelegationBinder.ParameterBinding.Anonymous(constant);
+  }
+}
+
+class ToStringInterceptor {
+  public static String makeString(@StringValue("Hello!") String value) {
+    return value;
+  }
+}
+ 
+new ByteBuddy()
+  .subclass(Object.class)
+  .method(named("toString"))
+    .intercept(MethodDelegation.withDefaultConfiguration()
+      .withBinders(StringValueBinder.INSTANCE)
+      .to(ToStringInterceptor.class))
+  .make()
+```
 
