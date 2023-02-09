@@ -4,7 +4,7 @@ description: "Spring Security"
 category: Spring
 tags: [Spring, Java, Spring Security]
 redirect_to:
-  - /spring-security/00-特性
+  - /spring-security/00-特性/
 toc: true
 ---
 

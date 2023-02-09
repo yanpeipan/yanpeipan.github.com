@@ -104,6 +104,9 @@ collections:
   spring:
     output: true
     permalink: /:collection/:path/
+  mysql:
+    output: true
+    permalink: /:collection/:path/
   spring-security:
     output: true
     permalink: /:collection/:path/
@@ -149,6 +152,17 @@ defaults:
       comments: false
       sidebar:
         nav: "spring"
+  - scope:
+      path: ""
+      type: mysql
+    values:
+      layout: single
+      read_time: false
+      author_profile: false
+      share: false
+      comments: false
+      sidebar:
+        nav: "mysql"
   - scope:
       path: ""
       type: spring-security
