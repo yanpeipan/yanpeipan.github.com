@@ -4,6 +4,7 @@ description: "ByteBuddy入坑"
 category: Spring
 tags: [Java, Spring, ByteBuddy, 字节码]
 toc: true
+toc_sticky: true
 ---
 
 Byte Buddy是一个代码生成和操作库，用于在Java应用程序运行时创建和修改Java类，无需编译器的帮助。与Java类库附带的代码生成实用程序不同，Byte Buddy允许创建任意类，并且不限于实现用于创建运行时代理的接口。此外，Byte Buddy提供了一个方便的API，可以使用Java代理或在构建过程中手动更改类。

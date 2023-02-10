@@ -4,6 +4,7 @@ description: ""
 category: 
 tags: [JavaScript]
 toc: true
+toc_sticky: true
 ---
 
 # JavaScript基础
