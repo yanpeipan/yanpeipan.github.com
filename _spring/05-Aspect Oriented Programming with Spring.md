@@ -1,6 +1,9 @@
 ---
 title: AOP
 toc: true
+toc_sticky: true
+tags:
+- Spring
 ---
 
 Spring通过使用基于模式的方法或@AspectJ批注样式，提供了编写自定义方面的简单而强大的方法.

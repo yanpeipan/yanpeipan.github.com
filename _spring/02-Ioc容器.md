@@ -1,12 +1,15 @@
 ---
 title: IoC容器
 toc: true
+toc_sticky: true
+tags:
+- Spring
 ---
 
-## Spring IoC Container and Beans
+## 1.1 Spring IoC容器和Beans
 是通过使用类的直接构造或诸如服务定位器模式之类的机制来控制其依赖项的实例化或位置的Bean本身的逆过程（因此称为Control Inversion）.
 
-`org.springframework.beans`和`org.springframework.context`包是Spring Framework的IoC容器的基础. 
+`org.springframework.beans`和`org.springframework.context`是Spring Framework的IoC容器的基础包. 
 
 `BeanFactory`提供了配置框架和基础功能，能够管理任何类型的对象.
 
@@ -15,15 +18,17 @@ toc: true
 * 与Spring的AOP功能轻松集成
 * 消息资源处理（用于国际化）
 * 活动发布
-* 应用层特定的上下文，例如Web应用程序中使用的WebApplicationContext .
+* 应用层特定的上下文，例如Web应用程序中使用的`WebApplicationContext` .
 
 在Spring中，**构成应用程序主干并由Spring IoC容器管理的对象称为bean. Bean是由Spring IoC容器实例化，组装和以其他方式管理的对象**. 否则，bean仅仅是应用程序中许多对象之一. Bean及其之间的依赖关系反映在容器使用的配置元数据中.
 
 
 
-## Container
+## 1.2 容器概述
 
-org.springframework.context.ApplicationContext接口表示Spring IoC容器，并负责实例化，配置和组装Bean.Spring提供了ApplicationContext接口的几种实现：
+`org.springframework.context.ApplicationContext`接口表示Spring IoC容器，并负责实例化，配置和组装Bean.
+
+Spring提供了`ApplicationContext`接口的几种实现：
 
 * AnnotationConfigApplicationContext
 * AnnotationConfigWebApplicationContext
@@ -31,38 +36,29 @@ org.springframework.context.ApplicationContext接口表示Spring IoC容器，并
 * FileSystemXmlapplicationcontext
 * XmlWebApplicationContext
 
-### 配置Metadata
+### 1.2.1 元数据配置
 
 创建应用组件之间协作的行为通常称为装配（wiring），装配Bean的方式：
 
-* XML
-* JAVA
+* 基于XML的
+* 基于注解的配置
+* 基于 Java 的配置
 
 Spring通过应用上下文（ Application Context） 装载bean的定义并把它们组装起来。 Spring应用上下文全权负责对象的创建和组装。
 
-### 实例化容器
+### 1.2.2 实例化容器
 
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
-        https://www.springframework.org/schema/beans/spring-beans.xsd">
+```java
+@SpringBootApplication(scanBasePackages = {"com.p.y"}, exclude = DruidDataSourceAutoConfigure.class)
+public class StartApplication {
 
-    <!-- services -->
-
-    <bean id="petStore" class="org.springframework.samples.jpetstore.services.PetStoreServiceImpl">
-        <property name="accountDao" ref="accountDao"/>
-        <property name="itemDao" ref="itemDao"/>
-        <!-- additional collaborators and configuration for this bean go here -->
-    </bean>
-
-    <!-- more bean definitions for services go here -->
-
-</beans>
+    public static void main(String[] args) {
+        SpringApplication.run(StartApplication.class, args);
+    }
+}
 ```
 
-### 使用容器
+### 1.2.3 使用容器
 
 ```java
 // create and configure beans
@@ -75,9 +71,7 @@ PetStoreService service = context.getBean("petStore", PetStoreService.class);
 List<String> userList = service.getUsernameList();
 ```
 
-
-
-## Bean
+## 1.3 Bean
 Spring IoC容器管理一个或多个bean。这些bean是使用提供给容器的配置元数据创建的，在容器本身内，这些bean定义表示为`BeanDefinition`对象，其中包含（除其他信息外）以下元数据：
 
 * 包限定的类名称：通常，定义了Bean的实际实现类.
@@ -89,29 +83,33 @@ Spring IoC容器管理一个或多个bean。这些bean是使用提供给容器�
 
 | Property | 在...中解释 |
 | -------- | -------- |
-| Class     |  Instantiating Beans    |
-| Name     |   Naming Beans   |
-|  Scope    |  Bean Scopes    |
-| Constructor arguments     | Dependency Injection     |
-| Properties     |  Dependency Injection    |
-|  Autowiring mode    |  Autowiring Collaborators    |
-| Lazy initialization mode     |   Lazy-initialized Beans   |
-|  Initialization method    |  Initialization Callbacks    |
-|  Destruction method    |  Destruction Callbacks    |
+| 类     |  实例化Beans    |
+| 名称     |   命名Beans   |
+|  作用域 | Bean 作用域 |
+| 构造函数参数 | 依赖注入   |
+| 属性 | 依赖注入 |
+|  自动装载模式  |  自动装备协作组  |
+| 延迟初始化模式 |   延迟初始化Beans   |
+|  初始化方法  |  初始化回调  |
+|  销毁方式  | 销毁回调 |
 
 ApplicationContext实现还允许注册在容器外部（由用户）创建的现有对象. 这是通过通过`getBeanFactory()`方法访问`ApplicationContext`的`BeanFactory`来完成的，该方法返回`BeanFactory`的实现 `DefaultListableBeanFactory`. `DefaultListableBeanFactory`通过`registerSingleton(..)`和`registerBeanDefinition(..)`方法支持此注册. 但是，典型的应用程序只能与通过常规bean定义元数据定义的bean一起使用.
-### Naming Beans
+### 1.3.1 命名Beans
 每个bean具有一个或多个标识符. 这些标识符在承载Bean的容器内必须唯一. 一个bean通常只有一个标识符. 但是，如果需要多个，则可以将多余的别名视为别名.
 
 在基于XML的配置元数据中，可以使用id属性和/或name属性来指定bean标识符. id属性可让您精确指定一个id. 还可以在指定它们name属性指定别名，并由逗号（ , ），分号（ ; ）或空白分隔。如果未明确提供name或id ，则容器将为该bean生成一个唯一的名称. 
 
-### Instantiating Beans
+```java
+@Bean({"nameA", "aliasNameA"})
+```
+
+### 1.3.2 实例化Beans
 定义使用静态工厂方法创建的bean时，请使用class属性指定包含static工厂方法的类，并使用名为factory-method的属性指定工厂方法本身的名称. 
 
 
-## Dependencies
+## 1.4 依赖
 
-### Dependency Injection
+### 1.4.1 依赖注入
 依赖注入（DI）是一个过程，通过该过程，对象只能通过构造函数参数，工厂方法的参数或在构造或创建对象实例后在对象实例上设置的属性来定义其依赖关系（即，与它们一起工作的其他对象）。
 
 DI存在两个主要变体： 基于构造函数的依赖注入和基于Setter的依赖注入 .
@@ -131,15 +129,22 @@ public class ExampleBean {
 ```
 
 
-### depends-on
+### 1.4.3 depends-on
 有时bean之间的依赖性不太直接，depends-on属性可以显式地强制初始化一个或多个使用该元素的bean之前的bean
-### Lazy-initialized Beans
+
+```java
+@Compoent
+@DependsOn({"manager", "accountDao"})
+public Class ExampleBean {}
+```
+
+### 1.4.4 Lazy-initialized Beans
 ApplicationContext实现会急于创建和配置所有单例 bean. 通常，这种预初始化是可取的，因为与数小时甚至数天后相比，会立即发现配置或周​​围环境中的错误. 如果不希望使用此行为，则可以通过将bean定义标记为延迟初始化来防止单例bean的预实例化. 延迟初始化的bean告诉IoC容器在首次请求时而不是在启动时创建一个bean实例
 
-### Autowiring Collaborators
+### 1.4.5 Autowiring Collaborators
 Spring容器可以自动装配协作bean之间的关系. 您可以通过检查ApplicationContext的内容，让Spring为您的bean自动解决协作者（其他bean）
 
-### Method Injection
+### 1.4.6 Method Injection
 容器中的大多数bean是singletons，当bean的生命周期不同时会出现问题.解决方案是放弃某些控制反转. 通过实现ApplicationContextAware接口，并通过对容器 进行getBean("B")调用，可以使Bean A知道容器 ，每次bean A需要它时都请求（通常是新的）Bean B实例
 ```java
 public class CommandManager implements ApplicationContextAware {
@@ -292,6 +297,7 @@ public void setMovieFinder(MovieFinder movieFinder) {
 ### @Autowired
 可以使用JSR 330的@Inject注释代替Spring的@Autowired注释
 您可以将@Autowired注释应用于构造函数，如以下示例所示：
+
 ```java
 @Autowired
 public MovieRecommender(CustomerPreferenceDao customerPreferenceDao) {
@@ -302,6 +308,7 @@ public MovieRecommender(CustomerPreferenceDao customerPreferenceDao) {
 还可以将注释应用于具有任意名称和多个参数的方法
 也可以将@Autowired应用于字段
 还可以通过将@Autowired注释添加到需要该类型数组的字段或方法
+
 ```java
 @Autowired
 private MovieCatalog[] movieCatalogs;
@@ -598,12 +605,12 @@ public class AppConfig {
 ### 占位符解析
 由于Environment抽象是在整个容器中集成的，因此很容易通过它来路由占位符的解析
 
-## LoadTimeWeaver
+## 1.14 LoadTimeWeaver
 Spring使用LoadTimeWeaver在将类加载到Java虚拟机（JVM）中时对其进行动态转换.
 
 要启用加载时编织，可以将@EnableLoadTimeWeaving添加到您的@Configuration类之一，如以下示例所示：
 
-## ApplicationContext附加功能
+## 1.15 ApplicationContext附加功能
 为了以更加面向框架的方式增强BeanFactory功能，上下文包还提供以下功能：
 
 * 通过MessageSource界面访问i18n样式的消息.
@@ -611,12 +618,12 @@ Spring使用LoadTimeWeaver在将类加载到Java虚拟机（JVM）中时对其�
 * 事件发布，即实现了豆ApplicationListener接口，通过使用的ApplicationEventPublisher接口.
 * 加载多个（分层）上下文，使每个上下文都通过HierarchicalBeanFactory接口集中在一个特定层上，例如应用程序的Web层.
 
-### 国际化
+### 1.15.1 国际化
 ApplicationContext接口扩展了一个称为MessageSource的接口，因此提供了国际化（" i18n"）功能. Spring还提供了HierarchicalMessageSource接口，该接口可以分层解析消息
 
 Spring提供了两个MessageSource实现， ResourceBundleMessageSource和StaticMessageSource . 两者都实现HierarchicalMessageSource以便进行嵌套消息传递
 
-### 事件
+### 1.15.2 事件
 通过ApplicationEvent类和ApplicationListener接口提供ApplicationContext中的事件处理. 如果将实现ApplicationListener接口的bean部署到上下文中，则每次将ApplicationEvent发布到ApplicationContext ，都会通知该bean. 本质上，这是标准的Observer设计模式.
 
 
