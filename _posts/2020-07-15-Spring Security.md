@@ -2,7 +2,7 @@
 title: "Spring Security Servlet Applications"
 description: "Spring Security"
 category: Spring
-tags: [Spring, Java, Spring Security]
+tags: [Spring, Spring Security]
 redirect_to:
   - /spring-security/00-特性/
 toc: true

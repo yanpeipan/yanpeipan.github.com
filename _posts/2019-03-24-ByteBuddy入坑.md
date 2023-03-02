@@ -1,8 +1,8 @@
 ---
 title: "ByteBuddy入坑"
 description: "ByteBuddy入坑"
-category: Spring
-tags: [Java, Spring, ByteBuddy, 字节码]
+category: Java
+tags: [Java, 字节码]
 toc: true
 toc_sticky: true
 ---

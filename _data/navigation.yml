@@ -2,29 +2,33 @@
 main:
   - title: "Home"
     url: /
+  - title: "Java"
+    url: /categories/#Java
 
 
-spring:
-  - title: Spring
-  - title: 概述
-    url: /spring/00-概述
+spring-core:
   - title: Spring核心技术
-    url: /spring/01-Spring核心技术
+  - title: 概述
+    url: /spring-core/00-概述
+  - title: Spring核心技术
+    url: /spring-core/00-Spring核心技术
     children:
       - title: "Ioc容器"
-        url: /spring/02-Ioc容器
+        url: /spring-core/01-Ioc容器
+      - title: "资源"
+        url: /spring-core/02-资源
       - title: "验证，数据绑定，类型转换"
-        url: /spring/03-Validation, Data Binding, and Type Conversion
+        url: /spring-core/03-Validation, Data Binding, and Type Conversion
       - title: "Spring表达式语言"
-        url: /spring/04-Spring Expression Language
+        url: /spring-core/04-Spring Expression Language
       - title: "AOP"
-        url: /spring/05-Aspect Oriented Programming with Spring
+        url: /spring-core/05-Aspect Oriented Programming with Spring
       - title: "Spring AOP APIs"
-        url: /spring/06-Spring AOP APIs
+        url: /spring-core/06-Spring AOP APIs
       - title: "Null-safety"
-        url: /spring/07-Null-safety
+        url: /spring-core/07-Null-safety
       - title: "Data Buffers and Codecs"
-        url: /spring/08-Data Buffers and Codecs
+        url: /spring-core/08-Data Buffers and Codecs
         
 spring-security:
   - title: Spring Security
