@@ -10,7 +10,7 @@ import rehypeKatex from 'rehype-katex';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
+  title: '织码如诗',
   tagline: 'Dinosaurs are cool',
   favicon: 'img/favicon.ico',
 
