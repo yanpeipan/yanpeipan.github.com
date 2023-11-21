@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0">
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
     <channel>
         <title>织码如诗 Blog</title>
         <link>https://yanpeipan.github.io/blog</link>
@@ -12,6 +12,9 @@
             <link>https://yanpeipan.github.io/blog/2023/11/17/</link>
             <guid>https://yanpeipan.github.io/blog/2023/11/17/</guid>
             <pubDate>Fri, 17 Nov 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[1]]></description>
+            <content:encoded><![CDATA[<p>1
+11</p>]]></content:encoded>
         </item>
     </channel>
 </rss>
