@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkyanpeipan_github_com=self.webpackChunkyanpeipan_github_com||[]).push([[8947],{6600:e=>{e.exports=JSON.parse('{"authors":[{"name":"\u989c\u57f9\u6500","title":"\u7801\u519c","url":"https://github.com/yanpeipan","key":"yanpeipan","page":null,"count":0}]}')}}]);

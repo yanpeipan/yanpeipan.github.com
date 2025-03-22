@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkyanpeipan_github_com=self.webpackChunkyanpeipan_github_com||[]).push([[7472],{5513:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"","permalink":"/blog/2023/11/17/","unlisted":false,"date":"2023-11-17T00:00:00.000Z"}]}')}}]);
